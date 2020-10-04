@@ -18,7 +18,7 @@ def get_random_friendly_advice():
     random_friendly_message=random.choice(friendly_robot_advice)
     return random_friendly_message
 
-client = discord.Client()
+client = commands.Bot(command_prefix='a!')
 
 @client.event
 async def on_ready():
