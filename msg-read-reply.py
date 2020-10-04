@@ -10,6 +10,8 @@ load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 SERVER = os.getenv('DISCORD_SERVER')
 BOT_USER_ID = os.getenv('BOT_USER_ID')
+BOT_ROLE_ID = os.getenv('BOT_ROLE_ID')
+
 DEBUG = True
 
 def get_random_friendly_advice():
@@ -43,7 +45,7 @@ async def on_message(message):
     if message.author == client.user:
         return
 
-    if f'<@!{BOT_USER_ID}>' in message.content or f'<@{BOT_USER_ID}>' in message.content:
+    if any(id in message.content for id in [BOT_USER_ID, BOT_ROLE_ID]):
         await message.channel.send("Beep boop!")
 
     if 'robot' in message.content:
