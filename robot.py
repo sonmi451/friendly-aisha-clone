@@ -18,7 +18,7 @@ ADGENDA = os.getenv('GOOGLE_CALENDER')
 
 DEBUG = True
 
-client = commands.Bot(command_prefix='a!')
+client = commands.Bot(command_prefix='a?')
 
 
 def scrape_events_from_calender():
@@ -70,6 +70,12 @@ async def on_message(message):
     if 'robot' in message.content:
         friendly_message = get_random_friendly_advice()
         await message.channel.send(friendly_message)
+
+    if 'movie schedule' in message.content:
+        schedule = scrape_events_from_calender()
+        print_schedule = format_full_schedule(schedule)
+        await message.channel.send(print_schedule)
+
     await client.process_commands(message)
 
 
