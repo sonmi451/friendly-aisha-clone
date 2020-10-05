@@ -54,22 +54,14 @@ async def on_ready():
         if guild.name == SERVER:
             break
     # print(f'{client.user} has connected to Discord Server "{guild.name}!"\n')
-<<<<<<< HEAD
     print(client.user + " has connected to Discord Server " + guild.name)
-=======
-    print(client.user, "has connected to Discord Server ", guild.name)
->>>>>>> 240d7538cf60bb243ede83e15924f0d5308fa54b
 
 
 @client.event
 async def on_message(message):
     if DEBUG:
         # print(f"{message.author}\n {message.content}\n")
-<<<<<<< HEAD
         print(message.author + '\n' + message.content)
-=======
-        print(message.author}, '\n', message.content})
->>>>>>> 240d7538cf60bb243ede83e15924f0d5308fa54b
 
     if message.author == client.user:
         return
