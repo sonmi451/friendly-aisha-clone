@@ -53,13 +53,15 @@ async def on_ready():
     for guild in client.guilds:
         if guild.name == SERVER:
             break
-    print(f'{client.user} has connected to Discord Server "{guild.name}!"\n')
+    # print(f'{client.user} has connected to Discord Server "{guild.name}!"\n')
+    print(client.user, "has connected to Discord Server ", guild.name)
 
 
 @client.event
 async def on_message(message):
     if DEBUG:
-        print(f"{message.author}\n {message.content}\n")
+        # print(f"{message.author}\n {message.content}\n")
+        print(message.author}, '\n', message.content})
 
     if message.author == client.user:
         return
