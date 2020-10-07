@@ -48,7 +48,13 @@ def embed_schedule(schedule, first=False):
     formattd_schedule.add_field(name='Online Schedule',
                                 value='[See the calender online](' + ADGENDA + ')',
                                 inline=False)
-    return formattd_schedule
+    return formattd_schedule.add_field()
+
+
+def embed_response(text):
+    robot_response = discord.Embed(title='Beep boop!')
+    robot_response.add_field(name='a?', value=text)
+    return robot_response
 
 
 def get_random_friendly_advice():
@@ -77,14 +83,14 @@ async def on_message(message):
         return
 
     if any(id in message.content for id in [BOT_USER_ID, BOT_ROLE_ID]):
-        await message.channel.send("Beep boop!")
+        await message.channel.send(embed=embed_response("Beep boop!"))
 
     if 'robot' in message.content:
         friendly_message = get_random_friendly_advice()
-        await message.channel.send(friendly_message)
+        await message.channel.send(embed=embed_response(friendly_message))
 
     if 'regulations' in message.content.lower():
-        await message.channel.send('Praise be the regulations')
+        await message.channel.send(embed=embed_response('Praise be the regulations'))
 
     if 'movie schedule' in message.content:
         schedule = scrape_events_from_calender()
@@ -105,12 +111,5 @@ async def next_scheduled(ctx):
     schedule = scrape_events_from_calender()
     print_schedule = embed_schedule(schedule, first=True)
     await ctx.send(embed=print_schedule)
-
-
-@client.command(name='test', help='')
-async def game(ctx):
-    response = discord.Embed(
-        title='test hello')
-    await ctx.send(embed=response)
 
 client.run(TOKEN)
