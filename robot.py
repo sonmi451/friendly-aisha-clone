@@ -1,9 +1,7 @@
 import os
 import random
-
 import discord
 import requests
-
 from bs4 import BeautifulSoup
 from dotenv import load_dotenv
 from discord.ext import commands
@@ -22,23 +20,35 @@ client = commands.Bot(command_prefix='a?')
 
 
 def scrape_events_from_calender():
+    events = []
     adgenda_html = requests.get(ADGENDA)
     soup = BeautifulSoup(adgenda_html.text, 'html.parser')
-    adgenda_events = soup.select("body > div.view-container-border > div > div")
-    events = []
-    for event in adgenda_events:
-        event_text = event.text
-        oneline_event_text = event_text.replace('\n', ' ').replace('\r', '')
-        events.append(oneline_event_text)
+    if not 'Nothing currently scheduled' in soup.text:
+        adgenda_events = soup.select("body > div.view-container-border > div > div")
+        for event in adgenda_events:
+            event_text = event.text
+            oneline_event_list = event_text.split('\n')
+            events.append(oneline_event_list)
     return events
 
 
-def format_full_schedule(schedule):
-    return ',\n'.join(schedule)
+def embed_schedule(schedule, first=False):
+    formattd_schedule = discord.Embed(title='Agenda')
+    if not schedule:
+        formattd_schedule.add_field(name='Agenda', value='Hmm, looks like nothing is scheduled!')
+    else:
+        if first:
+            schedule = [schedule[0]]
 
+        for event in schedule:
+            formattd_schedule.add_field(name=event[1] + ' - ' + event[0],
+                                        value=event[2],
+                                        inline=False)
 
-def next_movie(schedule):
-    return schedule[0]
+    formattd_schedule.add_field(name='Online Schedule',
+                                value='[See the calender online](' + ADGENDA + ')',
+                                inline=False)
+    return formattd_schedule
 
 
 def get_random_friendly_advice():
@@ -73,25 +83,34 @@ async def on_message(message):
         friendly_message = get_random_friendly_advice()
         await message.channel.send(friendly_message)
 
+    if 'regulations' in message.content.lower():
+        await message.channel.send('Praise be the regulations')
+
     if 'movie schedule' in message.content:
         schedule = scrape_events_from_calender()
-        print_schedule = format_full_schedule(schedule)
+        print_schedule = embed_schedule(schedule)
         await message.channel.send(print_schedule)
-
     await client.process_commands(message)
 
 
 @client.command(name='movies', help='Read the full movie schedule from the calendar')
 async def full_schedule(ctx):
     schedule = scrape_events_from_calender()
-    print_schedule = format_full_schedule(schedule)
-    await ctx.send(print_schedule)
+    print_schedule = embed_schedule(schedule)
+    await ctx.send(embed=print_schedule)
 
 
 @client.command(name='movie', help='Reads the next scheduled movie schedule from the calendar')
 async def next_scheduled(ctx):
     schedule = scrape_events_from_calender()
-    movie = next_movie(schedule)
-    await ctx.send(movie)
+    print_schedule = embed_schedule(schedule, first=True)
+    await ctx.send(embed=print_schedule)
+
+
+@client.command(name='test', help='')
+async def game(ctx):
+    response = discord.Embed(
+        title='test hello')
+    await ctx.send(embed=response)
 
 client.run(TOKEN)
