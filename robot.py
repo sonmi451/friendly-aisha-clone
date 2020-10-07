@@ -89,7 +89,7 @@ async def on_message(message):
     if 'movie schedule' in message.content:
         schedule = scrape_events_from_calender()
         print_schedule = embed_schedule(schedule)
-        await message.channel.send(print_schedule)
+        await message.channel.send(embed=print_schedule)
     await client.process_commands(message)
 
 
