@@ -48,7 +48,7 @@ def embed_schedule(schedule, first=False):
     formattd_schedule.add_field(name='Online Schedule',
                                 value='[See the calender online](' + ADGENDA + ')',
                                 inline=False)
-    return formattd_schedule.add_field()
+    return formattd_schedule
 
 
 def embed_response(text):
