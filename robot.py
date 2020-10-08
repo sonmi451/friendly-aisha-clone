@@ -33,9 +33,9 @@ def scrape_events_from_calender():
 
 
 def embed_schedule(schedule, first=False):
-    formattd_schedule = discord.Embed(title='Agenda')
+    formattd_schedule = discord.Embed(title='Movie Schedule')
     if not schedule:
-        formattd_schedule.add_field(name='Agenda', value='Hmm, looks like nothing is scheduled!')
+        formattd_schedule.add_field(name='Empty schedule', value='Hmm, looks like nothing is scheduled!')
     else:
         if first:
             schedule = [schedule[0]]
@@ -45,8 +45,8 @@ def embed_schedule(schedule, first=False):
                                         value=event[2],
                                         inline=False)
 
-    formattd_schedule.add_field(name='Online Schedule',
-                                value='[See the calender online](' + ADGENDA + ')',
+    formattd_schedule.add_field(name='Calender',
+                                value='[See the calender of events online](' + ADGENDA + ')',
                                 inline=False)
     return formattd_schedule
 
