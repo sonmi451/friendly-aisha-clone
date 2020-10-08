@@ -83,14 +83,14 @@ async def on_message(message):
         return
 
     if any(id in message.content for id in [BOT_USER_ID, BOT_ROLE_ID]):
-        await message.channel.send(embed=embed_response("Beep boop!"))
+        await message.channel.send('Beep boop!')
 
     if 'robot' in message.content:
         friendly_message = get_random_friendly_advice()
-        await message.channel.send(embed=embed_response(friendly_message))
+        await message.channel.send(friendly_message)
 
     if 'regulations' in message.content.lower():
-        await message.channel.send(embed=embed_response('Praise be the regulations'))
+        await message.channel.send('Praise be the regulations')
 
     if 'movie schedule' in message.content:
         schedule = scrape_events_from_calender()
