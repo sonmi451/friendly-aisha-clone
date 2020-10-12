@@ -41,12 +41,12 @@ def embed_schedule(schedule, first=False):
             schedule = [schedule[0]]
 
         for event in schedule:
-            formattd_schedule.add_field(name=event[1] + ' - ' + event[0],
+            formattd_schedule.add_field(name=event[0] + ' - ' + event[1],
                                         value=event[2],
                                         inline=False)
 
     formattd_schedule.add_field(name='Calender',
-                                value='[See the calender of events online](' + ADGENDA + ')',
+                                value='[See the full calender of events online](https://calendar.google.com/calendar/u/0/embed?src=qjva8eaked6q9vdcgqkspqvseg@group.calendar.google.com)',
                                 inline=False)
     return formattd_schedule
 
@@ -69,18 +69,21 @@ async def on_ready():
     for guild in client.guilds:
         if guild.name == SERVER:
             break
-    # print(f'{client.user} has connected to Discord Server "{guild.name}!"\n')
     print(str(client.user) + " has connected to Discord Server " + str(guild.name))
 
 
 @client.event
 async def on_message(message):
     if DEBUG:
-        # print(f"{message.author}\n {message.content}\n")
         print(str(message.author) + '\n' + str(message.content))
 
     if message.author == client.user:
         return
+
+    # if wade used AoE2 shortcut for lol, reply
+    if message.author.id == 474091918050066432:
+        if '11' in message.content:
+            await message.channel.send("herb_laugh.mp4")
 
     if any(id in message.content for id in [BOT_USER_ID, BOT_ROLE_ID]):
         await message.channel.send('Beep boop!')
@@ -111,5 +114,6 @@ async def next_scheduled(ctx):
     schedule = scrape_events_from_calender()
     print_schedule = embed_schedule(schedule, first=True)
     await ctx.send(embed=print_schedule)
+
 
 client.run(TOKEN)
