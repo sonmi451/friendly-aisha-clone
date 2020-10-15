@@ -12,16 +12,17 @@ TOKEN = os.getenv('DISCORD_TOKEN')
 SERVER = os.getenv('DISCORD_SERVER')
 BOT_USER_ID = os.getenv('BOT_USER_ID')
 BOT_ROLE_ID = os.getenv('BOT_ROLE_ID')
-ADGENDA = os.getenv('GOOGLE_CALENDER')
+MOVIE_AGENDA = os.getenv('MOVIE_AGENDA')
+TV_GAMES_AGENDA = os.getenv('TV_GAMES_AGENDA')
 
 DEBUG = True
 
 client = commands.Bot(command_prefix='a?')
 
 
-def scrape_events_from_calender():
+def scrape_events_from_calender(calender):
     events = []
-    adgenda_html = requests.get(ADGENDA)
+    adgenda_html = requests.get(calender)
     soup = BeautifulSoup(adgenda_html.text, 'html.parser')
     if not 'Nothing currently scheduled' in soup.text:
         adgenda_events = soup.select("body > div.view-container-border > div > div")
@@ -32,7 +33,7 @@ def scrape_events_from_calender():
     return events
 
 
-def embed_schedule(schedule, first=False):
+def embed_movie_schedule(schedule, first=False):
     formattd_schedule = discord.Embed(title='Movie Schedule')
     if not schedule:
         formattd_schedule.add_field(name='Empty schedule', value='Hmm, looks like nothing is scheduled!')
@@ -48,6 +49,16 @@ def embed_schedule(schedule, first=False):
     formattd_schedule.add_field(name='Calender',
                                 value='[See the full calender of events online](https://calendar.google.com/calendar/u/0/embed?src=qjva8eaked6q9vdcgqkspqvseg@group.calendar.google.com)',
                                 inline=False)
+    return formattd_schedule
+
+
+def embed_games_schedule(schedule):
+    formattd_schedule = discord.Embed(title='TV Games')
+    formattd_schedule.add_field(name='Every Wednesday at 8PM!', value='join Acres Greg in the TV games voice channel for socialising and games')
+    for event in schedule:
+        formattd_schedule.add_field(name=event[0],
+                                    value='\n'.join(event[1:]),
+                                    inline=False)
     return formattd_schedule
 
 
@@ -96,23 +107,29 @@ async def on_message(message):
         await message.channel.send('Praise be the regulations')
 
     if 'movie schedule' in message.content:
-        schedule = scrape_events_from_calender()
-        print_schedule = embed_schedule(schedule)
+        schedule = scrape_events_from_calender(MOVIE_AGENDA)
+        print_schedule = embed_movie_schedule(schedule)
         await message.channel.send(embed=print_schedule)
+
+    if 'tv games schedule' in message.content:
+        schedule = scrape_events_from_calender(TV_GAMES_AGENDA)
+        print_schedule = embed_games_schedule(schedule)
+        await message.channel.send(embed=print_schedule)
+
     await client.process_commands(message)
 
 
 @client.command(name='movies', help='Read the full movie schedule from the calendar')
 async def full_schedule(ctx):
-    schedule = scrape_events_from_calender()
-    print_schedule = embed_schedule(schedule)
+    schedule = scrape_events_from_calender(MOVIE_AGENDA)
+    print_schedule = embed_movie_schedule(schedule)
     await ctx.send(embed=print_schedule)
 
 
 @client.command(name='movie', help='Reads the next scheduled movie schedule from the calendar')
 async def next_scheduled(ctx):
-    schedule = scrape_events_from_calender()
-    print_schedule = embed_schedule(schedule, first=True)
+    schedule = scrape_events_from_calender(MOVIE_AGENDA)
+    print_schedule = embed_movie_schedule(schedule, first=True)
     await ctx.send(embed=print_schedule)
 
 
