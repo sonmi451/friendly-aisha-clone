@@ -107,33 +107,35 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
+    chat_message = message.content.lower()
+
     if DEBUG:
-        print(str(message.author) + '\n' + str(message.content))
+        print(str(message.author) + '\n' + str(chat_message))
 
     if message.author == client.user:
         return
 
     # if wade used AoE2 shortcut for lol, reply
     if message.author.id == 474091918050066432:
-        if '11' in message.content:
+        if '11' in chat_message:
             await message.channel.send("herb_laugh.mp4")
 
-    if any(id in message.content for id in [BOT_USER_ID, BOT_ROLE_ID]):
+    if any(id in chat_message for id in [BOT_USER_ID, BOT_ROLE_ID]):
         await message.channel.send('Beep boop!')
 
-    if 'robot' in message.content:
+    if 'robot' in chat_message:
         friendly_message = get_random_friendly_advice()
         await message.channel.send(friendly_message)
 
-    if 'regulations' in message.content.lower():
+    if 'regulations' in chat_message:
         await message.channel.send('Praise be the regulations')
 
-    if 'movie schedule' in message.content:
+    if 'movie schedule' in chat_message:
         schedule = scrape_movie_events_from_calender(MOVIE_AGENDA)
         print_schedule = embed_movie_schedule(schedule)
         await message.channel.send(embed=print_schedule)
 
-    if 'tv games schedule' in message.content:
+    if 'tv games schedule' in chat_message:
         schedule = scrape_events_from_calender(TV_GAMES_AGENDA)
         print_schedule = embed_games_schedule(schedule)
         await message.channel.send(embed=print_schedule)
