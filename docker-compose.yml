@@ -1,0 +1,10 @@
+version: "3.4"
+
+services:
+
+  robot:
+    container_name: robot
+    restart: unless-stopped
+    build:
+      context: ./robot
+      dockerfile: Dockerfile
