@@ -33,7 +33,7 @@ def get_random_beep_boop():
                    'boop beep!',
                    'boop!',
                    'beep!']
-    random_beep = random.choice(friendly_robot_advice)
+    random_beep = random.choice(beeps_boops)
     return random_beep
 
 @client.event
