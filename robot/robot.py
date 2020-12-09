@@ -17,16 +17,24 @@ TV_GAMES_AGENDA = os.getenv('TV_GAMES_AGENDA')
 SHITEMAS_AGENDA = os.getenv('SHITEMAS_AGENDA')
 
 DEBUG = True
+SHITE = True
 
 client = commands.Bot(command_prefix='a?')
 
 
 def get_random_friendly_advice():
     with open('friendly_robot_advice.txt') as f:
-        friendly_robot_advice=[line.strip() for line in f]
-    random_friendly_message=random.choice(friendly_robot_advice)
+        friendly_robot_advice = [line.strip() for line in f]
+    random_friendly_message = random.choice(friendly_robot_advice)
     return random_friendly_message
 
+def get_random_beep_boop():
+    beeps_boops = ['beep boop!',
+                   'boop beep!',
+                   'boop!'
+                   'beep!']
+    random_beep = random.choice(friendly_robot_advice)
+    return random_beep
 
 @client.event
 async def on_ready():
@@ -51,8 +59,10 @@ async def on_message(message):
         if '11' in chat_message:
             await message.channel.send("herb_laugh.mp4")
 
+    # if you @ the bot it beeps or boops
     if any(id in chat_message for id in [BOT_USER_ID, BOT_ROLE_ID]):
-        await message.channel.send('Beep boop!')
+        beep_boop = get_random_beep_boop()
+        await message.channel.send(beep_boop)
 
     if 'robot' in chat_message:
         friendly_message = get_random_friendly_advice()
@@ -71,13 +81,14 @@ async def on_message(message):
         print_schedule = embed_movie_schedule(schedule)
         await message.channel.send(embed=print_schedule)
 
-    if 'shite schedule' in chat_message:
-        schedule = scrape_timed_events_from_calender(SHITEMAS_AGENDA)
-        print_schedule = embed_shitemas_schedule(schedule)
-        await message.channel.send(embed=print_schedule)
+    if SHITE:
+        if 'shitemas' in chat_message:
+            await message.channel.send('SHITEmas is the most wonderful time of the year.')
 
-    if 'shitemas' in chat_message:
-        await message.channel.send('SHITEmas is the most wonderful time of the year.')
+        if 'shite schedule' in chat_message:
+            schedule = scrape_timed_events_from_calender(SHITEMAS_AGENDA)
+            print_schedule = embed_shitemas_schedule(schedule)
+            await message.channel.send(embed=print_schedule)
 
     await client.process_commands(message)
 
