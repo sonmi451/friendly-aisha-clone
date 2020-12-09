@@ -31,7 +31,7 @@ def get_random_friendly_advice():
 def get_random_beep_boop():
     beeps_boops = ['beep boop!',
                    'boop beep!',
-                   'boop!'
+                   'boop!',
                    'beep!']
     random_beep = random.choice(friendly_robot_advice)
     return random_beep
