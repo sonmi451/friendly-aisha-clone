@@ -1,0 +1,2 @@
+use `docker-compose up -d` to start the robot
+use `docker-compose down` to stop the robot
