@@ -17,7 +17,7 @@ TV_GAMES_AGENDA = os.getenv('TV_GAMES_AGENDA')
 SHITEMAS_AGENDA = os.getenv('SHITEMAS_AGENDA')
 
 DEBUG = True
-SHITE = True
+SHITE = False
 
 client = commands.Bot(command_prefix='a?')
 
