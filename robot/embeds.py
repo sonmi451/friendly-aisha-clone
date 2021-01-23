@@ -49,7 +49,14 @@ def embed_games_schedule(schedule):
     return formatted_schedule
 
 
-def embed_response(text):
-    robot_response = discord.Embed(title='Beep boop!')
-    robot_response.add_field(name='a?', value=text)
+def embed_github():
+    robot_response = discord.Embed()
+    robot_response.add_field(name='See my Source Code:',
+                            value='[https://github.com/sonmi451/friendly-aisha-clone](https://github.com/sonmi451/friendly-aisha-clone)',
+                            inline=False)
+    return robot_response
+
+
+def embed_response(message):
+    robot_response = discord.Embed(title=message)
     return robot_response

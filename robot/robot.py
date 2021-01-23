@@ -6,7 +6,8 @@ from discord.ext import commands
 from calendars import scrape_timed_events_from_calender, scrape_all_day_events_from_calender
 from helpers import get_random_friendly_advice_from_file, get_random_friendly_advice, \
     get_aoe_taunts_from_file, get_aoe_taunt, get_random_beep_boop
-from embeds import embed_movie_schedule, embed_shitemas_schedule, embed_games_schedule, embed_response
+from embeds import embed_movie_schedule, embed_shitemas_schedule, embed_games_schedule, embed_response, \
+    embed_github
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
@@ -50,22 +51,27 @@ async def on_message(message):
     if message.author.id == 474091918050066432:
         taunt = get_aoe_taunt(AOE_TAUNTS_DICT, chat_message)
         if taunt:
-            await message.channel.send(taunt)
+            response = embed_response(taunt)
+            await message.channel.send(embed=response)
         elif ' 11' in chat_message or '11 ' in chat_message:
-            await message.channel.send("herb_laugh.mp4")
+            response = embed_response("herb_laugh.mp4")
+            await message.channel.send(embed=response)
 
 
     # if you @ the bot it beeps or boops
     if any(id in chat_message for id in [BOT_USER_ID, BOT_ROLE_ID]):
         beep_boop = get_random_beep_boop()
-        await message.channel.send(beep_boop)
+        response = embed_response(beep_boop)
+        await message.channel.send(embed=response)
 
     if 'robot' in chat_message:
         friendly_message = get_random_friendly_advice(FRIENDLY_ROBOT_ADVICE)
-        await message.channel.send(friendly_message)
+        response = embed_response(friendly_message)
+        await message.channel.send(embed=response)
 
     if 'regulations' in chat_message:
-        await message.channel.send('Praise be the regulations')
+        response = embed_response('Praise be the regulations')
+        await message.channel.send(embed=response)
 
     if 'tv games schedule' in chat_message:
         schedule = scrape_all_day_events_from_calender(TV_GAMES_AGENDA)
@@ -79,8 +85,10 @@ async def on_message(message):
 
     if SHITE:
         if 'shitemas' in chat_message:
-            await message.channel.send('SHITEmas is the most wonderful time of the year.')
+            response = embed_response('SHITEmas is the most wonderful time of the year.')
+            await message.channel.send(embed=response)
 
+        await message.channel.send(embed=response)
         if 'shite schedule' in chat_message:
             schedule = scrape_timed_events_from_calender(SHITEMAS_AGENDA)
             print_schedule = embed_shitemas_schedule(schedule)
@@ -105,11 +113,19 @@ async def next_scheduled(ctx):
     await ctx.send(embed=print_schedule)
 
 
+@client.command(name='github',
+                help='Github page for the repo')
+async def github_url(ctx):
+    github_url = embed_github()
+    await ctx.send(embed=github_url)
+
+
 @client.command(name='parrot',
                 help='I\'ll repeat what you say')
-async def aoe_speak(ctx, message):
+async def parrot_speak(ctx, message):
     if message:
-        await ctx.send(str(message))
+        response = embed_response(message)
+        await ctx.send(embed=response)
 
 
 @client.command(name='wade',
@@ -117,7 +133,8 @@ async def aoe_speak(ctx, message):
 async def aoe_speak(ctx, taunt_num):
     taunt = get_aoe_taunt(AOE_TAUNTS_DICT, taunt_num)
     if taunt:
-        await ctx.send(taunt)
+        response = embed_response(taunt)
+        await ctx.send(embed=response)
 
 
 client.run(TOKEN)
