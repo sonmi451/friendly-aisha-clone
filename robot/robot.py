@@ -23,7 +23,7 @@ SHITE = False
 FRIENDLY_ROBOT_ADVICE = get_random_friendly_advice_from_file()
 AOE_TAUNTS_DICT = get_aoe_taunts_from_file()
 
-client = commands.Bot(command_prefix='a?')
+client = commands.Bot(command_prefix='$')
 
 
 @client.event
@@ -92,7 +92,7 @@ async def on_message(message):
 @client.command(name='movies',
                 help='Read the full movie schedule from the calendar')
 async def full_schedule(ctx):
-    schedule = scrape_movie_events_from_calender(MOVIE_AGENDA)
+    schedule = scrape_timed_events_from_calender(MOVIE_AGENDA)
     print_schedule = embed_movie_schedule(schedule)
     await ctx.send(embed=print_schedule)
 
@@ -100,9 +100,15 @@ async def full_schedule(ctx):
 @client.command(name='movie',
                 help='Reads the next scheduled movie schedule from the calendar')
 async def next_scheduled(ctx):
-    schedule = scrape_movie_events_from_calender(MOVIE_AGENDA)
+    schedule = scrape_timed_events_from_calender(MOVIE_AGENDA)
     print_schedule = embed_movie_schedule(schedule, first=True)
     await ctx.send(embed=print_schedule)
 
+@client.command(name='wade',
+                help='Talk in AOE taunts!')
+async def aoe_speak(ctx, taunt_num):
+    taunt = get_aoe_taunt(AOE_TAUNTS_DICT, taunt_num)
+    if taunt:
+        await ctx.send(taunt)
 
 client.run(TOKEN)
