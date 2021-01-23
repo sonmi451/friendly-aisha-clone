@@ -147,7 +147,11 @@ async def on_message(message):
                           'What age are you in?')])
         try:
             if int(chat_message) in aoe_dict:
-                await message.channel.send(aoe_dict[int(chat_message)])
+                try:
+                    msg = aoe_dict[int(chat_message)]
+                    await message.channel.send(msg)
+                except KeyError:
+                    pass
         except ValueError:
             pass
 
