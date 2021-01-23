@@ -1,10 +1,11 @@
 import os
-import random
 import discord
 from dotenv import load_dotenv
 from discord.ext import commands
 
 from calendars import scrape_timed_events_from_calender, scrape_all_day_events_from_calender
+from helpers import get_random_friendly_advice_from_file, get_random_friendly_advice, \
+    get_aoe_taunts_from_file, get_aoe_taunt, get_random_beep_boop
 from embeds import embed_movie_schedule, embed_shitemas_schedule, embed_games_schedule, embed_response
 
 load_dotenv()
@@ -19,23 +20,10 @@ SHITEMAS_AGENDA = os.getenv('SHITEMAS_AGENDA')
 DEBUG = True
 SHITE = False
 
+FRIENDLY_ROBOT_ADVICE = get_random_friendly_advice_from_file()
+AOE_TAUNTS_DICT = get_aoe_taunts_from_file()
+
 client = commands.Bot(command_prefix='a?')
-
-
-def get_random_friendly_advice():
-    with open('friendly_robot_advice.txt') as f:
-        friendly_robot_advice = [line.strip() for line in f]
-    random_friendly_message = random.choice(friendly_robot_advice)
-    return random_friendly_message
-
-
-def get_random_beep_boop():
-    beeps_boops = ['beep boop!',
-                   'boop beep!',
-                   'boop!',
-                   'beep!']
-    random_beep = random.choice(beeps_boops)
-    return random_beep
 
 
 @client.event
@@ -58,102 +46,14 @@ async def on_message(message):
     if message.author == client.user:
         return
 
-    # if wade used AoE2 shortcut for lol, reply
+    # if Wade uses AoE shortcuts, reply with their meaning
     if message.author.id == 474091918050066432:
-        # this dict should really be loaded once from a file or something
-        aoe_dict = dict([(1,
-                          'Yes.'),
-                         (2,
-                          'No.'),
-                         (3,
-                          'Food please.'),
-                         (4,
-                          'Wood please.'),
-                         (5,
-                          'Gold please.'),
-                         (6,
-                          'Stone please.'),
-                         (7,
-                          'Ahh!'),
-                         (8,
-                          'All hail, king of the losers!'),
-                         (9,
-                          'Ooh!'),
-                         (10,
-                          'I\'ll beat you back to Age of Empires.'),
-                         (11,
-                          '(Herb laugh)'),
-                         (12,
-                          'AGH, He rushed.'),
-                         (13,
-                          'Sure, blame it on your ISP.'),
-                         (14,
-                          'Start the game already!'),
-                         (15,
-                          'Don\'t point that thing at me!'),
-                         (16,
-                          'Enemy sighted!'),
-                         (17,
-                          'It is good to be the king.'),
-                         (18,
-                          'Monk! I need a monk!'),
-                         (19,
-                          'Long time, no siege.'),
-                         (20,
-                          'My granny could scrap better than that.'),
-                         (21,
-                          'Nice town, I\'ll take it.'),
-                         (22,
-                          'Quit touching me!'),
-                         (23,
-                          'Raiding party!'),
-                         (24,
-                          'Dadgum.'),
-                         (25,
-                          'Eh, smite me.'),
-                         (26,
-                          'The wonder, the wonder, the... no!'),
-                         (27,
-                          'You played two hours to die like this?'),
-                         (28,
-                          'Yeah, well, you should see the other guy.'),
-                         (29,
-                          'Roggan.'),
-                         (30,
-                          'Wololo.'),
-                         (31,
-                          'Attack an enemy now.'),
-                         (32,
-                          'Cease creating extra villagers.'),
-                         (33,
-                          'Create extra villagers.'),
-                         (34,
-                          'Build a navy.'),
-                         (35,
-                          'Stop building a navy.'),
-                         (36,
-                          'Wait for my signal to attack.'),
-                         (37,
-                          'Build a wonder.'),
-                         (38,
-                          'Give me your extra resources.'),
-                         (39,
-                          '(Ally sound)'),
-                         (40,
-                          '(Enemy sound)'),
-                         (41,
-                          '(Neutral sound)'),
-                         (42,
-                          'What age are you in?')])
-        try:
-            if int(chat_message) in aoe_dict:
-                try:
-                    msg = aoe_dict[int(chat_message)]
-                    await message.channel.send(msg)
-                except KeyError:
-                    pass
-        except ValueError:
-            pass
+        taunt = get_aoe_taunt(AOE_TAUNTS_DICT, chat_message)
+        if taunt:
+            await message.channel.send(taunt)
+        elif ' 11' in chat_message or '11 ' in chat_message:
+            await message.channel.send("herb_laugh.mp4")
+
 
     # if you @ the bot it beeps or boops
     if any(id in chat_message for id in [BOT_USER_ID, BOT_ROLE_ID]):
@@ -161,7 +61,7 @@ async def on_message(message):
         await message.channel.send(beep_boop)
 
     if 'robot' in chat_message:
-        friendly_message = get_random_friendly_advice()
+        friendly_message = get_random_friendly_advice(FRIENDLY_ROBOT_ADVICE)
         await message.channel.send(friendly_message)
 
     if 'regulations' in chat_message:
