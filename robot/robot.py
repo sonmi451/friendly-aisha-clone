@@ -104,11 +104,20 @@ async def next_scheduled(ctx):
     print_schedule = embed_movie_schedule(schedule, first=True)
     await ctx.send(embed=print_schedule)
 
+
+@client.command(name='parrot',
+                help='I\'ll repeat what you say')
+async def aoe_speak(ctx, message):
+    if message:
+        await ctx.send(str(message))
+
+
 @client.command(name='wade',
                 help='Talk in AOE taunts!')
 async def aoe_speak(ctx, taunt_num):
     taunt = get_aoe_taunt(AOE_TAUNTS_DICT, taunt_num)
     if taunt:
         await ctx.send(taunt)
+
 
 client.run(TOKEN)
