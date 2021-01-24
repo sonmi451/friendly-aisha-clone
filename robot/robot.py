@@ -23,6 +23,7 @@ SHITE = False
 
 FRIENDLY_ROBOT_ADVICE = get_random_friendly_advice_from_file()
 AOE_TAUNTS_DICT = get_aoe_taunts_from_file()
+HERB_LAUGH = discord.File(f'./11_herb_laugh.mp3')
 
 client = commands.Bot(command_prefix='$')
 
@@ -54,9 +55,7 @@ async def on_message(message):
             response = embed_response(taunt)
             await message.channel.send(embed=response)
         elif ' 11' in chat_message or '11 ' in chat_message:
-            response = embed_response("herb_laugh.mp4")
-            await message.channel.send(embed=response)
-
+            await message.channel.send(file=HERB_LAUGH)
 
     # if you @ the bot it beeps or boops
     if any(id in chat_message for id in [BOT_USER_ID, BOT_ROLE_ID]):
