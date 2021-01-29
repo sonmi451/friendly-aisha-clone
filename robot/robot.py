@@ -54,7 +54,7 @@ async def on_message(message):
         if taunt:
             response = embed_response(taunt)
             await message.channel.send(embed=response)
-        elif ' 11' in chat_message or '11 ' in chat_message:
+        elif '11' in chat_message or '11' in chat_message:
             await message.channel.send(file=HERB_LAUGH)
 
     # if you @ the bot it beeps or boops
