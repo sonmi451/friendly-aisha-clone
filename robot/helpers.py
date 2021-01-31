@@ -39,7 +39,7 @@ def get_aoe_taunt(aoe_taunts, number):
 def get_movie_watchlist_from_file():
     with open('../resources/movie_watchlist.txt', 'r') as f:
         movie_watchlist = [line.strip() for line in f if line.strip()]
-    return movie_watchlist
+    return sorted(movie_watchlist)
 
 
 def write_movie_to_file(movie):
