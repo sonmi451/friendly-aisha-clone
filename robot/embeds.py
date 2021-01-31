@@ -1,6 +1,17 @@
 import discord
 
 
+def embed_movie_watchlist(movie_watchlist):
+    formatted_watchlist = discord.Embed()
+    if movie_watchlist:
+        formatted_watchlist.add_field(name='Movie Watchlist',
+                                      value='\n'.join(movie_watchlist))
+    else:
+        formatted_watchlist.add_field(name='Movie Watchlist',
+                                      value='[empty list]')
+    return formatted_watchlist
+
+
 def embed_movie_schedule(schedule, first=False):
     formatted_schedule = discord.Embed(title='Movie Schedule')
     if not schedule:
@@ -57,6 +68,6 @@ def embed_github():
     return robot_response
 
 
-def embed_response(message):
-    robot_response = discord.Embed(title=message)
-    return robot_response
+def embed_response(title):
+    response = discord.Embed(title=title)
+    return response

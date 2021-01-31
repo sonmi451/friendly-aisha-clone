@@ -5,8 +5,9 @@ from discord.ext import commands
 
 from calendars import scrape_timed_events_from_calender, scrape_all_day_events_from_calender
 from helpers import get_random_friendly_advice_from_file, get_random_friendly_advice, \
-    get_aoe_taunts_from_file, get_aoe_taunt, get_random_beep_boop
-from embeds import embed_movie_schedule, embed_shitemas_schedule, embed_games_schedule, embed_response, \
+    get_aoe_taunts_from_file, get_aoe_taunt, get_random_beep_boop, get_movie_watchlist_from_file, \
+    get_herb_laugh_from_file, write_movie_to_file, remove_movie_from_file
+from embeds import embed_movie_watchlist, embed_movie_schedule, embed_shitemas_schedule, embed_games_schedule, embed_response, \
     embed_github
 
 load_dotenv()
@@ -23,7 +24,7 @@ SHITE = False
 
 FRIENDLY_ROBOT_ADVICE = get_random_friendly_advice_from_file()
 AOE_TAUNTS_DICT = get_aoe_taunts_from_file()
-HERB_LAUGH = discord.File(f'./11_herb_laugh.mp3')
+HERB_LAUGH = get_herb_laugh_from_file()
 
 client = commands.Bot(command_prefix='$')
 
@@ -112,6 +113,40 @@ async def next_scheduled(ctx):
     await ctx.send(embed=print_schedule)
 
 
+@client.command(name='movielist',
+                help='See the watchlist')
+async def view_watchlist(ctx):
+    watchlist = get_movie_watchlist_from_file()
+    response = embed_movie_watchlist(watchlist)
+    await ctx.send(embed=response)
+
+
+@client.command(name='addmovie',
+                help='Add a new movie to the watchlist')
+async def add_movie_to_watchlist(ctx, movie):
+    if movie:
+        movie_name = str(movie)
+        write_movie_to_file(movie_name)
+        text=f"Thank you for your suggestion: {movie_name}!"
+    else:
+        text="you wanna try: `$addmovie \"The Best Film in the World\"`"
+    response = embed_response(text)
+    await ctx.send(embed=response)
+
+
+@client.command(name='delmovie',
+                help='Remove a movie to the watchlist')
+async def add_movie_to_watchlist(ctx, movie):
+    if movie:
+        movie_name = str(movie)
+        remove_movie_from_file(movie_name)
+        text=f"Removed movie from watchlist: {movie_name}!"
+    else:
+        text="you wanna try: `$delmovie \"The Best Film in the World\"`"
+    response = embed_response(text)
+    await ctx.send(embed=response)
+
+
 @client.command(name='github',
                 help='Github page for the repo')
 async def github_url(ctx):
@@ -134,6 +169,5 @@ async def aoe_speak(ctx, taunt_num):
     if taunt:
         response = embed_response(taunt)
         await ctx.send(embed=response)
-
 
 client.run(TOKEN)

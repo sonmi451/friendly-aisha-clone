@@ -8,3 +8,5 @@ services:
     build:
       context: ./robot
       dockerfile: Dockerfile
+    volumes:
+      - ./resources:/resources:rw

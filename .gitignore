@@ -2,3 +2,5 @@ venv/
 *.pyc
 local/
 .env
+
+*/movie_watchlist.txt
