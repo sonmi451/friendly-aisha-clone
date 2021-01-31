@@ -11,7 +11,6 @@ For getting files, directory structure is assumed to be:
 
 import json
 import random
-
 import discord
 
 
@@ -38,23 +37,24 @@ def get_aoe_taunt(aoe_taunts, number):
 
 
 def get_movie_watchlist_from_file():
-    with open('../resources/movie_watchlist.txt', 'a+') as f:
-        movie_watchlist = [line.strip() for line in f]
+    with open('../resources/movie_watchlist.txt', 'r') as f:
+        movie_watchlist = [line.strip() for line in f if line.strip()]
     return movie_watchlist
 
 
 def write_movie_to_file(movie):
-    with open('../resources/movie_watchlist.txt', 'a+') as f:
-        f.write(f'\n{movie}')
+    watchlist = get_movie_watchlist_from_file()
+    if movie not in watchlist:
+        with open('../resources/movie_watchlist.txt', 'a') as f:
+            f.write(f'\n{movie}')
 
 
 def remove_movie_from_file(movie):
-    with open('../resources/movie_watchlist.txt', 'a+') as read_file:
-        lines = read_file.readlines()
+    watchlist = get_movie_watchlist_from_file()
     with open('../resources/movie_watchlist.txt', 'w+') as out_file:
-        for line in lines:
+        for line in watchlist:
             if movie != line.strip():
-                out_file.write(line)
+                out_file.write(f'{line}\n')
 
 
 def get_random_friendly_advice(friendly_robot_advice):
