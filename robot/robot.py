@@ -7,8 +7,8 @@ from calendars import scrape_timed_events_from_calender, scrape_all_day_events_f
 from helpers import get_random_friendly_advice_from_file, get_random_friendly_advice, \
     get_aoe_taunts_from_file, get_aoe_taunt, get_random_beep_boop, get_movie_watchlist_from_file, \
     get_herb_laugh_from_file, write_movie_to_file, remove_movie_from_file
-from embeds import embed_movie_watchlist, embed_movie_schedule, embed_shitemas_schedule, embed_games_schedule, embed_response, \
-    embed_github
+from embeds import embed_movie_watchlist, embed_movie_schedule, embed_shitemas_schedule, embed_games_schedule, \
+    embed_github, embed_guess_the_soup_rules, embed_response
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
@@ -71,6 +71,10 @@ async def on_message(message):
 
     if 'regulations' in chat_message:
         response = embed_response('Praise be the regulations')
+        await message.channel.send(embed=response)
+
+    if 'guess the soup rules' in chat_message:
+        response = embed_guess_the_soup_rules()
         await message.channel.send(embed=response)
 
     if 'tv games schedule' in chat_message:

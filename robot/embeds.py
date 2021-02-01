@@ -68,6 +68,17 @@ def embed_github():
     return robot_response
 
 
+def embed_guess_the_soup_rules():
+    formatted_rules = discord.Embed(title='The Rules of Guess the Soup')
+    formatted_rules.add_field(name='1', value='Everything is a soup!',
+                              inline=False)
+    formatted_rules.add_field(name='2', value='Every soup probably contains onion and garlic',
+                              inline=False)
+    formatted_rules.add_field(name='3', value='Consider perl barley',
+                              inline=False)
+    return formatted_rules
+
+
 def embed_response(title):
     response = discord.Embed(title=title)
     return response
