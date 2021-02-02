@@ -40,6 +40,16 @@ async def on_ready():
 
 
 @client.event
+async def on_member_join(member):
+    welcome_message = f"""Wilkommen {member.name}, to the Socially Distant Club!
+                          I am your Friendly Aisha Clone, here to be most helpful <3
+                          On Wednesdays at 8PM we play ~GAMES~ in voice chat
+                          On Sunday evening we watch movies"""
+    response = embed_response(welcome_message)
+    await message.channel.send(embed=response)
+
+
+@client.event
 async def on_message(message):
     chat_message = message.content.lower()
 
