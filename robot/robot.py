@@ -86,6 +86,9 @@ async def on_message(message):
         response = embed_response('Praise be the regulations')
         await message.channel.send(embed=response)
 
+    if 'rock' in chat_message and 'fact' in chat_message:
+        await message.add_reaction(emoji='<:rockfact:772801261103742976>')
+
     if 'guess the soup' in chat_message:
         await message.add_reaction(emoji='<:soupguess:806255878902513724>')
         if 'rules' in chat_message:
