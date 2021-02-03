@@ -86,9 +86,11 @@ async def on_message(message):
         response = embed_response('Praise be the regulations')
         await message.channel.send(embed=response)
 
-    if 'guess the soup rules' in chat_message:
-        response = embed_guess_the_soup_rules()
-        await message.channel.send(embed=response)
+    if 'guess the soup' in chat_message:
+        await message.add_reaction(emoji='<:soupguess:806255878902513724>')
+        if 'rules' in chat_message:
+            response = embed_guess_the_soup_rules()
+            await message.channel.send(embed=response)
 
     if 'tv games schedule' in chat_message:
         schedule = scrape_all_day_events_from_calender(TV_GAMES_AGENDA)
