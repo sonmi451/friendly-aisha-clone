@@ -26,7 +26,10 @@ FRIENDLY_ROBOT_ADVICE = get_random_friendly_advice_from_file()
 AOE_TAUNTS_DICT = get_aoe_taunts_from_file()
 HERB_LAUGH = get_herb_laugh_from_file()
 
-client = commands.Bot(command_prefix='$')
+intents = discord.Intents.default()
+intents.members = True
+
+client = commands.Bot(command_prefix='$', intents=intents)
 
 
 @client.event
