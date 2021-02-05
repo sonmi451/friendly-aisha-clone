@@ -2,13 +2,11 @@ import discord
 
 
 def embed_movie_watchlist(movie_watchlist):
-    formatted_watchlist = discord.Embed()
     if movie_watchlist:
-        formatted_watchlist.add_field(name='Movie Watchlist',
-                                      value='\n'.join(movie_watchlist))
+        description = '\n'.join(movie_watchlist)
     else:
-        formatted_watchlist.add_field(name='Movie Watchlist',
-                                      value='[empty list]')
+        description = '[empty list]'
+    formatted_watchlist = discord.Embed(title='Movie Watchlist', description=description[:1500])
     return formatted_watchlist
 
 
