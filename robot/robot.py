@@ -91,7 +91,7 @@ async def on_message(message):
 
     if 'guess the soup' in chat_message:
         await message.add_reaction(emoji='<:soupguess:806255878902513724>')
-        if 'rules' in chat_message:
+        if 'rule' in chat_message:
             response = embed_guess_the_soup_rules()
             await message.channel.send(embed=response)
 
