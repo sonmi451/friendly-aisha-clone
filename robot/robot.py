@@ -147,7 +147,7 @@ async def view_watchlist(ctx):
                 help='Add a new movie to the watchlist')
 async def add_movie_to_watchlist(ctx, movie):
     if movie:
-        movie_name = str(movie)
+        movie_name = str(movie).title()
         write_movie_to_file(movie_name)
         text=f"Thank you for your suggestion: {movie_name}!"
     else:
