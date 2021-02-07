@@ -5,7 +5,7 @@ def update_movie_list_file():
     with open('../resources/movie_watchlist.txt', 'r') as in_file:
         for line in in_file:
             print(line)
-            movie_dict[line.strip()] = {
+            movie_dict[line.strip().title()] = {
                 'suggestedBy': 'Sonmi451',
                 'votes': 1,
                 'IMDB': "",
