@@ -68,10 +68,10 @@ def add_movie_to_watchlist(movie_name, movie_details):
     write_watchlist_to_file(watchlist)
 
 
-def remove_movie_from_watchlist(movie):
+def remove_movie_from_watchlist(movie_name):
     watchlist = read_watchlist_from_file()
     if movie in watchlist.keys():
-        watchlist.pop(movie)
+        watchlist.pop(movie_name)
         write_watchlist_to_file(watchlist)
 
 
