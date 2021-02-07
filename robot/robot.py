@@ -144,7 +144,7 @@ async def view_watchlist(ctx):
 
 
 @client.command(name='addmovie',
-                help='Add a new movie to the watchlist')
+                help='Add or upvote a movie on the watchlist')
 async def add_movie(ctx, movie):
     if movie:
         movie_name = str(movie).title()
