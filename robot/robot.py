@@ -6,7 +6,8 @@ from discord.ext import commands
 from calendars import scrape_timed_events_from_calender, scrape_all_day_events_from_calender
 from helpers import get_random_friendly_advice_from_file, get_random_friendly_advice, \
     get_aoe_taunts_from_file, get_aoe_taunt, get_random_beep_boop, get_movie_watchlist, \
-    get_herb_laugh_from_file, add_movie_to_watchlist, remove_movie_from_watchlist
+    get_herb_laugh_from_file, add_movie_to_watchlist, remove_movie_from_watchlist, \
+    get_movie_by_upvotes
 from embeds import embed_movie_watchlist, embed_movie_schedule, embed_shitemas_schedule, embed_games_schedule, \
     embed_github, embed_guess_the_soup_rules, embed_response
 
@@ -139,6 +140,14 @@ async def next_scheduled(ctx):
                 help='See the watchlist')
 async def view_watchlist(ctx):
     watchlist = get_movie_watchlist()
+    response = embed_movie_watchlist(watchlist)
+    await ctx.send(embed=response)
+
+
+@client.command(name='upvotelist',
+                help='See the watchlist sorted by upvotes')
+async def view_watchlist_upvote_sorted(ctx):
+    watchlist = get_movie_by_upvotes()
     response = embed_movie_watchlist(watchlist)
     await ctx.send(embed=response)
 
