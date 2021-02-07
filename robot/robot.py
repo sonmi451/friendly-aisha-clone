@@ -5,8 +5,8 @@ from discord.ext import commands
 
 from calendars import scrape_timed_events_from_calender, scrape_all_day_events_from_calender
 from helpers import get_random_friendly_advice_from_file, get_random_friendly_advice, \
-    get_aoe_taunts_from_file, get_aoe_taunt, get_random_beep_boop, get_movie_watchlist_from_file, \
-    get_herb_laugh_from_file, write_movie_to_file, remove_movie_from_file
+    get_aoe_taunts_from_file, get_aoe_taunt, get_random_beep_boop, get_movie_watchlist, \
+    get_herb_laugh_from_file, add_movie_to_watchlist, remove_movie_from_watchlist
 from embeds import embed_movie_watchlist, embed_movie_schedule, embed_shitemas_schedule, embed_games_schedule, \
     embed_github, embed_guess_the_soup_rules, embed_response
 
@@ -138,17 +138,22 @@ async def next_scheduled(ctx):
 @client.command(name='movielist',
                 help='See the watchlist')
 async def view_watchlist(ctx):
-    watchlist = get_movie_watchlist_from_file()
+    watchlist = get_movie_watchlist()
     response = embed_movie_watchlist(watchlist)
     await ctx.send(embed=response)
 
 
 @client.command(name='addmovie',
                 help='Add a new movie to the watchlist')
-async def add_movie_to_watchlist(ctx, movie):
+async def add_movie(ctx, movie):
     if movie:
         movie_name = str(movie).title()
-        write_movie_to_file(movie_name)
+        movie_details = {
+            'suggestedBy': ctx.message.author.name,
+            'votes': 1,
+            'IMDB': "",
+        }
+        add_movie_to_watchlist(movie_name, movie_details)
         text=f"Thank you for your suggestion: {movie_name}!"
     else:
         text="you wanna try: `$addmovie \"The Best Film in the World\"`"
@@ -158,10 +163,10 @@ async def add_movie_to_watchlist(ctx, movie):
 
 @client.command(name='delmovie',
                 help='Remove a movie to the watchlist')
-async def add_movie_to_watchlist(ctx, movie):
+async def remove_movie(ctx, movie):
     if movie:
-        movie_name = str(movie)
-        remove_movie_from_file(movie_name)
+        movie_name = str(movie).title()
+        remove_movie_from_watchlist(movie_name)
         text=f"Removed movie from watchlist: {movie_name}!"
     else:
         text="you wanna try: `$delmovie \"The Best Film in the World\"`"

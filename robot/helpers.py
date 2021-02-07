@@ -2,7 +2,7 @@
 For getting files, directory structure is assumed to be:
 
 - resources
--- .txt files
+--- .txt files
 --- .json files
 - robot
 --- .py files
@@ -13,6 +13,7 @@ import json
 import random
 import discord
 
+MOVIE_WATCHLIST = '../resources/movie_watchlist.json'
 
 def get_herb_laugh_from_file():
     herb_laugh = discord.File(f'../resources/11_herb_laugh.mp3')
@@ -36,25 +37,42 @@ def get_aoe_taunt(aoe_taunts, number):
     return taunt
 
 
-def get_movie_watchlist_from_file():
-    with open('../resources/movie_watchlist.txt', 'r') as f:
-        movie_watchlist = [line.strip() for line in f if line.strip()]
-    return sorted(movie_watchlist)
+def read_watchlist_from_file():
+    movie_watchlist = {}
+    try:
+        with open(MOVIE_WATCHLIST, 'r') as in_file:
+            movie_watchlist = json.load(in_file)
+    except FileNotFoundError as e:
+        write_watchlist_to_file(movie_watchlist)
+    return movie_watchlist
 
 
-def write_movie_to_file(movie):
-    watchlist = get_movie_watchlist_from_file()
-    if movie not in watchlist:
-        with open('../resources/movie_watchlist.txt', 'a') as f:
-            f.write(f'\n{movie}')
+def write_watchlist_to_file(watchlist):
+    with open(MOVIE_WATCHLIST, 'w') as out_file:
+        json.dump(watchlist, out_file)
 
 
-def remove_movie_from_file(movie):
-    watchlist = get_movie_watchlist_from_file()
-    with open('../resources/movie_watchlist.txt', 'w+') as out_file:
-        for line in watchlist:
-            if movie != line.strip():
-                out_file.write(f'{line}\n')
+def get_movie_watchlist():
+    movie_watchlist = read_watchlist_from_file()
+    movies = movie_watchlist.keys()
+    return sorted(movies)
+
+
+def add_movie_to_watchlist(movie_name, movie_details):
+    watchlist = read_watchlist_from_file()
+    if movie_name in watchlist.keys():
+        num_votes = watchlist[movie_name].get('votes')
+        watchlist[movie_name]['votes'] = num_votes+1
+    else:
+        watchlist[movie_name] = movie_details
+    write_watchlist_to_file(watchlist)
+
+
+def remove_movie_from_watchlist(movie):
+    watchlist = read_watchlist_from_file()
+    if movie in watchlist.keys():
+        watchlist.pop(movie)
+        write_watchlist_to_file(watchlist)
 
 
 def get_random_friendly_advice(friendly_robot_advice):

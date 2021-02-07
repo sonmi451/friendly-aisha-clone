@@ -3,4 +3,4 @@ venv/
 local/
 .env
 
-*/movie_watchlist.txt
+*/movie_watchlist.json
