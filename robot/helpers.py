@@ -61,9 +61,13 @@ def get_movie_watchlist():
 def get_movie_by_upvotes():
     movie_watchlist = read_watchlist_from_file()
     movies = movie_watchlist.keys()
-    return sorted(movies,
+    upvote_movies = filter(lambda x: movie_watchlist[x]['votes']
+                           if movie_watchlist[x]['votes'] > 2 else None,
+                           movie_watchlist)
+    return sorted(upvote_movies,
                  key=lambda x: (movie_watchlist[x]['votes']),
                  reverse=True)
+
 
 
 def add_movie_to_watchlist(movie_name, movie_details):
