@@ -1,3 +1,6 @@
+################################################################################
+# IMPORTS
+
 import os
 import discord
 from dotenv import load_dotenv
@@ -11,9 +14,13 @@ from helpers import get_random_friendly_advice_from_file, get_random_friendly_ad
 from embeds import embed_movie_watchlist, embed_movie_schedule, embed_shitemas_schedule, embed_games_schedule, \
     embed_github, embed_guess_the_soup_rules, embed_response
 
+################################################################################
+# LOAD ENVIRONMENT VARIABLES
+
 load_dotenv()
 
-
+DEBUG = os.getenv('DEBUG_MODE', default=False)
+SHITE = os.getenv('SHITE_SCHEDULE', default=False)
 SERVER = os.getenv('DISCORD_SERVER')
 BOT_USER_ID = os.getenv('BOT_USER_ID')
 BOT_ROLE_ID = os.getenv('BOT_ROLE_ID')
@@ -21,21 +28,31 @@ MOVIE_AGENDA = os.getenv('MOVIE_AGENDA')
 TV_GAMES_AGENDA = os.getenv('TV_GAMES_AGENDA')
 SHITEMAS_AGENDA = os.getenv('SHITEMAS_AGENDA')
 
+if DEBUG:
+    TOKEN = os.getenv('DISCORD_TOKEN_22')
+else:
+    TOKEN = os.getenv('DISCORD_TOKEN')
+
+################################################################################
+# LOAD FILES
+
 FRIENDLY_ROBOT_ADVICE = get_random_friendly_advice_from_file()
 AOE_TAUNTS_DICT = get_aoe_taunts_from_file()
 HERB_LAUGH = get_herb_laugh_from_file()
 
-DEBUG = False
-SHITE = False
+################################################################################
+# DISCORDS SETUP
 
 intents = discord.Intents.default()
 intents.members = True
 
-client = commands.Bot(command_prefix='$', intents=intents)
-
 if DEBUG:
-    TOKEN = os.getenv('DISCORD_TOKEN_22')
     client = commands.Bot(command_prefix='test$', intents=intents)
+else:
+    client = commands.Bot(command_prefix='$', intents=intents)
+
+################################################################################
+# COMMANDS ETC
 
 @client.event
 async def on_ready():
@@ -50,7 +67,8 @@ async def on_ready():
 @client.event
 async def on_member_join(member):
     welcome_message = f"""Wilkommen {member.name}, to the Socially Distant Club!
-                          I am your Friendly Aisha Clone, here to be most helpful <3
+                          I am your Friendly Aisha Clone,
+                          here to be most helpful <3
                           On Wednesdays at 8PM we play ~GAMES~ in voice chat
                           On Sunday evening we watch movies"""
     response = embed_response(welcome_message)
@@ -210,5 +228,8 @@ async def aoe_speak(ctx, taunt_num):
     if taunt:
         response = embed_response(taunt)
         await ctx.send(embed=response)
+
+################################################################################
+# RUN THE ROBOT
 
 client.run(TOKEN)
