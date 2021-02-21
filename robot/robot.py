@@ -75,6 +75,7 @@ async def on_message(message):
             taunt = get_aoe_taunt(AOE_TAUNTS_DICT, chat_message)
             if taunt:
                 response = embed_response(taunt)
+                await message.channel.send(embed=response)
 
     # if you @ the bot it beeps or boops
     if any(id in chat_message for id in [BOT_USER_ID, BOT_ROLE_ID]):
