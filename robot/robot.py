@@ -35,7 +35,7 @@ client = commands.Bot(command_prefix='$', intents=intents)
 
 if DEBUG:
     TOKEN = os.getenv('DISCORD_TOKEN_22')
-    client = commands.Bot(command_prefix='£', intents=intents)
+    client = commands.Bot(command_prefix='test$', intents=intents)
 
 @client.event
 async def on_ready():
