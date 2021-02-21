@@ -8,3 +8,5 @@ Marble is metamorphosed limestone, quartzite is metamorphosed sandstone, and gne
 A rock is a naturally occuring solid.
 The powder of a mineral rock called cinnabar makes a brilliant red colour that was widely used in art in the Middle Ages.
 Gemstones are minerals valued by humans for their beauty, rarity, and durability. The most valuable include diamonds, emeralds, rubies, and sapphires.
+Rocks are great!
+Rock Pokémon usually have high defense - however, since many Rock Pokémon are part Ground they have a 4x weakness to both Grass and Water.
