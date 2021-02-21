@@ -20,7 +20,7 @@ from embeds import embed_movie_watchlist, embed_movie_schedule, embed_shitemas_s
 load_dotenv()
 
 DEBUG = os.getenv('DEBUG_MODE', default=False)
-SHITE = os.getenv('SHITE_SCHEDULE', default=False)
+SHITE = os.getenv('SHITE', default=False)
 SERVER = os.getenv('DISCORD_SERVER')
 BOT_USER_ID = os.getenv('BOT_USER_ID')
 BOT_ROLE_ID = os.getenv('BOT_ROLE_ID')
@@ -28,7 +28,7 @@ MOVIE_AGENDA = os.getenv('MOVIE_AGENDA')
 TV_GAMES_AGENDA = os.getenv('TV_GAMES_AGENDA')
 SHITEMAS_AGENDA = os.getenv('SHITEMAS_AGENDA')
 
-if DEBUG:
+if DEBUG == '1':
     TOKEN = os.getenv('DISCORD_TOKEN_22')
 else:
     TOKEN = os.getenv('DISCORD_TOKEN')
@@ -46,7 +46,7 @@ HERB_LAUGH = get_herb_laugh_from_file()
 intents = discord.Intents.default()
 intents.members = True
 
-if DEBUG:
+if DEBUG == '1':
     client = commands.Bot(command_prefix='test$', intents=intents)
 else:
     client = commands.Bot(command_prefix='$', intents=intents)
@@ -129,12 +129,11 @@ async def on_message(message):
         print_schedule = embed_movie_schedule(schedule)
         await message.channel.send(embed=print_schedule)
 
-    if SHITE:
+    if SHITE == '1':
         if 'shitemas' in chat_message:
             response = embed_response('SHITEmas is the most wonderful time of the year.')
             await message.channel.send(embed=response)
 
-        await message.channel.send(embed=response)
         if 'shite schedule' in chat_message:
             schedule = scrape_timed_events_from_calender(SHITEMAS_AGENDA)
             print_schedule = embed_shitemas_schedule(schedule)
