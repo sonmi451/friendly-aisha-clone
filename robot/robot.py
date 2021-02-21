@@ -12,7 +12,8 @@ from embeds import embed_movie_watchlist, embed_movie_schedule, embed_shitemas_s
     embed_github, embed_guess_the_soup_rules, embed_response
 
 load_dotenv()
-TOKEN = os.getenv('DISCORD_TOKEN')
+
+
 SERVER = os.getenv('DISCORD_SERVER')
 BOT_USER_ID = os.getenv('BOT_USER_ID')
 BOT_ROLE_ID = os.getenv('BOT_ROLE_ID')
@@ -20,18 +21,21 @@ MOVIE_AGENDA = os.getenv('MOVIE_AGENDA')
 TV_GAMES_AGENDA = os.getenv('TV_GAMES_AGENDA')
 SHITEMAS_AGENDA = os.getenv('SHITEMAS_AGENDA')
 
-DEBUG = True
-SHITE = False
-
 FRIENDLY_ROBOT_ADVICE = get_random_friendly_advice_from_file()
 AOE_TAUNTS_DICT = get_aoe_taunts_from_file()
 HERB_LAUGH = get_herb_laugh_from_file()
+
+DEBUG = False
+SHITE = False
 
 intents = discord.Intents.default()
 intents.members = True
 
 client = commands.Bot(command_prefix='$', intents=intents)
 
+if DEBUG:
+    TOKEN = os.getenv('DISCORD_TOKEN_22')
+    client = commands.Bot(command_prefix='£', intents=intents)
 
 @client.event
 async def on_ready():
