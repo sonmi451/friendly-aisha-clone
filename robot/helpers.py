@@ -15,6 +15,7 @@ import discord
 
 MOVIE_WATCHLIST = '../resources/movie_watchlist.json'
 
+
 def get_herb_laugh_from_file():
     herb_laugh = discord.File(f'../resources/11_herb_laugh.mp3')
     return herb_laugh
@@ -24,6 +25,12 @@ def get_random_friendly_advice_from_file():
     with open('../resources/friendly_robot_advice.txt') as f:
         friendly_robot_advice = [line.strip() for line in f]
     return friendly_robot_advice
+
+
+def get_random_rock_facts_from_file():
+    with open('../resources/rock_facts.txt') as f:
+        rock_facts = [line.strip() for line in f]
+    return rock_facts
 
 
 def get_aoe_taunts_from_file():
@@ -65,9 +72,8 @@ def get_movie_by_upvotes():
                            if movie_watchlist[x]['votes'] > 1 else None,
                            movie_watchlist)
     return sorted(upvote_movies,
-                 key=lambda x: (movie_watchlist[x]['votes']),
-                 reverse=True)
-
+                  key=lambda x: (movie_watchlist[x]['votes']),
+                  reverse=True)
 
 
 def add_movie_to_watchlist(movie_name, movie_details):
@@ -90,6 +96,11 @@ def remove_movie_from_watchlist(movie_name):
 def get_random_friendly_advice(friendly_robot_advice):
     random_friendly_message = random.choice(friendly_robot_advice)
     return random_friendly_message
+
+
+def get_random_rock_fact(rock_facts):
+    random_rock_fact = random.choice(rock_facts)
+    return random_rock_fact
 
 
 def get_random_beep_boop():

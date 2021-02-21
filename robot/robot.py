@@ -10,7 +10,7 @@ from calendars import scrape_timed_events_from_calender, scrape_all_day_events_f
 from helpers import get_random_friendly_advice_from_file, get_random_friendly_advice, \
     get_aoe_taunts_from_file, get_aoe_taunt, get_random_beep_boop, get_movie_watchlist, \
     get_herb_laugh_from_file, add_movie_to_watchlist, remove_movie_from_watchlist, \
-    get_movie_by_upvotes
+    get_movie_by_upvotes, get_random_rock_facts_from_file, get_random_rock_fact
 from embeds import embed_movie_watchlist, embed_movie_schedule, embed_shitemas_schedule, embed_games_schedule, \
     embed_github, embed_guess_the_soup_rules, embed_response
 
@@ -39,6 +39,7 @@ else:
 FRIENDLY_ROBOT_ADVICE = get_random_friendly_advice_from_file()
 AOE_TAUNTS_DICT = get_aoe_taunts_from_file()
 HERB_LAUGH = get_herb_laugh_from_file()
+ROCK_FACTS = get_random_rock_facts_from_file()
 
 ################################################################################
 # DISCORDS SETUP
@@ -53,6 +54,7 @@ else:
 
 ################################################################################
 # COMMANDS ETC
+
 
 @client.event
 async def on_ready():
@@ -112,6 +114,9 @@ async def on_message(message):
 
     if 'rock' in chat_message and 'fact' in chat_message:
         await message.add_reaction(emoji='<:rockfact:772801261103742976>')
+        rock_message = get_random_rock_fact(ROCK_FACTS)
+        response = embed_response(rock_message)
+        await message.channel.send(embed=response)
 
     if 'guess the soup' in chat_message:
         await message.add_reaction(emoji='<:soupguess:806255878902513724>')
@@ -131,7 +136,8 @@ async def on_message(message):
 
     if SHITE == '1':
         if 'shitemas' in chat_message:
-            response = embed_response('SHITEmas is the most wonderful time of the year.')
+            response = embed_response(
+                'SHITEmas is the most wonderful time of the year.')
             await message.channel.send(embed=response)
 
         if 'shite schedule' in chat_message:
@@ -185,9 +191,9 @@ async def add_movie(ctx, movie):
             'IMDB': "",
         }
         add_movie_to_watchlist(movie_name, movie_details)
-        text=f"Thank you for your suggestion: {movie_name}!"
+        text = f"Thank you for your suggestion: {movie_name}!"
     else:
-        text="you wanna try: `$addmovie \"The Best Film in the World\"`"
+        text = "you wanna try: `$addmovie \"The Best Film in the World\"`"
     response = embed_response(text)
     await ctx.send(embed=response)
 
@@ -198,9 +204,9 @@ async def remove_movie(ctx, movie):
     if movie:
         movie_name = str(movie).title()
         remove_movie_from_watchlist(movie_name)
-        text=f"Removed movie from watchlist: {movie_name}!"
+        text = f"Removed movie from watchlist: {movie_name}!"
     else:
-        text="you wanna try: `$delmovie \"The Best Film in the World\"`"
+        text = "you wanna try: `$delmovie \"The Best Film in the World\"`"
     response = embed_response(text)
     await ctx.send(embed=response)
 
