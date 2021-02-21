@@ -1,2 +1,10 @@
-use `docker-compose up -d` to start the robot
+create a `.env` file in the top level folder:
+For dev/test you need the need the following 2 env vars:
+```
+DEBUG_MODE=1
+DISCORD_TOKEN_TEST=<token_id>
+DISCORD_SERVER=<server_id.
+```
+use `docker-compose up` to start the robot
+use `docker-compose up -d` to start the robot in detached mode
 use `docker-compose down` to stop the robot

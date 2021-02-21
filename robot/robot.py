@@ -22,14 +22,14 @@ load_dotenv()
 DEBUG = os.getenv('DEBUG_MODE', default=False)
 SHITE = os.getenv('SHITE', default=False)
 SERVER = os.getenv('DISCORD_SERVER')
-BOT_USER_ID = os.getenv('BOT_USER_ID')
-BOT_ROLE_ID = os.getenv('BOT_ROLE_ID')
-MOVIE_AGENDA = os.getenv('MOVIE_AGENDA')
-TV_GAMES_AGENDA = os.getenv('TV_GAMES_AGENDA')
-SHITEMAS_AGENDA = os.getenv('SHITEMAS_AGENDA')
+BOT_USER_ID = os.getenv('BOT_USER_ID', default=False)
+BOT_ROLE_ID = os.getenv('BOT_ROLE_ID', default=False)
+MOVIE_AGENDA = os.getenv('MOVIE_AGENDA', default=False)
+TV_GAMES_AGENDA = os.getenv('TV_GAMES_AGENDA', default=False)
+SHITEMAS_AGENDA = os.getenv('SHITEMAS_AGENDA', default=False)
 
 if DEBUG == '1':
-    TOKEN = os.getenv('DISCORD_TOKEN_22')
+    TOKEN = os.getenv('DISCORD_TOKEN_TEST')
 else:
     TOKEN = os.getenv('DISCORD_TOKEN')
 
