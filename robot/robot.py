@@ -48,7 +48,7 @@ intents = discord.Intents.default()
 intents.members = True
 
 if DEBUG == '1':
-    client = commands.Bot(command_prefix='test$', intents=intents)
+    client = commands.Bot(command_prefix='test$')
 else:
     client = commands.Bot(command_prefix='$', intents=intents)
 
