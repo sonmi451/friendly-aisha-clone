@@ -65,12 +65,12 @@ async def on_message(message):
 
     # if Wade uses AoE shortcuts, reply with their meaning
     if message.author.id == 474091918050066432:
-        taunt = get_aoe_taunt(AOE_TAUNTS_DICT, chat_message)
-        if taunt == '11':
+        if '11' in chat_message:
             await message.channel.send(file=HERB_LAUGH)
-        elif taunt:
-            response = embed_response(taunt)
-            await message.channel.send(embed=response)
+        else:
+            taunt = get_aoe_taunt(AOE_TAUNTS_DICT, chat_message)
+            if taunt:
+                response = embed_response(taunt)
 
     # if you @ the bot it beeps or boops
     if any(id in chat_message for id in [BOT_USER_ID, BOT_ROLE_ID]):
