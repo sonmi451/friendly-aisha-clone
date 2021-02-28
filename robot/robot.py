@@ -222,9 +222,9 @@ async def github_url(ctx):
 
 @client.command(name='parrot',
                 help='I\'ll repeat what you say')
-async def parrot_speak(ctx, message):
+async def parrot_speak(ctx, *message):
     if message:
-        response = embed_response(message)
+        response = embed_response(' '.join(message))
         await ctx.send(embed=response)
 
 
