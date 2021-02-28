@@ -182,8 +182,9 @@ async def view_watchlist_upvote_sorted(ctx):
 
 @client.command(name='addmovie',
                 help='Add or upvote a movie on the watchlist')
-async def add_movie(ctx, movie):
+async def add_movie(ctx, *movie):
     if movie:
+        movie = ' '.join(movie)
         movie_name = str(movie).title()
         movie_details = {
             'suggestedBy': ctx.message.author.name,
