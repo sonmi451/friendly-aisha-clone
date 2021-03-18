@@ -38,7 +38,6 @@ else:
 
 FRIENDLY_ROBOT_ADVICE = get_random_friendly_advice_from_file()
 AOE_TAUNTS_DICT = get_aoe_taunts_from_file()
-HERB_LAUGH = get_herb_laugh_from_file()
 ROCK_FACTS = get_random_rock_facts_from_file()
 
 ################################################################################
@@ -90,7 +89,8 @@ async def on_message(message):
     # if Wade uses AoE shortcuts, reply with their meaning
     if message.author.id == 474091918050066432:
         if '11' in chat_message:
-            await message.channel.send(file=HERB_LAUGH)
+            herb_laugh = get_herb_laugh_from_file()
+            await message.channel.send(file=herb_laugh)
         else:
             taunt = get_aoe_taunt(AOE_TAUNTS_DICT, chat_message)
             if taunt:
