@@ -12,7 +12,7 @@ from helpers import get_random_friendly_advice_from_file, get_random_friendly_ad
     get_herb_laugh_from_file, add_movie_to_watchlist, remove_movie_from_watchlist, \
     get_movie_by_upvotes, get_random_rock_facts_from_file, get_random_rock_fact
 from embeds import embed_movie_watchlist, embed_movie_schedule, embed_shitemas_schedule, embed_games_schedule, \
-    embed_github, embed_guess_the_soup_rules, embed_response
+    embed_github, embed_guess_the_soup_rules, embed_response, embed_shitemaster_email
 
 ################################################################################
 # LOAD ENVIRONMENT VARIABLES
@@ -27,6 +27,7 @@ BOT_ROLE_ID = os.getenv('BOT_ROLE_ID', default=False)
 MOVIE_AGENDA = os.getenv('MOVIE_AGENDA', default=False)
 TV_GAMES_AGENDA = os.getenv('TV_GAMES_AGENDA', default=False)
 SHITEMAS_AGENDA = os.getenv('SHITEMAS_AGENDA', default=False)
+SHITEMASTER_EMAIL = os.getenv('SHITEMASTER_EMAIL', default=None)
 
 if DEBUG == '1':
     TOKEN = os.getenv('DISCORD_TOKEN_TEST')
@@ -133,6 +134,13 @@ async def on_message(message):
         schedule = scrape_timed_events_from_calender(MOVIE_AGENDA)
         print_schedule = embed_movie_schedule(schedule)
         await message.channel.send(embed=print_schedule)
+
+    sm_assistant_msgs = ['shitemaster email', 'submit shitemaster', 'submit task',
+                         'sm email', 'shitemasters assistant email',
+                         'shitemaster''s assistant email', 'shite email']
+    if any(x in chat_message.lower() for x in sm_assistant_msgs):
+        embed = embed_shitemaster_email(SHITEMASTER_EMAIL)
+        await message.author.send('', embed=embed)
 
     if SHITE == '1':
         if 'shitemas' in chat_message:

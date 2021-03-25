@@ -6,63 +6,69 @@ def embed_movie_watchlist(movie_watchlist):
         description = '\n'.join(movie_watchlist)
     else:
         description = '[empty list]'
-    formatted_watchlist = discord.Embed(title='Movie Watchlist', description=description[:1500])
+    formatted_watchlist = discord.Embed(
+        title='Movie Watchlist', description=description[:1500])
     return formatted_watchlist
 
 
 def embed_movie_schedule(schedule, first=False):
     formatted_schedule = discord.Embed(title='Movie Schedule')
     if not schedule:
-        formatted_schedule.add_field(name='Empty schedule', value='Hmm, looks like nothing is scheduled!')
+        formatted_schedule.add_field(
+            name='Empty schedule', value='Hmm, looks like nothing is scheduled!')
     else:
         if first:
             schedule = [schedule[0]]
 
         for day in schedule:
             formatted_schedule.add_field(name=day[0],
-                                        value='\n'.join([str(time + ': ' + description) for time, description in day[1].items()]),
-                                        inline=False)
+                                         value='\n'.join(
+                                             [str(time + ': ' + description) for time, description in day[1].items()]),
+                                         inline=False)
 
     formatted_schedule.add_field(name='Calender',
-                                value='[See the full calender of events online](https://calendar.google.com/calendar/u/0/embed?src=qjva8eaked6q9vdcgqkspqvseg@group.calendar.google.com)',
-                                inline=False)
+                                 value='[See the full calender of events online](https://calendar.google.com/calendar/u/0/embed?src=qjva8eaked6q9vdcgqkspqvseg@group.calendar.google.com)',
+                                 inline=False)
     return formatted_schedule
 
 
 def embed_shitemas_schedule(schedule, first=False):
     formatted_schedule = discord.Embed(title='SHITEMAS')
     if not schedule:
-        formatted_schedule.add_field(name='Empty schedule', value='Hmm, looks like nothing is scheduled!')
+        formatted_schedule.add_field(
+            name='Empty schedule', value='Hmm, looks like nothing is scheduled!')
     else:
         if first:
             schedule = [schedule[0]]
 
         for day in schedule:
             formatted_schedule.add_field(name=day[0],
-                                        value='\n'.join([str(time + ': ' + description) for time, description in day[1].items()]),
-                                        inline=False)
+                                         value='\n'.join(
+                                             [str(time + ': ' + description) for time, description in day[1].items()]),
+                                         inline=False)
 
     formatted_schedule.add_field(name='Calender',
-                                value='[See the full calender of events online](https://calendar.google.com/calendar/embed?src=c5ilkhfkd424ddm47unrfuvd9c%40group.calendar.google.com)',
-                                inline=False)
+                                 value='[See the full calender of events online](https://calendar.google.com/calendar/embed?src=c5ilkhfkd424ddm47unrfuvd9c%40group.calendar.google.com)',
+                                 inline=False)
     return formatted_schedule
 
 
 def embed_games_schedule(schedule):
     formatted_schedule = discord.Embed(title='TV Games')
-    formatted_schedule.add_field(name='Every Wednesday at 8PM!', value='join Acres Greg in the TV games voice channel for socialising and games')
+    formatted_schedule.add_field(name='Every Wednesday at 8PM!',
+                                 value='join Acres Greg in the TV games voice channel for socialising and games')
     for day in schedule:
         formatted_schedule.add_field(name=day[0],
-                                    value='\n'.join(day[1:]),
-                                    inline=False)
+                                     value='\n'.join(day[1:]),
+                                     inline=False)
     return formatted_schedule
 
 
 def embed_github():
     robot_response = discord.Embed()
     robot_response.add_field(name='See my Source Code:',
-                            value='[https://github.com/sonmi451/friendly-aisha-clone](https://github.com/sonmi451/friendly-aisha-clone)',
-                            inline=False)
+                             value='[https://github.com/sonmi451/friendly-aisha-clone](https://github.com/sonmi451/friendly-aisha-clone)',
+                             inline=False)
     return robot_response
 
 
@@ -80,3 +86,15 @@ def embed_guess_the_soup_rules():
 def embed_response(title):
     response = discord.Embed(title=title)
     return response
+
+
+def embed_shitemaster_email(email):
+    description = f'As much video and photo evidence as possible should be provided to \
+        the SHITEmaster’s assistant (Aisha!) before the task deadline. \
+            This includes video of you reading out the tasks and how you do \
+                the task(not just the finished task).\nAll evidence should be \
+                    shared in Google Photos or email to **{email}** 🖖'
+    sm_email = discord.Embed(title='Submit Your Shitemaster Tasks',
+                             description=description)
+
+    return sm_email
