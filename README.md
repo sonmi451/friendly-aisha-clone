@@ -10,7 +10,7 @@ DISCORD_SERVER=<server_id>
 DISCORD_TOKEN=<token_id>
 ```
 
-To enable test you can optionally create a second (test) bot/application and then need the following 2 env vars:
+If you want to test/dev with a second (test) bot/application you can set the following optional env vars:
 ```
 DEBUG_MODE=1
 DISCORD_TOKEN_TEST=<alternate_token_id>
