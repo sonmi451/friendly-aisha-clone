@@ -136,7 +136,7 @@ async def on_message(message):
 
     sm_assistant_msgs = ['shitemaster email', 'submit shitemaster', 'submit task',
                          'sm email', 'shitemasters assistant email',
-                         'shitemaster''s assistant email', 'shite email']
+                         'shitemaster\'s assistant email', 'shite email']
     if any(x in chat_message.lower() for x in sm_assistant_msgs):
         embed = embed_shitemaster_email(SHITEMASTER_EMAIL)
         await message.author.send('', embed=embed)
