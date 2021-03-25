@@ -60,10 +60,10 @@ else:
 async def on_ready():
     for guild in client.guilds:
         if guild.name == SERVER:
+            print(str(client.user) +
+                  " has connected to Discord Server " +
+                  str(guild.name))
             break
-    print(str(client.user) +
-          " has connected to Discord Server " +
-          str(guild.name))
 
 
 @client.event
