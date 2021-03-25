@@ -72,9 +72,8 @@ async def on_member_join(member):
                           I am your Friendly Aisha Clone,
                           here to be most helpful <3
                           On Wednesdays at 8PM we play ~GAMES~ in voice chat
-                          On Sunday evening we watch movies"""
-    response = embed_response(welcome_message)
-    await message.channel.send(embed=response)
+                          On Sunday evenings we watch movies"""
+    await member.send(embed=welcome_message)
 
 
 @client.event
