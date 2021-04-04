@@ -1,6 +1,12 @@
 import requests
 from bs4 import BeautifulSoup
+from datetime import datetime, timedelta, timezone
+import pytz
 
+TIME_FORMAT = "%H:%M"
+
+def is_british_summer_time():
+    return pytz.timezone("Europe/London") != datetime.now(timezone.utc)
 
 def scrape_timed_events_from_calender(calender):
     events = []
@@ -17,6 +23,9 @@ def scrape_timed_events_from_calender(calender):
                 event_times = event.findAll("td", class_="event-time")
                 if event_times:
                     times = [event_time.text for event_time in event_times]
+                    if is_british_summer_time():
+                        times = [(datetime.strptime(time, TIME_FORMAT) + timedelta(hours=1)).strftime(format=TIME_FORMAT)
+                                for time in times]
                 event_summary = event.findAll("div", class_="event-summary")
                 if event_summary:
                     descriptions = [event.text for event in event_summary]
