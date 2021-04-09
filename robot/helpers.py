@@ -20,6 +20,8 @@ def get_herb_laugh_from_file():
     herb_laugh = discord.File(f'../resources/11_herb_laugh.mp3')
     return herb_laugh
 
+def get_herb_path():
+    return '../resources/11_herb_laugh.mp3'
 
 def get_random_friendly_advice_from_file():
     with open('../resources/friendly_robot_advice.txt') as f:
