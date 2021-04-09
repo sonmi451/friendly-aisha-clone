@@ -5,7 +5,8 @@ import os
 import discord
 from dotenv import load_dotenv
 from discord.ext import commands
-
+from discord.voice_client import VoiceClient
+from discord.utils import get
 from calendars import scrape_timed_events_from_calender, scrape_all_day_events_from_calender
 from helpers import get_random_friendly_advice_from_file, get_random_friendly_advice, \
     get_aoe_taunts_from_file, get_aoe_taunt, get_random_beep_boop, get_movie_watchlist, \
@@ -90,7 +91,13 @@ async def on_message(message):
     if message.author.id == 474091918050066432:
         if '11' in chat_message:
             herb_laugh = get_herb_laugh_from_file()
-            await message.channel.send(file=herb_laugh)
+            if (message.author.voice is not None):
+                await message.author.voice.channel.connect()
+                voice = get(client.voice_clients)
+                voice.play(discord.FFmpegPCMAudio(get_herb_path()), after=await voice.disconnect())
+                
+            else:            
+                await message.channel.send(file=herb_laugh)
         else:
             taunt = get_aoe_taunt(AOE_TAUNTS_DICT, chat_message)
             if taunt:
