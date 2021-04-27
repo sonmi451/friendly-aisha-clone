@@ -10,3 +10,12 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ./resources:/resources:rw
+
+  databse:
+    container_name: database
+    image: mongo:latest
+    restart: on-failure
+    ports:
+      - 27017:27017
+    volumes:
+      - ./data:/data/db

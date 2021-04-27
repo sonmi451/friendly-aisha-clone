@@ -5,12 +5,16 @@ import os
 import discord
 from dotenv import load_dotenv
 from discord.ext import commands
+from pymongo import MongoClient
 
 from calendars import scrape_timed_events_from_calender, scrape_all_day_events_from_calender
-from helpers import get_random_friendly_advice_from_file, get_random_friendly_advice, \
-    get_aoe_taunts_from_file, get_aoe_taunt, get_random_beep_boop, get_movie_watchlist, \
-    get_herb_laugh_from_file, add_movie_to_watchlist, remove_movie_from_watchlist, \
-    get_movie_by_upvotes, get_random_rock_facts_from_file, get_random_rock_fact
+from helpers import get_random_beep_boop, \
+    get_random_friendly_advice_from_file, get_random_friendly_advice, \
+    get_aoe_taunts_from_file, get_aoe_taunt, \
+    get_herb_laugh_from_file, \
+    get_random_rock_facts_from_file, get_random_rock_fact
+from database_helpers import get_movie_watchlist, add_movie_to_watchlist, \
+    remove_movie_from_watchlist, get_movie_by_upvotes
 from embeds import embed_movie_watchlist, embed_movie_schedule, embed_shitemas_schedule, embed_games_schedule, \
     embed_github, embed_guess_the_soup_rules, embed_response, embed_shitemaster_email
 
@@ -28,6 +32,7 @@ MOVIE_AGENDA = os.getenv('MOVIE_AGENDA', default=False)
 TV_GAMES_AGENDA = os.getenv('TV_GAMES_AGENDA', default=False)
 SHITEMAS_AGENDA = os.getenv('SHITEMAS_AGENDA', default=False)
 SHITEMASTER_EMAIL = os.getenv('SHITEMASTER_EMAIL', default=None)
+DB_LOAD_DATA = os.getenv('DATABASE_INIT', default=False)
 
 if DEBUG == '1':
     TOKEN = os.getenv('DISCORD_TOKEN_TEST')
@@ -40,6 +45,17 @@ else:
 FRIENDLY_ROBOT_ADVICE = get_random_friendly_advice_from_file()
 AOE_TAUNTS_DICT = get_aoe_taunts_from_file()
 ROCK_FACTS = get_random_rock_facts_from_file()
+
+################################################################################
+# LOAD DATABASE
+
+DB_CLIENT = MongoClient("mongodb://database:27017/")
+MOVIE_DATABASE = DB_CLIENT["movie_list"]
+MOVIE_COLLECTION = MOVIE_DATABASE["movies"]
+if DB_LOAD_DATA == '1':
+    from database_helpers import load_movie_json_into_db
+    print("Populate database")
+    load_movie_json_into_db(MOVIE_COLLECTION)
 
 ################################################################################
 # DISCORDS SETUP
@@ -60,9 +76,7 @@ else:
 async def on_ready():
     for guild in client.guilds:
         if guild.name == SERVER:
-            print(str(client.user) +
-                  " has connected to Discord Server " +
-                  str(guild.name))
+            print(f"{client.user} has connected to Discord Server {guild.name}")
             break
 
 
@@ -174,7 +188,7 @@ async def next_scheduled(ctx):
 @client.command(name='movielist',
                 help='See the watchlist')
 async def view_watchlist(ctx):
-    watchlist = get_movie_watchlist()
+    watchlist = get_movie_watchlist(MOVIE_COLLECTION)
     response = embed_movie_watchlist(watchlist)
     await ctx.send(embed=response)
 
@@ -182,7 +196,7 @@ async def view_watchlist(ctx):
 @client.command(name='upvotelist',
                 help='See the watchlist sorted by upvotes')
 async def view_watchlist_upvote_sorted(ctx):
-    watchlist = get_movie_by_upvotes()
+    watchlist = get_movie_by_upvotes(MOVIE_COLLECTION)
     response = embed_movie_watchlist(watchlist)
     await ctx.send(embed=response)
 
@@ -194,14 +208,15 @@ async def add_movie(ctx, *movie):
         movie = ' '.join(movie)
         movie_name = str(movie).title()
         movie_details = {
+            '_id': movie_name,
             'suggestedBy': ctx.message.author.name,
             'votes': 1,
             'IMDB': "",
         }
-        add_movie_to_watchlist(movie_name, movie_details)
+        add_movie_to_watchlist(MOVIE_COLLECTION, movie_details)
         text = f"Thank you for your suggestion: {movie_name}!"
     else:
-        text = "you wanna try: `$addmovie \"The Best Film in the World\"`"
+        text = "you wanna try: `$addmovie The Best Film in the World`"
     response = embed_response(text)
     await ctx.send(embed=response)
 
@@ -212,7 +227,7 @@ async def remove_movie(ctx, *movie):
     if movie:
         movie = ' '.join(movie)
         movie_name = str(movie).title()
-        remove_movie_from_watchlist(movie_name)
+        remove_movie_from_watchlist(MOVIE_COLLECTION, movie_name)
         text = f"Removed movie from watchlist: {movie_name}!"
     else:
         text = "you wanna try: `$delmovie \"The Best Film in the World\"`"

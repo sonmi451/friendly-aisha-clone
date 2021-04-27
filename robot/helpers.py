@@ -58,41 +58,6 @@ def write_watchlist_to_file(watchlist):
     with open(MOVIE_WATCHLIST, 'w') as out_file:
         json.dump(watchlist, out_file)
 
-
-def get_movie_watchlist():
-    movie_watchlist = read_watchlist_from_file()
-    movies = movie_watchlist.keys()
-    return sorted(movies)
-
-
-def get_movie_by_upvotes():
-    movie_watchlist = read_watchlist_from_file()
-    movies = movie_watchlist.keys()
-    upvote_movies = filter(lambda x: movie_watchlist[x]['votes']
-                           if movie_watchlist[x]['votes'] > 1 else None,
-                           movie_watchlist)
-    return sorted(upvote_movies,
-                  key=lambda x: (movie_watchlist[x]['votes']),
-                  reverse=True)
-
-
-def add_movie_to_watchlist(movie_name, movie_details):
-    watchlist = read_watchlist_from_file()
-    if movie_name in watchlist.keys():
-        num_votes = watchlist[movie_name].get('votes')
-        watchlist[movie_name]['votes'] = num_votes+1
-    else:
-        watchlist[movie_name] = movie_details
-    write_watchlist_to_file(watchlist)
-
-
-def remove_movie_from_watchlist(movie_name):
-    watchlist = read_watchlist_from_file()
-    if movie_name in watchlist.keys():
-        watchlist.pop(movie_name)
-        write_watchlist_to_file(watchlist)
-
-
 def get_random_friendly_advice(friendly_robot_advice):
     random_friendly_message = random.choice(friendly_robot_advice)
     return random_friendly_message
