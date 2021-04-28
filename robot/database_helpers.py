@@ -27,14 +27,13 @@ def get_movie_by_upvotes(movie_collection):
 def add_movie_to_watchlist(movie_collection, movie_details):
     movie_name = movie_details['_id']
     query = {"_id": movie_name}
-    print(f"Looking for movies matching query: {query}")
+    print(f"Looking for movie matching query: {query}")
     search_results = movie_collection.find(query)
     movie_found = False
 
     # look for record in collection
     for result in search_results:
         movie_found = True
-        print(result)
         upvotes = result['votes']
         print(f"Movie {movie_name} has {upvotes} upvotes")
         break
@@ -42,7 +41,6 @@ def add_movie_to_watchlist(movie_collection, movie_details):
     # either update record
     if movie_found:
         print(f"{movie_name} already in collection")
-        print()
         new_upvotes = { "$set": { "votes": upvotes+1} }
         movie_collection.update_one(query, new_upvotes)
 
@@ -54,7 +52,7 @@ def add_movie_to_watchlist(movie_collection, movie_details):
 
 def remove_movie_from_watchlist(movie_collection, movie_name):
     query = {"_id": movie_name}
-    print(f"Looking for movies matching query: {query}")
+    print(f"Looking for movie matching query: {query}")
     search_results = movie_collection.find(query)
     movie_found = False
 
@@ -76,4 +74,4 @@ def load_movie_json_into_db(movie_collection):
             temp_dict = movie_watchlist[movie]
             temp_dict['_id'] = movie
             movie_collection.insert_one(temp_dict)
-            print(f'Inserted new records for {movie}')
+            print(f'Inserted new record for {movie}')
