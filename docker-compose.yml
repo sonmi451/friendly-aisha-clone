@@ -14,7 +14,7 @@ services:
   databse:
     container_name: database
     image: mongo:latest
-    restart: on-failure
+    restart: unless-stopped
     ports:
       - 27017:27017
     volumes:
