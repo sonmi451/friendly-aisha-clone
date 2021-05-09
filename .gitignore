@@ -3,4 +3,4 @@ venv/
 local/
 .env
 data/
-*/movie_watchlist.json
+*/movie_watchlist.*
