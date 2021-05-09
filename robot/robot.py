@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 from discord.ext import commands
 from pymongo import MongoClient
 
-from calendars import scrape_timed_events_from_calender, scrape_all_day_events_from_calender
+from calendars import scrape_events_from_calender
 from helpers import get_random_beep_boop, \
     get_random_friendly_advice_from_file, get_random_friendly_advice, \
     get_aoe_taunts_from_file, get_aoe_taunt, \
@@ -139,7 +139,7 @@ async def on_message(message):
             await message.channel.send(embed=response)
 
     if 'tv games schedule' in chat_message:
-        schedule = scrape_all_day_events_from_calender(TV_GAMES_AGENDA)
+        schedule = scrape_timed_events_from_calender(TV_GAMES_AGENDA)
         print_schedule = embed_games_schedule(schedule)
         await message.channel.send(embed=print_schedule)
 
@@ -172,7 +172,7 @@ async def on_message(message):
 @client.command(name='movies',
                 help='Read the full movie schedule from the calendar')
 async def full_schedule(ctx):
-    schedule = scrape_timed_events_from_calender(MOVIE_AGENDA)
+    schedule = scrape_events_from_calender(MOVIE_AGENDA)
     print_schedule = embed_movie_schedule(schedule)
     await ctx.send(embed=print_schedule)
 
@@ -180,7 +180,7 @@ async def full_schedule(ctx):
 @client.command(name='movie',
                 help='Reads the next scheduled movie schedule from the calendar')
 async def next_scheduled(ctx):
-    schedule = scrape_timed_events_from_calender(MOVIE_AGENDA)
+    schedule = scrape_events_from_calender(MOVIE_AGENDA)
     print_schedule = embed_movie_schedule(schedule, first=True)
     await ctx.send(embed=print_schedule)
 

@@ -59,7 +59,8 @@ def embed_games_schedule(schedule):
                                  value='join Acres Greg in the TV games voice channel for socialising and games')
     for day in schedule:
         formatted_schedule.add_field(name=day[0],
-                                     value='\n'.join(day[1:]),
+                                     value='\n'.join(
+                                         [str(description) for time, description in day[1].items()]),
                                      inline=False)
     return formatted_schedule
 
