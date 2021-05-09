@@ -139,12 +139,12 @@ async def on_message(message):
             await message.channel.send(embed=response)
 
     if 'tv games schedule' in chat_message:
-        schedule = scrape_timed_events_from_calender(TV_GAMES_AGENDA)
+        schedule = scrape_events_from_calender(TV_GAMES_AGENDA)
         print_schedule = embed_games_schedule(schedule)
         await message.channel.send(embed=print_schedule)
 
     if 'movie schedule' in chat_message:
-        schedule = scrape_timed_events_from_calender(MOVIE_AGENDA)
+        schedule = scrape_events_from_calender(MOVIE_AGENDA)
         print_schedule = embed_movie_schedule(schedule)
         await message.channel.send(embed=print_schedule)
 
