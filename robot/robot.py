@@ -8,11 +8,10 @@ from discord.ext import commands
 from pymongo import MongoClient
 
 from calendars import scrape_events_from_calender
-from helpers import get_random_beep_boop, \
-    get_random_friendly_advice_from_file, get_random_friendly_advice, \
-    get_aoe_taunts_from_file, get_aoe_taunt, \
-    get_herb_laugh_from_file, \
-    get_random_rock_facts_from_file, get_random_rock_fact
+from helpers import get_random_beep_boop, get_random, get_aoe_taunt, \
+    get_random_friendly_advice_from_file, get_aoe_taunts_from_file, \
+    get_herb_laugh_from_file, get_random_rock_facts_from_file, \
+    get_random_tv_game_help_from_file
 from database_helpers import get_movie_watchlist, add_movie_to_watchlist, \
     remove_movie_from_watchlist, get_movie_by_upvotes
 from embeds import embed_movie_watchlist, embed_movie_schedule, embed_shitemas_schedule, embed_games_schedule, \
@@ -45,6 +44,7 @@ else:
 FRIENDLY_ROBOT_ADVICE = get_random_friendly_advice_from_file()
 AOE_TAUNTS_DICT = get_aoe_taunts_from_file()
 ROCK_FACTS = get_random_rock_facts_from_file()
+TV_GAMES_HELP = get_random_tv_game_help_from_file()
 
 ################################################################################
 # LOAD DATABASE
@@ -118,7 +118,7 @@ async def on_message(message):
         await message.channel.send(embed=response)
 
     if 'robot' in chat_message:
-        friendly_message = get_random_friendly_advice(FRIENDLY_ROBOT_ADVICE)
+        friendly_message = get_random(FRIENDLY_ROBOT_ADVICE)
         response = embed_response(friendly_message)
         await message.channel.send(embed=response)
 
@@ -128,7 +128,7 @@ async def on_message(message):
 
     if 'rock' in chat_message and 'fact' in chat_message:
         await message.add_reaction(emoji='<:rockfact:772801261103742976>')
-        rock_message = get_random_rock_fact(ROCK_FACTS)
+        rock_message = get_random(ROCK_FACTS)
         response = embed_response(rock_message)
         await message.channel.send(embed=response)
 
@@ -137,6 +137,11 @@ async def on_message(message):
         if 'rule' in chat_message:
             response = embed_guess_the_soup_rules()
             await message.channel.send(embed=response)
+
+    if 'tv' in chat_message and 'game' in chat_message and 'help' in chat_message:
+        help = get_random(TV_GAMES_HELP)
+        response = embed_response(help)
+        await message.channel.send(embed=response)
 
     if 'tv games schedule' in chat_message:
         schedule = scrape_events_from_calender(TV_GAMES_AGENDA)

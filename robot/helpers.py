@@ -32,6 +32,11 @@ def get_random_rock_facts_from_file():
         rock_facts = [line.strip() for line in f]
     return rock_facts
 
+def get_random_tv_game_help_from_file():
+    with open('../resources/tv_games.txt') as f:
+        rock_facts = [line.strip() for line in f]
+    return rock_facts
+
 
 def get_aoe_taunts_from_file():
     with open('../resources/aoe_taunts.json') as f:
@@ -58,8 +63,8 @@ def write_watchlist_to_file(watchlist):
     with open(MOVIE_WATCHLIST, 'w') as out_file:
         json.dump(watchlist, out_file)
 
-def get_random_friendly_advice(friendly_robot_advice):
-    random_friendly_message = random.choice(friendly_robot_advice)
+def get_random(list_of_things):
+    random_friendly_message = random.choice(list_of_things)
     return random_friendly_message
 
 
