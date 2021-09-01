@@ -10,8 +10,8 @@ from pymongo import MongoClient
 from calendars import scrape_events_from_calender
 from helpers import get_random_beep_boop, get_random, get_aoe_taunt, \
     get_random_friendly_advice_from_file, get_aoe_taunts_from_file, \
-    get_herb_laugh_from_file, get_random_rock_facts_from_file, \
-    get_random_tv_game_help_from_file
+    get_herb_laugh_from_file, get_fanfare_from_file, \
+    get_random_rock_facts_from_file, get_random_tv_game_help_from_file
 from database_helpers import get_movie_watchlist, add_movie_to_watchlist, \
     remove_movie_from_watchlist, get_movie_by_upvotes
 from embeds import embed_movie_watchlist, embed_movie_schedule, embed_shitemas_schedule, embed_games_schedule, \
@@ -116,6 +116,10 @@ async def on_message(message):
         beep_boop = get_random_beep_boop()
         response = embed_response(beep_boop)
         await message.channel.send(embed=response)
+
+    if 'nerts' in chat_message:
+        fanfare = get_fanfare_from_file()
+        await message.channel.send(file=fanfare)
 
     if 'robot' in chat_message:
         friendly_message = get_random(FRIENDLY_ROBOT_ADVICE)
