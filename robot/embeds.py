@@ -22,7 +22,8 @@ class AishaEmbed():
 
     def embed_constrain(self, name, value=None):
         self.embeds.append(self.embed)
-        self.base_movie_embed()
+        self.base_movie_embed(title_str='Movie Watchlist',
+                              description='More movies below')
         if value:
             self.embed.add_field(name=name, value=value)
 
@@ -87,7 +88,7 @@ class AishaEmbed():
 def embed_movie_watchlist(movie_watchlist):
     embedder = AishaEmbed()
     responses = embedder.format_all_movies_embed(movie_watchlist)
-    return responses[0]
+    return responses
 
 
 def embed_movie_schedule(schedule, first=False):
