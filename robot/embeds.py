@@ -1,14 +1,93 @@
 import discord
 
 
+class AishaEmbed():
+    '''Embed extensions.'''
+
+    def __init__(self):
+        self.cont = 1
+        self.embed = None
+        self.embeds = []
+
+    def base_movie_embed(self, title_str, description):
+        colour = colour = discord.Colour.random()
+        if self.cont > 1:
+            title = f'{title_str} ({self.cont})'
+            description = 'More movies below'
+        else:
+            title = f'{title_str}'
+
+        self.embed = discord.Embed(
+            title=title, description=description, colour=colour)
+
+    def embed_constrain(self, name, value=None):
+        self.embeds.append(self.embed)
+        self.base_movie_embed()
+        if value:
+            self.embed.add_field(name=name, value=value)
+
+    def process_the(self):
+        processed_movies = []
+        for movie in self.all_movies:
+            if movie[:4] == "The ":
+                movie = movie[4:] + ", The"
+            processed_movies.append(movie)
+        self.all_movies = processed_movies
+
+    def set_all_movies(self):
+        count = 1
+        alphabet = None
+        value = ''
+        self.process_the()
+        for text in sorted(self.all_movies):
+            name = text[0]
+
+            if alphabet is None:
+                alphabet = name
+            embed_len = len(alphabet) + len(value) + \
+                len(self.embed) + len(name)
+            field_len = len(alphabet) + len(value) + len(text) + len(name)
+
+            if embed_len > 5998:
+                count += 1
+                self.cont += 1
+                self.embed_constrain(alphabet)
+
+            if name != alphabet[0]:
+                self.embed.add_field(name=alphabet, value=value)
+                alphabet = name
+                value = text
+                continue
+
+            if field_len > 1022:
+                self.embed.add_field(name=alphabet, value=value)
+                alphabet = f'{name} (cont...)'
+                value = text
+                continue
+
+            if value:
+                value += f'\n{text}'
+            else:
+                value = text
+
+    def format_all_movies_embed(self, all_movies):
+        self.all_movies = all_movies
+        self.cont = 1
+        self.embeds = []
+        self.base_movie_embed(title_str='Movie Watchlist',
+                              description='Movies in the pool of possible watches')
+
+        self.set_all_movies()
+
+        self.embeds.append(self.embed)
+
+        return self.embeds
+
+
 def embed_movie_watchlist(movie_watchlist):
-    if movie_watchlist:
-        description = '\n'.join(movie_watchlist)
-    else:
-        description = '[empty list]'
-    formatted_watchlist = discord.Embed(
-        title='Movie Watchlist', description=description[:1500])
-    return formatted_watchlist
+    embedder = AishaEmbed()
+    responses = embedder.format_all_movies_embed(movie_watchlist)
+    return responses[0]
 
 
 def embed_movie_schedule(schedule, first=False):
