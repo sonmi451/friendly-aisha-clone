@@ -3,6 +3,7 @@
 
 import os
 import discord
+import DiscordUtils
 from dotenv import load_dotenv
 from discord.ext import commands
 from pymongo import MongoClient
@@ -198,8 +199,13 @@ async def next_scheduled(ctx):
                 help='See the watchlist')
 async def view_watchlist(ctx):
     watchlist = get_movie_watchlist(MOVIE_COLLECTION)
-    response = embed_movie_watchlist(watchlist)
-    await ctx.send(embed=response)
+    responses = embed_movie_watchlist(watchlist)
+    if len(responses) > 1:
+        paginator = DiscordUtils.Pagination.AutoEmbedPaginator(
+            ctx, timeout=60)
+        await paginator.run(responses)
+    else:
+        await ctx.send(content='', embed=responses[0])
 
 
 @client.command(name='upvotelist',
