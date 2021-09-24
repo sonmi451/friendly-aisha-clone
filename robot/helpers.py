@@ -20,9 +20,11 @@ def get_herb_laugh_from_file():
     herb_laugh = discord.File(f'../resources/11_herb_laugh.mp3')
     return herb_laugh
 
+
 def get_fanfare_from_file():
     fanfare = discord.File(f'../resources/fanfare.mp3')
     return fanfare
+
 
 def get_random_friendly_advice_from_file():
     with open('../resources/friendly_robot_advice.txt') as f:
@@ -34,6 +36,7 @@ def get_random_rock_facts_from_file():
     with open('../resources/rock_facts.txt') as f:
         rock_facts = [line.strip() for line in f]
     return rock_facts
+
 
 def get_random_tv_game_help_from_file():
     with open('../resources/tv_games.txt') as f:
@@ -65,6 +68,7 @@ def read_watchlist_from_file():
 def write_watchlist_to_file(watchlist):
     with open(MOVIE_WATCHLIST, 'w') as out_file:
         json.dump(watchlist, out_file)
+
 
 def get_random(list_of_things):
     random_friendly_message = random.choice(list_of_things)
