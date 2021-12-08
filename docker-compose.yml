@@ -10,6 +10,9 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ./resources:/resources:rw
+    environment:
+      PYTHONUNBUFFERED: 1
+
 
   databse:
     container_name: database
