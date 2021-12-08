@@ -118,7 +118,7 @@ async def on_message(message):
         response = embed_response(beep_boop)
         await message.channel.send(embed=response)
 
-    if 'nerts' in chat_message:
+    if 'nerts!' in chat_message:
         fanfare = get_fanfare_from_file()
         await message.channel.send(file=fanfare)
 
