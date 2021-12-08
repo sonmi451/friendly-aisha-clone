@@ -6,7 +6,9 @@ import pytz
 TIME_FORMAT = "%H:%M"
 
 def is_british_summer_time():
-    return pytz.timezone("Europe/London") != datetime.now(timezone.utc)
+    utc_now = datetime.now(timezone.utc)
+    time_in_london = utc_now.replace(tzinfo=timezone.utc).astimezone(tz=pytz.timezone("Europe/London"))
+    return time_in_london != utc_now
 
 def scrape_events_from_calender(calender):
     events = []
