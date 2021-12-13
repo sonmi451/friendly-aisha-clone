@@ -118,6 +118,14 @@ async def on_message(message):
         response = embed_response(beep_boop)
         await message.channel.send(embed=response)
 
+    if 'orb' in chat_message:
+        orbified_message = chat_message
+        vowels = [x for x in 'aeiu']
+        for vowel in vowels:
+            if vowel in chat_message:
+                orbified_message=orbified_message.replace(vowel,'orb')
+        await message.channel.send(orbified_message)
+
     if 'nerts!' in chat_message:
         fanfare = get_fanfare_from_file()
         await message.channel.send(file=fanfare)
