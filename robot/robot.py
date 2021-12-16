@@ -27,6 +27,7 @@ load_dotenv()
 DEBUG = os.getenv('DEBUG_MODE', default=False)
 SHITE = os.getenv('SHITE', default=False)
 SERVER = os.getenv('DISCORD_SERVER')
+WADE_ID = os.getenv('WADE_ID', default=False)
 BOT_USER_ID = os.getenv('BOT_USER_ID', default=False)
 BOT_ROLE_ID = os.getenv('BOT_ROLE_ID', default=False)
 MOVIE_AGENDA = os.getenv('MOVIE_AGENDA', default=False)
@@ -108,7 +109,7 @@ async def on_message(message):
         return
 
     # if Wade uses AoE shortcuts, reply with their meaning
-    if message.author.id == 474091918050066432:
+    if WADE_ID and message.author.id == WADE_ID:
         if re.search(r'(^|\D)(1{2})(\D|$)', chat_message):
             herb_laugh = get_herb_laugh_from_file()
             await message.channel.send(file=herb_laugh)
