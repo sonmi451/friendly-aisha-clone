@@ -101,6 +101,10 @@ async def on_message(message):
     if message.author == client.user:
         return
 
+    # ignore shoutybot
+    if message.author.id == 824577719047290912:
+        return
+
     # if Wade uses AoE shortcuts, reply with their meaning
     if message.author.id == 474091918050066432:
         if '11' in chat_message.replace('397509261170704384', ''):
