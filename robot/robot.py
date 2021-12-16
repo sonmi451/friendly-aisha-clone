@@ -108,7 +108,7 @@ async def on_message(message):
 
     # if Wade uses AoE shortcuts, reply with their meaning
     if message.author.id == 474091918050066432:
-        if '11' in chat_message.replace('397509261170704384', ''):
+        if re.search(r'(^|\D)(1{2})(\D|$)', chat_message):
             herb_laugh = get_herb_laugh_from_file()
             await message.channel.send(file=herb_laugh)
         else:
