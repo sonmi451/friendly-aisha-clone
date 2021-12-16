@@ -153,8 +153,8 @@ async def on_message(message):
             await message.channel.send(embed=response)
 
     if 'tv' in chat_message and 'game' in chat_message and 'help' in chat_message:
-        help = get_random(TV_GAMES_HELP)
-        response = embed_response(help)
+        tv_games_help = get_random(TV_GAMES_HELP)
+        response = embed_response(tv_games_help)
         await message.channel.send(embed=response)
 
     if 'tv games schedule' in chat_message:
