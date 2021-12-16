@@ -21,11 +21,6 @@ def get_herb_laugh_from_file():
     return herb_laugh
 
 
-def get_fanfare_from_file():
-    fanfare = discord.File(f'../resources/fanfare.mp3')
-    return fanfare
-
-
 def get_random_friendly_advice_from_file():
     with open('../resources/friendly_robot_advice.txt') as f:
         friendly_robot_advice = [line.strip() for line in f]
@@ -42,6 +37,12 @@ def get_random_tv_game_help_from_file():
     with open('../resources/tv_games.txt') as f:
         rock_facts = [line.strip() for line in f]
     return rock_facts
+
+
+def get_nerts_commentry_from_file():
+    with open('../resources/nerts_commentry.txt') as f:
+        nerts_commentry = [line.strip() for line in f]
+    return nerts_commentry
 
 
 def get_aoe_taunts_from_file():
