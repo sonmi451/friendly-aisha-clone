@@ -11,9 +11,9 @@ from pymongo import MongoClient
 
 from calendars import scrape_events_from_calender
 from helpers import get_random_beep_boop, get_random, get_aoe_taunt, \
-    get_random_friendly_advice_from_file, get_aoe_taunts_from_file, \
+    get_friendly_advice_from_file, get_aoe_taunts_from_file, \
     get_herb_laugh_from_file, get_nerts_commentry_from_file, \
-    get_random_rock_facts_from_file, get_random_tv_game_help_from_file
+    get_rock_facts_from_file, get_tv_games_help_from_file
 from database_helpers import get_movie_watchlist, add_movie_to_watchlist, \
     remove_movie_from_watchlist, get_movie_by_upvotes
 from embeds import embed_movie_watchlist, embed_movie_schedule, embed_shitemas_schedule, embed_games_schedule, \
@@ -43,11 +43,11 @@ else:
 ################################################################################
 # LOAD FILES
 
-FRIENDLY_ROBOT_ADVICE = get_random_friendly_advice_from_file()
+FRIENDLY_ROBOT_ADVICE = get_friendly_advice_from_file()
 AOE_TAUNTS_DICT = get_aoe_taunts_from_file()
-ROCK_FACTS = get_random_rock_facts_from_file()
+ROCK_FACTS = get_rock_facts_from_file()
 NERTS = get_nerts_commentry_from_file()
-TV_GAMES_HELP = get_random_tv_game_help_from_file()
+TV_GAMES_HELP = get_tv_games_help_from_file()
 
 ################################################################################
 # LOAD DATABASE

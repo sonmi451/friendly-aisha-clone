@@ -17,37 +17,37 @@ MOVIE_WATCHLIST = '../resources/movie_watchlist.json'
 
 
 def get_herb_laugh_from_file():
-    herb_laugh = discord.File(f'../resources/11_herb_laugh.mp3')
+    herb_laugh = discord.File('../resources/11_herb_laugh.mp3')
     return herb_laugh
 
 
-def get_random_friendly_advice_from_file():
-    with open('../resources/friendly_robot_advice.txt') as f:
-        friendly_robot_advice = [line.strip() for line in f]
+def get_friendly_advice_from_file():
+    with open('../resources/friendly_robot_advice.txt') as file:
+        friendly_robot_advice = [line.strip() for line in file]
     return friendly_robot_advice
 
 
-def get_random_rock_facts_from_file():
-    with open('../resources/rock_facts.txt') as f:
-        rock_facts = [line.strip() for line in f]
+def get_rock_facts_from_file():
+    with open('../resources/rock_facts.txt') as file:
+        rock_facts = [line.strip() for line in file]
     return rock_facts
 
 
-def get_random_tv_game_help_from_file():
-    with open('../resources/tv_games.txt') as f:
-        rock_facts = [line.strip() for line in f]
-    return rock_facts
+def get_tv_games_help_from_file():
+    with open('../resources/tv_games.txt') as file:
+        tv_games = [line.strip() for line in file]
+    return tv_games
 
 
 def get_nerts_commentry_from_file():
-    with open('../resources/nerts_commentry.txt') as f:
-        nerts_commentry = [line.strip() for line in f]
+    with open('../resources/nerts_commentry.txt') as file:
+        nerts_commentry = [line.strip() for line in file]
     return nerts_commentry
 
 
 def get_aoe_taunts_from_file():
-    with open('../resources/aoe_taunts.json') as f:
-        aoe_taunts = json.load(f)
+    with open('../resources/aoe_taunts.json') as file:
+        aoe_taunts = json.load(file)
     return aoe_taunts
 
 
@@ -61,7 +61,7 @@ def read_watchlist_from_file():
     try:
         with open(MOVIE_WATCHLIST, 'r') as in_file:
             movie_watchlist = json.load(in_file)
-    except FileNotFoundError as e:
+    except FileNotFoundError as ex:
         write_watchlist_to_file(movie_watchlist)
     return movie_watchlist
 
