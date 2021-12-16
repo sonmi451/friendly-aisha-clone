@@ -2,6 +2,7 @@
 # IMPORTS
 
 import os
+import re
 import discord
 import DiscordUtils
 from dotenv import load_dotenv
@@ -123,16 +124,7 @@ async def on_message(message):
         await message.channel.send(embed=response)
 
     if 'orb' in chat_message:
-        orbified_message = chat_message
-        vowels = [x for x in 'oaeiu']
-        capital_vowels = [x for x in 'OAEIU']
-        for vowel in vowels:
-            if vowel in chat_message:
-                orbified_message=orbified_message.replace(vowel,'orb')
-                vowels = [x for x in 'oaeiu']
-        for vowel in capital_vowels:
-            if vowel in chat_message:
-                orbified_message=orbified_message.replace(vowel,'Orb')
+        orbified_message = re.sub('[aeiou]', 'orb', chat_message)
         await message.channel.send(orbified_message)
 
     if 'nerts!' in chat_message:
