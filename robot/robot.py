@@ -272,8 +272,8 @@ async def github_url(ctx):
                 help='Gimme some bubblewrap to pop')
 async def bubblewrap(ctx):
     bubblerow = "||pop|| ||pop|| ||pop|| ||pop|| ||pop|| ||pop|| ||pop|| ||pop|| ||pop|| ||pop|| ||pop||\n"
-    bubblewrap = f"Enjoy the bubblewrap:\n{bubblerow * 9}"
-    await ctx.send(bubblewrap)
+    bubbles = f"Enjoy the bubblewrap:\n{bubblerow * 9}"
+    await ctx.send(bubbles)
 
 
 @client.command(name='parrot',
