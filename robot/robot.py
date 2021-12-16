@@ -104,10 +104,6 @@ async def on_message(message):
     if message.author == client.user:
         return
 
-    # ignore shoutybot
-    if message.author.id == 824577719047290912:
-        return
-
     # if Wade uses AoE shortcuts, reply with their meaning
     if WADE_ID and message.author.id == WADE_ID:
         if re.search(r'(^|\D)(1{2})(\D|$)', chat_message):
@@ -125,7 +121,7 @@ async def on_message(message):
         response = embed_response(beep_boop)
         await message.channel.send(embed=response)
 
-    if 'orb' in chat_message:
+    if 'orb' in chat_message and 'i have counted' not in chat_message:
         orbified_message = re.sub('[aeiou]', 'orb', chat_message)
         await message.channel.send(orbified_message)
 
