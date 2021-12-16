@@ -181,7 +181,7 @@ async def on_message(message):
             await message.channel.send(embed=response)
 
         if 'shite schedule' in chat_message:
-            schedule = scrape_timed_events_from_calender(SHITEMAS_AGENDA)
+            schedule = scrape_events_from_calender(SHITEMAS_AGENDA)
             print_schedule = embed_shitemas_schedule(schedule)
             await message.channel.send(embed=print_schedule)
 
