@@ -109,6 +109,9 @@ def embed_movie_schedule(schedule, first=False):
     formatted_schedule.add_field(name='Calender',
                                  value='[See the full calender of events online](https://calendar.google.com/calendar/u/0/embed?src=qjva8eaked6q9vdcgqkspqvseg@group.calendar.google.com)',
                                  inline=False)
+    formatted_schedule.add_field(name='Reelgood',
+                                 value='[Where can I stream these from?](https://reelgood.com/)',
+                                 inline=False)
     return formatted_schedule
 
 
