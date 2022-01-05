@@ -9,11 +9,15 @@ For getting files, directory structure is assumed to be:
 
 '''
 
+import discord
 import json
 import random
-import discord
+import re
+from nltk.corpus import words
 
 MOVIE_WATCHLIST = '../resources/movie_watchlist.json'
+# This removes duplicates and caches this to speed up the bot
+WORD_SET = set(words.words())
 
 
 def get_herb_laugh_from_file():
@@ -88,3 +92,28 @@ def get_random_beep_boop():
                    'beep!']
     random_beep = random.choice(beeps_boops)
     return random_beep
+
+
+def britishify(string, british_to_american):
+    for british_spelling, american_spelling in british_to_american.items():
+        string = re.sub(
+            f'(?<![a-zA-Z]){american_spelling}(?![a-z-Z])', british_spelling, string)
+    return string
+
+
+def get_british_spellings_from_file():
+    with open('../resources/british_spellings.json') as file:
+        british_spellings = json.load(file)
+    return british_spellings
+
+
+def get_word(british_to_american, word_len=5):
+    wordle_words = [word for word in WORD_SET if len(word) == word_len]
+    chosen_word = None
+    while chosen_word == None:
+        random_word = random.choice(wordle_words)
+        if not random_word[0].isupper():
+            chosen_word = random_word
+    if random_word in british_to_american:
+        random_word = britishify(random_word, british_to_american)
+    return random_word

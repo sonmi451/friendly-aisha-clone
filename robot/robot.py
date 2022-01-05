@@ -13,7 +13,7 @@ from calendars import scrape_events_from_calender
 from helpers import get_random_beep_boop, get_random, get_aoe_taunt, \
     get_friendly_advice_from_file, get_aoe_taunts_from_file, \
     get_herb_laugh_from_file, get_nerts_commentry_from_file, \
-    get_rock_facts_from_file, get_tv_games_help_from_file
+    get_rock_facts_from_file, get_tv_games_help_from_file, get_british_spellings_from_file, get_word
 from database_helpers import get_movie_watchlist, add_movie_to_watchlist, \
     remove_movie_from_watchlist, get_movie_by_upvotes
 from embeds import embed_movie_watchlist, embed_movie_schedule, embed_shitemas_schedule, embed_games_schedule, \
@@ -49,6 +49,7 @@ AOE_TAUNTS_DICT = get_aoe_taunts_from_file()
 ROCK_FACTS = get_rock_facts_from_file()
 NERTS = get_nerts_commentry_from_file()
 TV_GAMES_HELP = get_tv_games_help_from_file()
+BRITISH_WORDS = get_british_spellings_from_file()
 
 ################################################################################
 # LOAD DATABASE
@@ -288,6 +289,24 @@ async def aoe_speak(ctx, taunt_num):
     if taunt:
         response = embed_response(taunt)
         await ctx.send(embed=response)
+
+
+@client.command(name='wordle',
+                help='Play wordle in Discord')
+async def play_wordle(ctx, *message):
+    if message:
+        try:
+            print(message)
+            word_len = int(message[0])
+        except:
+            word_len = 5
+    else:
+        word_len = 5
+    try:
+        word = get_word(BRITISH_WORDS, word_len)
+        await ctx.send(word)
+    except:
+        await ctx.send('Found no words of that length')
 
 ################################################################################
 # RUN THE ROBOT
