@@ -102,8 +102,7 @@ def embed_movie_schedule(schedule, first=False):
 
         for day in schedule:
             formatted_schedule.add_field(name=day[0],
-                                         value='\n'.join(
-                                             [str(time + ': ' + description) for time, description in day[1].items()]),
+                                         value='\n'.join([str(time + ': ' + description) if time != ' ' else description for time, description in day[1].items()]),
                                          inline=False)
 
     formatted_schedule.add_field(name='Calender',
@@ -126,8 +125,7 @@ def embed_shitemas_schedule(schedule, first=False):
 
         for day in schedule:
             formatted_schedule.add_field(name=day[0],
-                                         value='\n'.join(
-                                             [str(time + ': ' + description) for time, description in day[1].items()]),
+                                         value='\n'.join([str(time + ': ' + description) if time != ' ' else description for time, description in day[1].items()]),
                                          inline=False)
 
     formatted_schedule.add_field(name='Calender',
@@ -142,8 +140,7 @@ def embed_games_schedule(schedule):
                                  value='join Acres Greg in the TV games voice channel for socialising and games')
     for day in schedule:
         formatted_schedule.add_field(name=day[0],
-                                     value='\n'.join(
-                                         [str(description) for time, description in day[1].items()]),
+                                     value='\n'.join([str(time + ': ' + description) if time != ' ' else description for time, description in day[1].items()]),
                                      inline=False)
     return formatted_schedule
 
