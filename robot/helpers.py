@@ -132,7 +132,7 @@ def check_answer(answer, word):
                 response_str += '🟩'
             elif letter in word:
                 correct = False
-                response_str += '🟨'
+                response_str += '🟦'
             else:
                 correct = False
                 response_str += '⬛'
