@@ -143,9 +143,21 @@ def check_answer(answer, word):
         wrong_len = True
     return correct, response_str, wrong_len
 
+
 def get_wordle_stats():
     stats_msg = f'Play Wordle on Discord with a selection of {len(WORD_SET)} English words!'
-    return stats_msg 
+    return stats_msg
+
+
+def get_emoji_word(word):
+    emojied_word = ''
+    for character in list(word.lower()):
+        if character.isalpha():
+            emojied_word += f':regional_indicator_{character}:'
+        else:
+            emojied_word += character
+    return emojied_word
+
 
 async def wait_for_answer(ctx, word, word_len):
     def check(m):
@@ -167,11 +179,13 @@ async def wait_for_answer(ctx, word, word_len):
                     # Skip bot commands
                     pass
                 else:
-                    correct, response_str, wrong_len = check_answer(msg.content, word)
+                    correct, response_str, wrong_len = check_answer(
+                        msg.content, word)
+                    emoji_word = get_emoji_word(msg.content)
                     if correct:
-                        await ctx.send(f'{fail_count}/{word_len+1}: {msg.content.upper()}\n' + response_str + f'\nCorrect! The word was {word}')
+                        await ctx.send(f'{emoji_word} - {fail_count}/{word_len+1}\n' + response_str + f'\nCorrect! The word was {word}')
                     else:
-                        await ctx.send(f'{fail_count}/{word_len+1}: {msg.content.upper()}\n' + response_str)
+                        await ctx.send(f'{emoji_word} - {fail_count}/{word_len+1}\n' + response_str)
                     if (fail_count == word_len+1):
                         await ctx.send(f'Too many incorrect guesses. The word was {word}')
                         break
