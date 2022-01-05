@@ -9,6 +9,7 @@ For getting files, directory structure is assumed to be:
 
 '''
 
+import asyncio
 import discord
 import json
 import random
@@ -117,3 +118,64 @@ def get_word(british_to_american, word_len=5):
     if random_word in british_to_american:
         random_word = britishify(random_word, british_to_american)
     return random_word
+
+
+def check_answer(answer, word):
+    characters = list(answer.upper())
+    if len(characters) == len(word):
+        response_str = ''
+        correct = True
+        wrong_len = False
+        idx = 0
+        for letter in characters:
+            if letter == word[idx]:
+                response_str += '🟩'
+            elif letter in word:
+                correct = False
+                response_str += '🟨'
+            else:
+                correct = False
+                response_str += '⬛'
+            idx += 1
+    else:
+        response_str = 'Guesses must be the same length as the wordle'
+        correct = False
+        wrong_len = True
+    return correct, response_str, wrong_len
+
+def get_wordle_stats():
+    stats_msg = f'Play Wordle on Discord with a selection of {len(WORD_SET)} English words!'
+    return stats_msg 
+
+async def wait_for_answer(ctx, word, word_len):
+    def check(m):
+        '''
+        Checks message is by original command user and in the same channel
+        '''
+        if m.channel != ctx.channel:
+            return False
+        if m.author != ctx.author:
+            return False
+        return True
+    try:
+        correct = False
+        fail_count = 1
+        while not correct:
+            msg = await ctx.bot.wait_for('message', timeout=300, check=check)
+            if msg:
+                if msg.content[0] == '$':
+                    # Skip bot commands
+                    pass
+                else:
+                    correct, response_str, wrong_len = check_answer(msg.content, word)
+                    if correct:
+                        await ctx.send(f'{fail_count}/{word_len+1}: {msg.content.upper()}\n' + response_str + f'\nCorrect! The word was {word}')
+                    else:
+                        await ctx.send(f'{fail_count}/{word_len+1}: {msg.content.upper()}\n' + response_str)
+                    if (fail_count == word_len+1):
+                        await ctx.send(f'Too many incorrect guesses. The word was {word}')
+                        break
+                    if not wrong_len:
+                        fail_count += 1
+    except asyncio.TimeoutError:
+        await ctx.send(f'Wordle timed out. Guess quicker next time!\nThe word was {word}')

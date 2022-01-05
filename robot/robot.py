@@ -13,7 +13,8 @@ from calendars import scrape_events_from_calender
 from helpers import get_random_beep_boop, get_random, get_aoe_taunt, \
     get_friendly_advice_from_file, get_aoe_taunts_from_file, \
     get_herb_laugh_from_file, get_nerts_commentry_from_file, \
-    get_rock_facts_from_file, get_tv_games_help_from_file, get_british_spellings_from_file, get_word
+    get_rock_facts_from_file, get_tv_games_help_from_file, \
+    get_british_spellings_from_file, get_word, get_wordle_stats, wait_for_answer
 from database_helpers import get_movie_watchlist, add_movie_to_watchlist, \
     remove_movie_from_watchlist, get_movie_by_upvotes
 from embeds import embed_movie_watchlist, embed_movie_schedule, embed_shitemas_schedule, embed_games_schedule, \
@@ -295,18 +296,20 @@ async def aoe_speak(ctx, taunt_num):
                 help='Play wordle in Discord')
 async def play_wordle(ctx, *message):
     if message:
+        if message[0] == 'stats':
+            await ctx.send(get_wordle_stats())
         try:
-            print(message)
             word_len = int(message[0])
         except:
             word_len = 5
     else:
         word_len = 5
     try:
-        word = get_word(BRITISH_WORDS, word_len)
-        await ctx.send(word)
-    except:
-        await ctx.send('Found no words of that length')
+        word = get_word(BRITISH_WORDS, word_len).upper()
+        await ctx.send(f'Guessing a {word_len} character word in {word_len+1} guesses...')
+        await wait_for_answer(ctx, word, word_len)
+    except Exception as e:
+        await (ctx.send('Found no words of that length'))
 
 ################################################################################
 # RUN THE ROBOT
