@@ -132,7 +132,7 @@ def check_answer(answer, word):
                 response_str += '🟩'
             elif letter in word:
                 correct = False
-                response_str += '🟦'
+                response_str += '🟨'
             else:
                 correct = False
                 response_str += '⬛'
@@ -184,6 +184,7 @@ async def wait_for_answer(ctx, word, word_len):
                     emoji_word = get_emoji_word(msg.content)
                     if correct:
                         await ctx.send(f'{emoji_word} - {fail_count}/{word_len+1}\n' + response_str + f'\nCorrect! The word was {word}')
+                        return
                     else:
                         await ctx.send(f'{emoji_word} - {fail_count}/{word_len+1}\n' + response_str)
                     if (fail_count == word_len+1):
