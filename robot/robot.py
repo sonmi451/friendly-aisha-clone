@@ -17,8 +17,10 @@ from helpers import get_random_beep_boop, get_random, get_aoe_taunt, \
     get_british_spellings_from_file, get_word, get_wordle_stats, wait_for_answer
 from database_helpers import get_movie_watchlist, add_movie_to_watchlist, \
     remove_movie_from_watchlist, get_movie_by_upvotes
-from embeds import embed_movie_watchlist, embed_movie_schedule, embed_shitemas_schedule, embed_games_schedule, \
-    embed_github, embed_guess_the_soup_rules, embed_response, embed_shitemaster_email
+from embeds import embed_movie_watchlist, embed_movie_schedule,
+embed_shitemas_schedule, embed_games_schedule, \
+    embed_github, embed_guess_the_soup_rules, embed_response,
+embed_shitemaster_email
 
 ################################################################################
 # LOAD ENVIRONMENT VARIABLES
@@ -75,8 +77,13 @@ else:
     client = commands.Bot(command_prefix='$', intents=intents)
 
 ################################################################################
-# COMMANDS ETC
+# GLOBAL VARS
 
+SHITEMASTER_HELP = ['shitemaster email', 'submit shitemaster', 'submit task',
+                     'sm email', 'shitemasters assistant email',
+                     'shitemaster\'s assistant email', 'shite email']
+################################################################################
+# EVENT REACTIONS
 
 @client.event
 async def on_ready():
@@ -84,7 +91,6 @@ async def on_ready():
         if guild.name == SERVER:
             print(f"{client.user} has connected to Discord Server {guild.name}")
             break
-
 
 @client.event
 async def on_member_join(member):
@@ -95,98 +101,8 @@ async def on_member_join(member):
                           On Sunday evenings we watch movies"""
     await member.send(embed=welcome_message)
 
-
-@client.event
-async def on_message(message):
-    chat_message = message.content.lower()
-
-    if DEBUG:
-        print(str(message.author) + '\n' + str(chat_message))
-
-    if message.author == client.user:
-        return
-
-    # if Wade uses AoE shortcuts, reply with their meaning
-    if WADE_ID and message.author.id == WADE_ID:
-        if re.search(r'(^|\D)(1{2})(\D|$)', chat_message):
-            herb_laugh = get_herb_laugh_from_file()
-            await message.channel.send(file=herb_laugh)
-        else:
-            taunt = get_aoe_taunt(AOE_TAUNTS_DICT, chat_message)
-            if taunt:
-                response = embed_response(taunt)
-                await message.channel.send(embed=response)
-
-    # if you @ the bot it beeps or boops
-    if any(id in chat_message for id in [BOT_USER_ID, BOT_ROLE_ID]):
-        beep_boop = get_random_beep_boop()
-        response = embed_response(beep_boop)
-        await message.channel.send(embed=response)
-
-    if 'orb' in chat_message and 'i have counted' not in chat_message:
-        orbified_message = re.sub('[aeiou]', 'orb', chat_message)
-        await message.channel.send(orbified_message)
-
-    if 'nerts' in chat_message:
-        response = get_random(NERTS)
-        response = embed_response(response)
-        await message.channel.send(embed=response)
-
-    if 'robot' in chat_message:
-        friendly_message = get_random(FRIENDLY_ROBOT_ADVICE)
-        response = embed_response(friendly_message)
-        await message.channel.send(embed=response)
-
-    if 'regulations' in chat_message:
-        response = embed_response('Praise be the regulations')
-        await message.channel.send(embed=response)
-
-    if 'rock' in chat_message and 'fact' in chat_message:
-        await message.add_reaction(emoji='<:rockfact:772801261103742976>')
-        rock_message = get_random(ROCK_FACTS)
-        response = embed_response(rock_message)
-        await message.channel.send(embed=response)
-
-    if 'guess the soup' in chat_message:
-        await message.add_reaction(emoji='<:soupguess:806255878902513724>')
-        if 'rule' in chat_message:
-            response = embed_guess_the_soup_rules()
-            await message.channel.send(embed=response)
-
-    if 'tv' in chat_message and 'game' in chat_message and 'help' in chat_message:
-        tv_games_help = get_random(TV_GAMES_HELP)
-        response = embed_response(tv_games_help)
-        await message.channel.send(embed=response)
-
-    if 'tv games schedule' in chat_message:
-        schedule = scrape_events_from_calender(TV_GAMES_AGENDA)
-        print_schedule = embed_games_schedule(schedule)
-        await message.channel.send(embed=print_schedule)
-
-    if 'movie schedule' in chat_message:
-        schedule = scrape_events_from_calender(MOVIE_AGENDA)
-        print_schedule = embed_movie_schedule(schedule)
-        await message.channel.send(embed=print_schedule)
-
-    sm_assistant_msgs = ['shitemaster email', 'submit shitemaster', 'submit task',
-                         'sm email', 'shitemasters assistant email',
-                         'shitemaster\'s assistant email', 'shite email']
-    if any(x in chat_message.lower() for x in sm_assistant_msgs):
-        embed = embed_shitemaster_email(SHITEMASTER_EMAIL)
-        await message.author.send('', embed=embed)
-
-    if SHITE == '1':
-        if 'shitemas' in chat_message:
-            response = embed_response(
-                'SHITEmas is the most wonderful time of the year.')
-            await message.channel.send(embed=response)
-
-        if 'shite schedule' in chat_message:
-            schedule = scrape_events_from_calender(SHITEMAS_AGENDA)
-            print_schedule = embed_shitemas_schedule(schedule)
-            await message.channel.send(embed=print_schedule)
-
-    await client.process_commands(message)
+################################################################################
+# USER COMMANDS
 
 
 @client.command(name='movies',
@@ -198,7 +114,8 @@ async def full_schedule(ctx):
 
 
 @client.command(name='movie',
-                help='Reads the next scheduled movie schedule from the calendar')
+                help='Reads the next scheduled movie schedule from the
+calendar')
 async def next_scheduled(ctx):
     schedule = scrape_events_from_calender(MOVIE_AGENDA)
     print_schedule = embed_movie_schedule(schedule, first=True)
@@ -260,20 +177,20 @@ async def remove_movie(ctx, *movie):
     await ctx.send(embed=response)
 
 
-@client.command(name='github',
-                help='Github page for the repo')
-async def github_url(ctx):
-    github_url = embed_github()
-    await ctx.send(embed=github_url)
-
-
 @client.command(name='bubblewrap',
                 help='Gimme some bubblewrap to pop')
 async def bubblewrap(ctx):
-    bubblerow = "||pop|| ||pop|| ||pop|| ||pop|| ||pop|| ||pop|| ||pop|| ||pop|| ||pop|| ||pop|| ||pop||\n"
+    bubblerow = "||pop|| ||pop|| ||pop|| ||pop|| ||pop|| ||pop||
+||pop|| ||pop|| ||pop|| ||pop|| ||pop||\n"
     bubbles = f"Enjoy the bubblewrap:\n{bubblerow * 9}"
     await ctx.send(bubbles)
 
+
+@client.command(name='github',
+                help='See my insides on Github!')
+async def github_url(ctx):
+    url = embed_github()
+    await ctx.send(embed=url)
 
 @client.command(name='parrot',
                 help='I\'ll repeat what you say')
@@ -306,10 +223,104 @@ async def play_wordle(ctx, *message):
         word_len = 5
     try:
         word = get_word(BRITISH_WORDS, word_len).upper()
-        await ctx.send(f'Guessing a {word_len} character word in {word_len+1} guesses...')
+        await ctx.send(f'Guessing a {word_len} character word in
+{word_len+1} guesses...')
         await wait_for_answer(ctx, word, word_len)
     except Exception as e:
         await (ctx.send('Found no words of that length'))
+
+################################################################################
+# RESPONSES TO TEXT
+
+@client.event
+async def on_message(message):
+    chat_message = message.content.lower()
+
+    if DEBUG:
+        print(str(message.author) + '\n' + str(chat_message))
+
+    if message.author == client.user:
+        return
+
+    # if Wade uses AoE shortcuts, reply with their meaning
+    if WADE_ID and message.author.id == WADE_ID:
+        if re.search(r'(^|\D)(1{2})(\D|$)', chat_message):
+            herb_laugh = get_herb_laugh_from_file()
+            await message.channel.send(file=herb_laugh)
+        else:
+            taunt = get_aoe_taunt(AOE_TAUNTS_DICT, chat_message)
+            if taunt:
+                response = embed_response(taunt)
+                await message.channel.send(embed=response)
+
+    # if you @ the bot it beeps or boops
+    if any(id in chat_message for id in [BOT_USER_ID, BOT_ROLE_ID]):
+        beep_boop = get_random_beep_boop()
+        response = embed_response(beep_boop)
+        await message.channel.send(embed=response)
+
+    if 'orb' in chat_message and 'i have counted' not in chat_message:
+        orbified_message = re.sub('[aeiou]', 'orb', chat_message)
+        await message.channel.send(orbified_message)
+
+    if 'nerts' in chat_message:
+        response = get_random(NERTS)
+        response = embed_response(response)
+        await message.channel.send(embed=response)
+
+    if 'robot' in chat_message:
+        friendly_message = get_random(FRIENDLY_ROBOT_ADVICE)
+        response = embed_response(friendly_message)
+        await message.channel.send(embed=response)
+
+    if 'regulations' in chat_message:
+        response = embed_response('Praise be the regulations')
+        await message.channel.send(embed=response)
+
+    if 'rock' in chat_message and 'fact' in chat_message:
+        await message.add_reaction(emoji='<:rockfact:772801261103742976>')
+        rock_message = get_random(ROCK_FACTS)
+        response = embed_response(rock_message)
+        await message.channel.send(embed=response)
+
+    if 'guess the soup' in chat_message:
+        await message.add_reaction(emoji='<:soupguess:806255878902513724>')
+        if 'rule' in chat_message:
+            response = embed_guess_the_soup_rules()
+            await message.channel.send(embed=response)
+
+    if 'tv' in chat_message and 'game' in chat_message and 'help' in
+chat_message:
+        tv_games_help = get_random(TV_GAMES_HELP)
+        response = embed_response(tv_games_help)
+        await message.channel.send(embed=response)
+
+    if 'tv games schedule' in chat_message:
+        schedule = scrape_events_from_calender(TV_GAMES_AGENDA)
+        print_schedule = embed_games_schedule(schedule)
+        await message.channel.send(embed=print_schedule)
+
+    if 'movie schedule' in chat_message:
+        schedule = scrape_events_from_calender(MOVIE_AGENDA)
+        print_schedule = embed_movie_schedule(schedule)
+        await message.channel.send(embed=print_schedule)
+
+    if any(x in chat_message.lower() for x in SHITEMASTER_HELP):
+        embed = embed_shitemaster_email(SHITEMASTER_EMAIL)
+        await message.author.send('', embed=embed)
+
+    if SHITE == '1':
+        if 'shitemas' in chat_message:
+            response = embed_response(
+                'SHITEmas is the most wonderful time of the year.')
+            await message.channel.send(embed=response)
+
+        if 'shite schedule' in chat_message:
+            schedule = scrape_events_from_calender(SHITEMAS_AGENDA)
+            print_schedule = embed_shitemas_schedule(schedule)
+            await message.channel.send(embed=print_schedule)
+
+    await client.process_commands(message)
 
 ################################################################################
 # RUN THE ROBOT
