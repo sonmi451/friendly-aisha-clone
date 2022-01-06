@@ -17,10 +17,8 @@ from helpers import get_random_beep_boop, get_random, get_aoe_taunt, \
     get_british_spellings_from_file, get_word, get_wordle_stats, wait_for_answer
 from database_helpers import get_movie_watchlist, add_movie_to_watchlist, \
     remove_movie_from_watchlist, get_movie_by_upvotes
-from embeds import embed_movie_watchlist, embed_movie_schedule,
-embed_shitemas_schedule, embed_games_schedule, \
-    embed_github, embed_guess_the_soup_rules, embed_response,
-embed_shitemaster_email
+from embeds import embed_movie_watchlist, embed_movie_schedule, embed_shitemas_schedule, embed_games_schedule, \
+    embed_github, embed_guess_the_soup_rules, embed_response, embed_shitemaster_email
 
 ################################################################################
 # LOAD ENVIRONMENT VARIABLES
@@ -119,8 +117,7 @@ async def full_schedule(ctx):
 
 
 @client.command(name='movie',
-                help='Reads the next scheduled movie schedule from the
-calendar')
+                help='Reads the next scheduled movie schedule from the calendar')
 async def next_scheduled(ctx):
     schedule = scrape_events_from_calender(MOVIE_AGENDA)
     print_schedule = embed_movie_schedule(schedule, first=True)
@@ -185,8 +182,7 @@ async def remove_movie(ctx, *movie):
 @client.command(name='bubblewrap',
                 help='Gimme some bubblewrap to pop')
 async def bubblewrap(ctx):
-    bubblerow = "||pop|| ||pop|| ||pop|| ||pop|| ||pop|| ||pop||
-||pop|| ||pop|| ||pop|| ||pop|| ||pop||\n"
+    bubblerow = "||pop|| ||pop|| ||pop|| ||pop|| ||pop|| ||pop|| ||pop|| ||pop|| ||pop|| ||pop|| ||pop||\n"
     bubbles = f"Enjoy the bubblewrap:\n{bubblerow * 9}"
     await ctx.send(bubbles)
 
@@ -228,8 +224,7 @@ async def play_wordle(ctx, *message):
         word_len = 5
     try:
         word = get_word(BRITISH_WORDS, word_len).upper()
-        await ctx.send(f'Guessing a {word_len} character word in
-{word_len+1} guesses...')
+        await ctx.send(f'Guessing a {word_len} character word in {word_len+1} guesses...')
         await wait_for_answer(ctx, word, word_len)
     except Exception as e:
         await (ctx.send('Found no words of that length'))
@@ -294,8 +289,7 @@ async def on_message(message):
             response = embed_guess_the_soup_rules()
             await message.channel.send(embed=response)
 
-    if 'tv' in chat_message and 'game' in chat_message and 'help' in
-chat_message:
+    if 'tv' in chat_message and 'game' in chat_message and 'help' in chat_message:
         tv_games_help = get_random(TV_GAMES_HELP)
         response = embed_response(tv_games_help)
         await message.channel.send(embed=response)
