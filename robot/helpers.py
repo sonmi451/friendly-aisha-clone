@@ -173,7 +173,7 @@ async def wait_for_answer(ctx, word, word_len):
         correct = False
         fail_count = 1
         while not correct:
-            msg = await ctx.bot.wait_for('message', timeout=300, check=check)
+            msg = await ctx.bot.wait_for('message', timeout=3600, check=check)
             if msg:
                 if msg.content[0] == '$':
                     # Skip bot commands
