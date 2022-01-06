@@ -75,8 +75,13 @@ else:
     client = commands.Bot(command_prefix='$', intents=intents)
 
 ################################################################################
-# COMMANDS ETC
+# GLOBAL VARS
 
+SHITEMASTER_HELP = ['shitemaster email', 'submit shitemaster', 'submit task',
+                     'sm email', 'shitemasters assistant email',
+                     'shitemaster\'s assistant email', 'shite email']
+################################################################################
+# EVENT REACTIONS
 
 @client.event
 async def on_ready():
@@ -84,7 +89,6 @@ async def on_ready():
         if guild.name == SERVER:
             print(f"{client.user} has connected to Discord Server {guild.name}")
             break
-
 
 @client.event
 async def on_member_join(member):
@@ -95,6 +99,138 @@ async def on_member_join(member):
                           On Sunday evenings we watch movies"""
     await member.send(embed=welcome_message)
 
+################################################################################
+# USER COMMANDS
+
+@client.command(name='shitemaster',
+                help='Recieve a DM of the Shitemaster submission info')
+async def full_schedule(ctx):
+        embed = embed_shitemaster_email(SHITEMASTER_EMAIL)
+        await ctx.author.send('', embed=embed)
+
+@client.command(name='movies',
+                help='Read the full movie schedule from the calendar')
+async def full_schedule(ctx):
+    schedule = scrape_events_from_calender(MOVIE_AGENDA)
+    print_schedule = embed_movie_schedule(schedule)
+    await ctx.send(embed=print_schedule)
+
+
+@client.command(name='movie',
+                help='Reads the next scheduled movie schedule from the calendar')
+async def next_scheduled(ctx):
+    schedule = scrape_events_from_calender(MOVIE_AGENDA)
+    print_schedule = embed_movie_schedule(schedule, first=True)
+    await ctx.send(embed=print_schedule)
+
+
+@client.command(name='movielist',
+                help='See the watchlist')
+async def view_watchlist(ctx):
+    watchlist = get_movie_watchlist(MOVIE_COLLECTION)
+    responses = embed_movie_watchlist(watchlist)
+    if len(responses) > 1:
+        paginator = DiscordUtils.Pagination.AutoEmbedPaginator(
+            ctx, timeout=60)
+        await paginator.run(responses)
+    else:
+        await ctx.send(content='', embed=responses[0])
+
+
+@client.command(name='upvotelist',
+                help='See the watchlist sorted by upvotes')
+async def view_watchlist_upvote_sorted(ctx):
+    watchlist = get_movie_by_upvotes(MOVIE_COLLECTION)
+    response = embed_movie_watchlist(watchlist)
+    await ctx.send(embed=response)
+
+
+@client.command(name='addmovie',
+                help='Add or upvote a movie on the watchlist')
+async def add_movie(ctx, *movie):
+    if movie:
+        movie = ' '.join(movie)
+        movie_name = str(movie).title()
+        movie_details = {
+            '_id': movie_name,
+            'suggestedBy': ctx.message.author.name,
+            'votes': 1,
+            'IMDB': "",
+        }
+        add_movie_to_watchlist(MOVIE_COLLECTION, movie_details)
+        text = f"Thank you for your suggestion: {movie_name}!"
+    else:
+        text = "you wanna try: `$addmovie The Best Film in the World`"
+    response = embed_response(text)
+    await ctx.send(embed=response)
+
+
+@client.command(name='delmovie',
+                help='Remove a movie to the watchlist')
+async def remove_movie(ctx, *movie):
+    if movie:
+        movie = ' '.join(movie)
+        movie_name = str(movie).title()
+        remove_movie_from_watchlist(MOVIE_COLLECTION, movie_name)
+        text = f"Removed movie from watchlist: {movie_name}!"
+    else:
+        text = "you wanna try: `$delmovie \"The Best Film in the World\"`"
+    response = embed_response(text)
+    await ctx.send(embed=response)
+
+
+@client.command(name='bubblewrap',
+                help='Gimme some bubblewrap to pop')
+async def bubblewrap(ctx):
+    bubblerow = "||pop|| ||pop|| ||pop|| ||pop|| ||pop|| ||pop|| ||pop|| ||pop|| ||pop|| ||pop|| ||pop||\n"
+    bubbles = f"Enjoy the bubblewrap:\n{bubblerow * 9}"
+    await ctx.send(bubbles)
+
+
+@client.command(name='github',
+                help='See my insides on Github!')
+async def github_url(ctx):
+    url = embed_github()
+    await ctx.send(embed=url)
+
+@client.command(name='parrot',
+                help='I\'ll repeat what you say')
+async def parrot_speak(ctx, *message):
+    if message:
+        response = embed_response(' '.join(message))
+        await ctx.send(embed=response)
+
+
+@client.command(name='wade',
+                help='Talk in AOE taunts!')
+async def aoe_speak(ctx, taunt_num):
+    taunt = get_aoe_taunt(AOE_TAUNTS_DICT, taunt_num)
+    if taunt:
+        response = embed_response(taunt)
+        await ctx.send(embed=response)
+
+
+@client.command(name='wordle',
+                help='Play wordle in Discord')
+async def play_wordle(ctx, *message):
+    if message:
+        if message[0] == 'stats':
+            await ctx.send(get_wordle_stats())
+        try:
+            word_len = int(message[0])
+        except:
+            word_len = 5
+    else:
+        word_len = 5
+    try:
+        word = get_word(BRITISH_WORDS, word_len).upper()
+        await ctx.send(f'Guessing a {word_len} character word in {word_len+1} guesses...')
+        await wait_for_answer(ctx, word, word_len)
+    except Exception as e:
+        await (ctx.send('Found no words of that length'))
+
+################################################################################
+# RESPONSES TO TEXT
 
 @client.event
 async def on_message(message):
@@ -168,10 +304,7 @@ async def on_message(message):
         print_schedule = embed_movie_schedule(schedule)
         await message.channel.send(embed=print_schedule)
 
-    sm_assistant_msgs = ['shitemaster email', 'submit shitemaster', 'submit task',
-                         'sm email', 'shitemasters assistant email',
-                         'shitemaster\'s assistant email', 'shite email']
-    if any(x in chat_message.lower() for x in sm_assistant_msgs):
+    if any(x in chat_message.lower() for x in SHITEMASTER_HELP):
         embed = embed_shitemaster_email(SHITEMASTER_EMAIL)
         await message.author.send('', embed=embed)
 
@@ -187,129 +320,6 @@ async def on_message(message):
             await message.channel.send(embed=print_schedule)
 
     await client.process_commands(message)
-
-
-@client.command(name='movies',
-                help='Read the full movie schedule from the calendar')
-async def full_schedule(ctx):
-    schedule = scrape_events_from_calender(MOVIE_AGENDA)
-    print_schedule = embed_movie_schedule(schedule)
-    await ctx.send(embed=print_schedule)
-
-
-@client.command(name='movie',
-                help='Reads the next scheduled movie schedule from the calendar')
-async def next_scheduled(ctx):
-    schedule = scrape_events_from_calender(MOVIE_AGENDA)
-    print_schedule = embed_movie_schedule(schedule, first=True)
-    await ctx.send(embed=print_schedule)
-
-
-@client.command(name='movielist',
-                help='See the watchlist')
-async def view_watchlist(ctx):
-    watchlist = get_movie_watchlist(MOVIE_COLLECTION)
-    responses = embed_movie_watchlist(watchlist)
-    if len(responses) > 1:
-        paginator = DiscordUtils.Pagination.AutoEmbedPaginator(
-            ctx, timeout=60)
-        await paginator.run(responses)
-    else:
-        await ctx.send(content='', embed=responses[0])
-
-
-@client.command(name='upvotelist',
-                help='See the watchlist sorted by upvotes')
-async def view_watchlist_upvote_sorted(ctx):
-    watchlist = get_movie_by_upvotes(MOVIE_COLLECTION)
-    response = embed_movie_watchlist(watchlist)
-    await ctx.send(embed=response)
-
-
-@client.command(name='addmovie',
-                help='Add or upvote a movie on the watchlist')
-async def add_movie(ctx, *movie):
-    if movie:
-        movie = ' '.join(movie)
-        movie_name = str(movie).title()
-        movie_details = {
-            '_id': movie_name,
-            'suggestedBy': ctx.message.author.name,
-            'votes': 1,
-            'IMDB': "",
-        }
-        add_movie_to_watchlist(MOVIE_COLLECTION, movie_details)
-        text = f"Thank you for your suggestion: {movie_name}!"
-    else:
-        text = "you wanna try: `$addmovie The Best Film in the World`"
-    response = embed_response(text)
-    await ctx.send(embed=response)
-
-
-@client.command(name='delmovie',
-                help='Remove a movie to the watchlist')
-async def remove_movie(ctx, *movie):
-    if movie:
-        movie = ' '.join(movie)
-        movie_name = str(movie).title()
-        remove_movie_from_watchlist(MOVIE_COLLECTION, movie_name)
-        text = f"Removed movie from watchlist: {movie_name}!"
-    else:
-        text = "you wanna try: `$delmovie \"The Best Film in the World\"`"
-    response = embed_response(text)
-    await ctx.send(embed=response)
-
-
-@client.command(name='github',
-                help='Github page for the repo')
-async def github_url(ctx):
-    github_url = embed_github()
-    await ctx.send(embed=github_url)
-
-
-@client.command(name='bubblewrap',
-                help='Gimme some bubblewrap to pop')
-async def bubblewrap(ctx):
-    bubblerow = "||pop|| ||pop|| ||pop|| ||pop|| ||pop|| ||pop|| ||pop|| ||pop|| ||pop|| ||pop|| ||pop||\n"
-    bubbles = f"Enjoy the bubblewrap:\n{bubblerow * 9}"
-    await ctx.send(bubbles)
-
-
-@client.command(name='parrot',
-                help='I\'ll repeat what you say')
-async def parrot_speak(ctx, *message):
-    if message:
-        response = embed_response(' '.join(message))
-        await ctx.send(embed=response)
-
-
-@client.command(name='wade',
-                help='Talk in AOE taunts!')
-async def aoe_speak(ctx, taunt_num):
-    taunt = get_aoe_taunt(AOE_TAUNTS_DICT, taunt_num)
-    if taunt:
-        response = embed_response(taunt)
-        await ctx.send(embed=response)
-
-
-@client.command(name='wordle',
-                help='Play wordle in Discord')
-async def play_wordle(ctx, *message):
-    if message:
-        if message[0] == 'stats':
-            await ctx.send(get_wordle_stats())
-        try:
-            word_len = int(message[0])
-        except:
-            word_len = 5
-    else:
-        word_len = 5
-    try:
-        word = get_word(BRITISH_WORDS, word_len).upper()
-        await ctx.send(f'Guessing a {word_len} character word in {word_len+1} guesses...')
-        await wait_for_answer(ctx, word, word_len)
-    except Exception as e:
-        await (ctx.send('Found no words of that length'))
 
 ################################################################################
 # RUN THE ROBOT
