@@ -104,6 +104,11 @@ async def on_member_join(member):
 ################################################################################
 # USER COMMANDS
 
+@client.command(name='shitemaster',
+                help='Recieve a DM of the Shitemaster submission info')
+async def full_schedule(ctx):
+        embed = embed_shitemaster_email(SHITEMASTER_EMAIL)
+        await ctx.author.send('', embed=embed)
 
 @client.command(name='movies',
                 help='Read the full movie schedule from the calendar')
