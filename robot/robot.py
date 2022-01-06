@@ -17,10 +17,8 @@ from helpers import get_random_beep_boop, get_random, get_aoe_taunt, \
     get_british_spellings_from_file, get_word, get_wordle_stats, wait_for_answer
 from database_helpers import get_movie_watchlist, add_movie_to_watchlist, \
     remove_movie_from_watchlist, get_movie_by_upvotes
-from embeds import embed_movie_watchlist, embed_movie_schedule,
-embed_shitemas_schedule, embed_games_schedule, \
-    embed_github, embed_guess_the_soup_rules, embed_response,
-embed_shitemaster_email
+from embeds import embed_movie_watchlist, embed_movie_schedule, embed_shitemas_schedule, embed_games_schedule, \
+    embed_github, embed_guess_the_soup_rules, embed_response, embed_shitemaster_email
 
 ################################################################################
 # LOAD ENVIRONMENT VARIABLES
@@ -185,8 +183,7 @@ async def remove_movie(ctx, *movie):
 @client.command(name='bubblewrap',
                 help='Gimme some bubblewrap to pop')
 async def bubblewrap(ctx):
-    bubblerow = "||pop|| ||pop|| ||pop|| ||pop|| ||pop|| ||pop||
-||pop|| ||pop|| ||pop|| ||pop|| ||pop||\n"
+    bubblerow = "||pop|| ||pop|| ||pop|| ||pop|| ||pop|| ||pop|| ||pop|| ||pop|| ||pop|| ||pop|| ||pop||\n"
     bubbles = f"Enjoy the bubblewrap:\n{bubblerow * 9}"
     await ctx.send(bubbles)
 
@@ -228,8 +225,7 @@ async def play_wordle(ctx, *message):
         word_len = 5
     try:
         word = get_word(BRITISH_WORDS, word_len).upper()
-        await ctx.send(f'Guessing a {word_len} character word in
-{word_len+1} guesses...')
+        await ctx.send(f'Guessing a {word_len} character word in {word_len+1} guesses...')
         await wait_for_answer(ctx, word, word_len)
     except Exception as e:
         await (ctx.send('Found no words of that length'))
