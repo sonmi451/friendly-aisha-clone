@@ -231,7 +231,12 @@ async def play_wordle(ctx, *message):
         await ctx.send(embed=response)
         await wait_for_answer(ctx, word, word_len)
     except Exception as e:
-        response = embed_wordle('A wordley error!',' Possibly there are no words of that length')
+        if DEBUG == '1':
+            response_text = ' Possibly there are no words of that length\n\nDebug mode error details:\n```' + str(e) + '```'
+        else:
+            response_text = ' Possibly there are no words of that length'
+        response = embed_wordle('A wordley error!', response_text)
+        print('\nException in play_wordle():', e, '', sep='\n')
         await ctx.send(embed=response)
 
 
@@ -249,6 +254,7 @@ async def wait_for_answer(ctx, word, word_len):
         correct = False
         fail_count = 1
         leftover_alphabet = ALPHABET
+        past_guesses = []
         while not correct:
             msg = await ctx.bot.wait_for('message', timeout=500, check=check)
             player = f'{msg.author}'
@@ -260,24 +266,29 @@ async def wait_for_answer(ctx, word, word_len):
                 else:
                     correct, wrong_len, leftover_alphabet, squares_response = check_answer(
                         msg.content, word, leftover_alphabet)
-                    emoji_word = get_emoji_word(msg.content)
-                    emoji_alphabet = get_emoji_word(' '.join(leftover_alphabet))
+                    # Setup only for valid guesses
+                    if not wrong_len:
+                        fail_count += 1
+                        emoji_word = get_emoji_word(msg.content)
+                        emoji_alphabet = get_emoji_word(''.join(leftover_alphabet))
+                        past_guesses += [f'{emoji_word} | {squares_response}']
+                        past_guesses_string = '\n'.join(past_guesses)
+                        common_response_text = f'{past_guesses_string} - {fail_count}/{word_len+1}'
+                    # Respond
                     if correct:
-                        response = embed_wordle(player_title, f'{emoji_word} - {fail_count}/{word_len+1}\n{squares_response}\nCorrect! The word was {get_emoji_word(word)}')
+                        response = embed_wordle(player_title, f'{common_response_text}\n\nCorrect! The word was {get_emoji_word(word)}')
                         await ctx.send(embed=response)
                         return
                     elif wrong_len:
                         response = embed_wordle(player_title, f'Your guesses must be {word_len} letters long! Try again!')
                         await ctx.send(embed=response)
                     elif (fail_count == word_len+1):
-                        response = embed_wordle(player_title, f'{emoji_word} - {fail_count}/{word_len+1}\n{squares_response}\nToo many incorrect guesses. The word was {get_emoji_word(word)}')
+                        response = embed_wordle(player_title, f'{common_response_text}\n\nToo many incorrect guesses. The word was {get_emoji_word(word)}')
                         await ctx.send(embed=response)
                         break
                     else:
-                        response = embed_wordle(player_title, f'{emoji_word} - {fail_count}/{word_len+1}\n{squares_response}\n\nUntried letters:\n{emoji_alphabet}')
+                        response = embed_wordle(player_title, f'{common_response_text}\n\nUntried letters:\n{emoji_alphabet}')
                         await ctx.send(embed=response)
-                    if not wrong_len:
-                        fail_count += 1
     except asyncio.TimeoutError:
         await ctx.send(f'\nWordle timed out. Guess quicker next time!\nThe word was {word}')
 
