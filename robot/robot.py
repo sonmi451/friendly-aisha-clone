@@ -242,6 +242,8 @@ async def play_wordle(ctx, *message):
 
 
 async def wait_for_answer(ctx, word, word_len):
+    emoji_correct_word = get_emoji_word(word)
+    tag_user = ctx.author.mention
     def check(m):
         '''
         Checks message is by original command user and in the same channel
@@ -256,7 +258,6 @@ async def wait_for_answer(ctx, word, word_len):
         fail_count = 0
         leftover_alphabet = ALPHABET
         past_guesses = []
-        emoji_correct_word = get_emoji_word(word)
         while not correct:
             msg = await ctx.bot.wait_for('message', timeout=500, check=check)
             player = f'{msg.author}'
@@ -299,7 +300,8 @@ async def wait_for_answer(ctx, word, word_len):
                                              'Unused Letters': emoji_alphabet}
                         await ctx.send(content=msg.author.mention, embed=embed_wordle(wordle_guess_again))
     except asyncio.TimeoutError:
-        await ctx.send(f'\nWordle timed out. Guess quicker next time!\nThe word was {word}')
+        wordle_timeout_error = {'A wordley timeout': f'Guess quicker next time!\nThe word was {emoji_correct_word}'}
+        await ctx.send(content=tag_user, embed=embed_wordle(wordle_timeout_error))
 
 ################################################################################
 # RESPONSES TO TEXT
