@@ -235,7 +235,7 @@ async def play_wordle(ctx, *message):
         if DEBUG == '1':
             response_text = ' Debug mode error details:\n```' + str(e) + '```'
         else:
-            response_text = ' Possibly there are no words of that length'
+            response_text = ' Sorry your current game is lost forever, please start a new one!'
         response = embed_wordle('A wordley error!', response_text)
         print('\nException in play_wordle():', e, '', sep='\n')
         await ctx.send(embed=response)
