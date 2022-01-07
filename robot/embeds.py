@@ -152,11 +152,15 @@ def embed_github():
                              inline=False)
     return robot_response
 
-def embed_wordle(title, response):
+def embed_wordle(title, response, unused_letters=False):
     robot_response = discord.Embed()
     robot_response.add_field(name=title,
                              value=response,
                              inline=False)
+    if unused_letters:
+        robot_response.add_field(name='Unused Letters',
+                                 value=unused_letters,
+                                 inline=False)
     return robot_response
 
 def embed_guess_the_soup_rules():
