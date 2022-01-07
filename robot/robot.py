@@ -232,7 +232,7 @@ async def play_wordle(ctx, *message):
         await wait_for_answer(ctx, word, word_len)
     except Exception as e:
         if DEBUG == '1':
-            response_text = ' Possibly there are no words of that length\n\nDebug mode error details:\n```' + str(e) + '```'
+            response_text = ' Debug mode error details:\n```' + str(e) + '```'
         else:
             response_text = ' Possibly there are no words of that length'
         response = embed_wordle('A wordley error!', response_text)
