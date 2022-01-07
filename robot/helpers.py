@@ -13,11 +13,12 @@ import discord
 import json
 import random
 import re
-from nltk.corpus import words
 
 MOVIE_WATCHLIST = '../resources/movie_watchlist.json'
-# This removes duplicates and caches this to speed up the bot
-WORD_SET = set(words.words())
+# This caches words to speed up the bot
+with open('../resources/words.json') as file:
+    WORD_SET = json.load(file)
+
 
 def get_herb_laugh_from_file():
     herb_laugh = discord.File('../resources/11_herb_laugh.mp3')
@@ -93,11 +94,15 @@ def get_random_beep_boop():
     return random_beep
 
 
-def britishify(string, british_to_american):
+def britishify(string, british_to_american, word_len):
     for british_spelling, american_spelling in british_to_american.items():
-        string = re.sub(
-            f'(?<![a-zA-Z]){american_spelling}(?![a-z-Z])', british_spelling, string)
-    return string
+        if string == american_spelling:
+            string = re.sub(
+                f'(?<![a-zA-Z]){american_spelling}(?![a-z-Z])', british_spelling, string)
+    if len(string) == word_len:
+        return string
+    else:
+        return get_word(british_to_american, word_len)
 
 
 def get_british_spellings_from_file():
@@ -113,9 +118,15 @@ def get_word(british_to_american, word_len=5):
         random_word = random.choice(wordle_words)
         if not random_word[0].isupper():
             chosen_word = random_word
-    if random_word in british_to_american:
-        random_word = britishify(random_word, british_to_american)
+    random_word = britishify(random_word, british_to_american, word_len)
     return random_word
+
+
+def valid_word(word):
+    if word in WORD_SET:
+        return True
+    else:
+        return False
 
 
 def check_answer(answer, word, leftover_alphabet):
@@ -125,7 +136,8 @@ def check_answer(answer, word, leftover_alphabet):
         correct = True
         wrong_len = False
         idx = 0
-        leftover_alphabet = [x for x in leftover_alphabet if x not in characters]
+        leftover_alphabet = [
+            x for x in leftover_alphabet if x not in characters]
         for letter in characters:
             if letter == word[idx]:
                 squares_response += '🟩'

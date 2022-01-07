@@ -24,3 +24,7 @@ However you can set the `DISCORD_TOKEN_TEST` token to be the same as your `DISCO
 use `docker-compose up` to start the robot
 use `docker-compose up -d` to start the robot in detached mode
 use `docker-compose down` to stop the robot
+
+## Wordlist
+
+The `$wordle` function uses the `3of6` wordlist from: [12 Dicts](http://wordlist.aspell.net/12dicts/)
