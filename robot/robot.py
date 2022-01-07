@@ -287,7 +287,7 @@ async def wait_for_answer(ctx, word, word_len):
                         await ctx.send(embed=response)
                         break
                     else:
-                        response = embed_wordle(player_title, f'{common_response_text}\n\nUnused letters\n{emoji_alphabet}')
+                        response = embed_wordle(player_title, f'{common_response_text}', emoji_alphabet)
                         await ctx.send(embed=response)
     except asyncio.TimeoutError:
         await ctx.send(f'\nWordle timed out. Guess quicker next time!\nThe word was {word}')
