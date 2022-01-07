@@ -91,8 +91,17 @@ def check_answer(answer, word, leftover_alphabet):
     return correct, wrong_len, leftover_alphabet, squares_response
 
 
-def get_wordle_stats(word_set):
-    stats_msg = f'Play Wordle on Discord with a selection of {len(word_set)} English words!'
+def get_wordle_stats(message, word_set):
+    stats_msg = (
+        f'Play Wordle on Discord with a selection of {len(word_set)} English words!'
+    )
+    if len(message) > 1:
+        try:
+            word_len = int(message[1])
+            wordle_words = [word for word in word_set if len(word) == word_len]
+            stats_msg = f'There are {len(wordle_words)} English words with {word_len} letters in the Wordle dictionary.'
+        except ValueError:
+            pass
     return stats_msg
 
 
