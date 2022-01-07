@@ -217,28 +217,31 @@ async def aoe_speak(ctx, taunt_num):
 @client.command(name='wordle',
                 help='Play wordle in Discord')
 async def play_wordle(ctx, *message):
+    play = True,
     if message:
         if message[0] == 'stats':
             await ctx.send(get_wordle_stats(WORD_SET))
+            play = False
         try:
             word_len = int(message[0])
         except:
             word_len = 5
     else:
         word_len = 5
-    try:
-        word = get_word(BRITISH_WORDS, WORD_SET, word_len).upper()
-        response = embed_wordle({'Wordle!': f'Guessing a {word_len} character word in {word_len+1} guesses...'})
-        await ctx.send(embed=response)
-        await wait_for_answer(ctx, word, word_len)
-    except Exception as e:
-        if DEBUG == '1':
-            response_text = ' Debug mode error details:\n```' + str(e) + '```'
-        else:
-            response_text = ' Sorry your current game is lost forever, please start a new one!'
-        response = embed_wordle({'A wordley error!': response_text})
-        print('\nException in play_wordle():', e, '', sep='\n')
-        await ctx.send(embed=response)
+    if play:
+        try:
+            word = get_word(BRITISH_WORDS, WORD_SET, word_len).upper()
+            response = embed_wordle({'Wordle!': f'Guessing a {word_len} character word in {word_len+1} guesses...'})
+            await ctx.send(embed=response)
+            await wait_for_answer(ctx, word, word_len)
+        except Exception as e:
+            if DEBUG == '1':
+                response_text = ' Debug mode error details:\n```' + str(e) + '```'
+            else:
+                response_text = ' Sorry your current game is lost forever, please start a new one!'
+            response = embed_wordle({'A wordley error!': response_text})
+            print('\nException in play_wordle():', e, '', sep='\n')
+            await ctx.send(embed=response)
 
 
 async def wait_for_answer(ctx, word, word_len):
