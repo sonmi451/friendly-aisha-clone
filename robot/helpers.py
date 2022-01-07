@@ -13,11 +13,12 @@ import discord
 import json
 import random
 import re
-from nltk.corpus import words
 
 MOVIE_WATCHLIST = '../resources/movie_watchlist.json'
-# This removes duplicates and caches this to speed up the bot
-WORD_SET = set(words.words())
+# This caches words to speed up the bot
+with open('../resources/words.json') as file:
+    WORD_SET = json.load(file)
+
 
 def get_herb_laugh_from_file():
     herb_laugh = discord.File('../resources/11_herb_laugh.mp3')
@@ -125,7 +126,8 @@ def check_answer(answer, word, leftover_alphabet):
         correct = True
         wrong_len = False
         idx = 0
-        leftover_alphabet = [x for x in leftover_alphabet if x not in characters]
+        leftover_alphabet = [
+            x for x in leftover_alphabet if x not in characters]
         for letter in characters:
             if letter == word[idx]:
                 squares_response += '🟩'
