@@ -94,11 +94,15 @@ def get_random_beep_boop():
     return random_beep
 
 
-def britishify(string, british_to_american):
+def britishify(string, british_to_american, word_len):
     for british_spelling, american_spelling in british_to_american.items():
-        string = re.sub(
-            f'(?<![a-zA-Z]){american_spelling}(?![a-z-Z])', british_spelling, string)
-    return string
+        if string == american_spelling:
+            string = re.sub(
+                f'(?<![a-zA-Z]){american_spelling}(?![a-z-Z])', british_spelling, string)
+    if len(string) == word_len:
+        return string
+    else:
+        return get_word(british_to_american, word_len)
 
 
 def get_british_spellings_from_file():
@@ -114,8 +118,7 @@ def get_word(british_to_american, word_len=5):
         random_word = random.choice(wordle_words)
         if not random_word[0].isupper():
             chosen_word = random_word
-    if random_word in british_to_american:
-        random_word = britishify(random_word, british_to_american)
+    random_word = britishify(random_word, british_to_american, word_len)
     return random_word
 
 
