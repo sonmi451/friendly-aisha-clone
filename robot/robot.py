@@ -1,6 +1,7 @@
 ################################################################################
 # IMPORTS
 
+import asyncio
 import os
 import re
 import discord
@@ -14,11 +15,12 @@ from helpers import get_random_beep_boop, get_random, get_aoe_taunt, \
     get_friendly_advice_from_file, get_aoe_taunts_from_file, \
     get_herb_laugh_from_file, get_nerts_commentry_from_file, \
     get_rock_facts_from_file, get_tv_games_help_from_file, \
-    get_british_spellings_from_file, get_word, get_wordle_stats, wait_for_answer
+    get_british_spellings_from_file, get_word, get_wordle_stats, get_emoji_word, \
+    check_answer
 from database_helpers import get_movie_watchlist, add_movie_to_watchlist, \
     remove_movie_from_watchlist, get_movie_by_upvotes
 from embeds import embed_movie_watchlist, embed_movie_schedule, embed_shitemas_schedule, embed_games_schedule, \
-    embed_github, embed_guess_the_soup_rules, embed_response, embed_shitemaster_email
+    embed_github, embed_guess_the_soup_rules, embed_response, embed_shitemaster_email, embed_wordle
 
 ################################################################################
 # LOAD ENVIRONMENT VARIABLES
@@ -77,6 +79,7 @@ else:
 ################################################################################
 # GLOBAL VARS
 
+ALPHABET = [x for x in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ']
 SHITEMASTER_HELP = ['shitemaster email', 'submit shitemaster', 'submit task',
                      'sm email', 'shitemasters assistant email',
                      'shitemaster\'s assistant email', 'shite email']
@@ -224,10 +227,59 @@ async def play_wordle(ctx, *message):
         word_len = 5
     try:
         word = get_word(BRITISH_WORDS, word_len).upper()
-        await ctx.send(f'Guessing a {word_len} character word in {word_len+1} guesses...')
+        response = embed_wordle('Wordle!', f'Guessing a {word_len} character word in {word_len+1} guesses...')
+        await ctx.send(embed=response)
         await wait_for_answer(ctx, word, word_len)
     except Exception as e:
-        await (ctx.send('Found no words of that length'))
+        response = embed_wordle('A wordley error!',' Possibly there are no words of that length')
+        await ctx.send(embed=response)
+
+
+async def wait_for_answer(ctx, word, word_len):
+    def check(m):
+        '''
+        Checks message is by original command user and in the same channel
+        '''
+        if m.channel != ctx.channel:
+            return False
+        if m.author != ctx.author:
+            return False
+        return True
+    try:
+        correct = False
+        fail_count = 1
+        leftover_alphabet = ALPHABET
+        while not correct:
+            msg = await ctx.bot.wait_for('message', timeout=500, check=check)
+            player = f'{msg.author}'
+            player_title = f'{player.split("#")[0]}\'s Wordle!'
+            if msg:
+                if msg.content[0] == '$':
+                    # Skip bot commands
+                    pass
+                else:
+                    correct, wrong_len, leftover_alphabet, squares_response = check_answer(
+                        msg.content, word, leftover_alphabet)
+                    emoji_word = get_emoji_word(msg.content)
+                    emoji_alphabet = get_emoji_word(' '.join(leftover_alphabet))
+                    if correct:
+                        response = embed_wordle(player_title, f'{emoji_word} - {fail_count}/{word_len+1}\n{squares_response}\nCorrect! The word was {get_emoji_word(word)}')
+                        await ctx.send(embed=response)
+                        return
+                    elif wrong_len:
+                        response = embed_wordle(player_title, f'Your guesses must be {word_len} letters long! Try again!')
+                        await ctx.send(embed=response)
+                    elif (fail_count == word_len+1):
+                        response = embed_wordle(player_title, f'{emoji_word} - {fail_count}/{word_len+1}\n{squares_response}\nToo many incorrect guesses. The word was {get_emoji_word(word)}')
+                        await ctx.send(embed=response)
+                        break
+                    else:
+                        response = embed_wordle(player_title, f'{emoji_word} - {fail_count}/{word_len+1}\n{squares_response}\n\nUntried letters:\n{emoji_alphabet}')
+                        await ctx.send(embed=response)
+                    if not wrong_len:
+                        fail_count += 1
+    except asyncio.TimeoutError:
+        await ctx.send(f'\nWordle timed out. Guess quicker next time!\nThe word was {word}')
 
 ################################################################################
 # RESPONSES TO TEXT
