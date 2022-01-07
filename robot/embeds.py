@@ -152,6 +152,12 @@ def embed_github():
                              inline=False)
     return robot_response
 
+def embed_wordle(title, response):
+    robot_response = discord.Embed()
+    robot_response.add_field(name=title,
+                             value=response,
+                             inline=False)
+    return robot_response
 
 def embed_guess_the_soup_rules():
     formatted_rules = discord.Embed(title='The Rules of Guess the Soup')

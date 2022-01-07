@@ -9,7 +9,6 @@ For getting files, directory structure is assumed to be:
 
 '''
 
-import asyncio
 import discord
 import json
 import random
@@ -19,7 +18,6 @@ from nltk.corpus import words
 MOVIE_WATCHLIST = '../resources/movie_watchlist.json'
 # This removes duplicates and caches this to speed up the bot
 WORD_SET = set(words.words())
-
 
 def get_herb_laugh_from_file():
     herb_laugh = discord.File('../resources/11_herb_laugh.mp3')
@@ -120,28 +118,28 @@ def get_word(british_to_american, word_len=5):
     return random_word
 
 
-def check_answer(answer, word):
+def check_answer(answer, word, leftover_alphabet):
     characters = list(answer.upper())
+    squares_response = ''
     if len(characters) == len(word):
-        response_str = ''
         correct = True
         wrong_len = False
         idx = 0
+        leftover_alphabet = [x for x in leftover_alphabet if x not in characters]
         for letter in characters:
             if letter == word[idx]:
-                response_str += '🟩'
+                squares_response += '🟩'
             elif letter in word:
                 correct = False
-                response_str += '🟦'
+                squares_response += '🟦'
             else:
                 correct = False
-                response_str += '⬛'
+                squares_response += '⬛'
             idx += 1
     else:
-        response_str = 'Guesses must be the same length as the wordle'
         correct = False
         wrong_len = True
-    return correct, response_str, wrong_len
+    return correct, wrong_len, leftover_alphabet, squares_response
 
 
 def get_wordle_stats():
@@ -157,40 +155,3 @@ def get_emoji_word(word):
         else:
             emojied_word += character
     return emojied_word
-
-
-async def wait_for_answer(ctx, word, word_len):
-    def check(m):
-        '''
-        Checks message is by original command user and in the same channel
-        '''
-        if m.channel != ctx.channel:
-            return False
-        if m.author != ctx.author:
-            return False
-        return True
-    try:
-        correct = False
-        fail_count = 1
-        while not correct:
-            msg = await ctx.bot.wait_for('message', timeout=500, check=check)
-            if msg:
-                if msg.content[0] == '$':
-                    # Skip bot commands
-                    pass
-                else:
-                    correct, response_str, wrong_len = check_answer(
-                        msg.content, word)
-                    emoji_word = get_emoji_word(msg.content)
-                    if correct:
-                        await ctx.send(f'{emoji_word} - {fail_count}/{word_len+1}\n' + response_str + f'\nCorrect! The word was {word}')
-                        return
-                    else:
-                        await ctx.send(f'{emoji_word} - {fail_count}/{word_len+1}\n' + response_str)
-                    if (fail_count == word_len+1):
-                        await ctx.send(f'Too many incorrect guesses. The word was {word}')
-                        break
-                    if not wrong_len:
-                        fail_count += 1
-    except asyncio.TimeoutError:
-        await ctx.send(f'Wordle timed out. Guess quicker next time!\nThe word was {word}')
