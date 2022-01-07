@@ -263,7 +263,7 @@ async def wait_for_answer(ctx, word, word_len):
                     emoji_word = get_emoji_word(msg.content)
                     emoji_alphabet = get_emoji_word(' '.join(leftover_alphabet))
                     if correct:
-                        response = embed_wordle(player_title, f'{emoji_word} - {fail_count}/{word_len+1}\n{squares_response}\nCorrect! The word was {word}')
+                        response = embed_wordle(player_title, f'{emoji_word} - {fail_count}/{word_len+1}\n{squares_response}\nCorrect! The word was {get_emoji_word(word)}')
                         await ctx.send(embed=response)
                         return
                     elif wrong_len:
