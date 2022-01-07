@@ -277,20 +277,20 @@ async def wait_for_answer(ctx, word, word_len):
                     # Respond
                     if correct:
                         response = embed_wordle(player_title, f'{common_response_text}\n\nCorrect! The word was {get_emoji_word(word)}')
-                        await ctx.send(embed=response)
+                        await ctx.send(content=msg.author.mention, embed=response)
                         return
                     elif wrong_len:
                         response = embed_wordle(player_title, f'Your guesses must be {word_len} letters long! Try again!')
-                        await ctx.send(embed=response)
+                        await ctx.send(content=msg.author.mention, embed=response)
                     elif (fail_count == word_len+1):
                         response = embed_wordle(player_title, f'{common_response_text}\n\nToo many incorrect guesses. The word was {get_emoji_word(word)}')
-                        await ctx.send(embed=response)
+                        await ctx.send(content=msg.author.mention, embed=response)
                         break
                     else:
                         response = embed_wordle(player_title, f'{common_response_text}', emoji_alphabet)
-                        await ctx.send(embed=response)
+                        await ctx.send(content=msg.author.mention, embed=response)
     except asyncio.TimeoutError:
-        await ctx.send(f'\nWordle timed out. Guess quicker next time!\nThe word was {word}')
+        await ctx.send(f'\n{msg.author.mention} - your Wordle timed out. Guess quicker next time!\nThe word was {word}')
 
 ################################################################################
 # RESPONSES TO TEXT
