@@ -11,12 +11,11 @@ from discord.ext import commands
 from pymongo import MongoClient
 
 from calendars import scrape_events_from_calender
+from file_helpers import get_aoe_taunts_from_file, get_british_spellings_from_file, \
+    get_friendly_advice_from_file, get_nerts_commentry_from_file, \
+    get_rock_facts_from_file, get_tv_games_help_from_file, get_word_set_from_file
 from helpers import get_random_beep_boop, get_random, get_aoe_taunt, \
-    get_friendly_advice_from_file, get_aoe_taunts_from_file, \
-    get_herb_laugh_from_file, get_nerts_commentry_from_file, \
-    get_rock_facts_from_file, get_tv_games_help_from_file, \
-    get_british_spellings_from_file, get_word, get_wordle_stats, get_emoji_word, \
-    check_answer, valid_word
+     get_word, get_wordle_stats, get_emoji_word, check_answer, valid_word
 from database_helpers import get_movie_watchlist, add_movie_to_watchlist, \
     remove_movie_from_watchlist, get_movie_by_upvotes
 from embeds import embed_movie_watchlist, embed_movie_schedule, embed_shitemas_schedule, embed_games_schedule, \
@@ -45,7 +44,7 @@ else:
     TOKEN = os.getenv('DISCORD_TOKEN')
 
 ################################################################################
-# LOAD FILES
+# LOAD FILES AS GLOBALS
 
 FRIENDLY_ROBOT_ADVICE = get_friendly_advice_from_file()
 AOE_TAUNTS_DICT = get_aoe_taunts_from_file()
@@ -53,6 +52,15 @@ ROCK_FACTS = get_rock_facts_from_file()
 NERTS = get_nerts_commentry_from_file()
 TV_GAMES_HELP = get_tv_games_help_from_file()
 BRITISH_WORDS = get_british_spellings_from_file()
+WORD_SET = get_word_set_from_file()
+
+################################################################################
+# OTHER GLOBAL VARS
+
+ALPHABET = [x for x in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ']
+SHITEMASTER_HELP = ['shitemaster email', 'submit shitemaster', 'submit task',
+                     'sm email', 'shitemasters assistant email',
+                     'shitemaster\'s assistant email', 'shite email']
 
 ################################################################################
 # LOAD DATABASE
@@ -76,13 +84,6 @@ if DEBUG == '1':
 else:
     client = commands.Bot(command_prefix='$', intents=intents)
 
-################################################################################
-# GLOBAL VARS
-
-ALPHABET = [x for x in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ']
-SHITEMASTER_HELP = ['shitemaster email', 'submit shitemaster', 'submit task',
-                     'sm email', 'shitemasters assistant email',
-                     'shitemaster\'s assistant email', 'shite email']
 ################################################################################
 # EVENT REACTIONS
 
@@ -218,7 +219,7 @@ async def aoe_speak(ctx, taunt_num):
 async def play_wordle(ctx, *message):
     if message:
         if message[0] == 'stats':
-            await ctx.send(get_wordle_stats())
+            await ctx.send(get_wordle_stats(WORD_SET))
         try:
             word_len = int(message[0])
         except:
@@ -226,7 +227,7 @@ async def play_wordle(ctx, *message):
     else:
         word_len = 5
     try:
-        word = get_word(BRITISH_WORDS, word_len).upper()
+        word = get_word(BRITISH_WORDS, WORD_SET, word_len).upper()
         response = embed_wordle('Wordle!', f'Guessing a {word_len} character word in {word_len+1} guesses...')
         await ctx.send(embed=response)
         await wait_for_answer(ctx, word, word_len)
@@ -264,7 +265,7 @@ async def wait_for_answer(ctx, word, word_len):
                 if guess[0] == '$':
                     # Skip bot commands
                     pass
-                elif not valid_word(guess):
+                elif not valid_word(guess, WORD_SET):
                     response = embed_wordle(
                         player_title, f'{guess} is not in the dictionary. Please guess again.')
                     await ctx.send(content=msg.author.mention, embed=response)

@@ -14,65 +14,10 @@ import json
 import random
 import re
 
-MOVIE_WATCHLIST = '../resources/movie_watchlist.json'
-# This caches words to speed up the bot
-with open('../resources/words.json') as file:
-    WORD_SET = json.load(file)
-
-
-def get_herb_laugh_from_file():
-    herb_laugh = discord.File('../resources/11_herb_laugh.mp3')
-    return herb_laugh
-
-
-def get_friendly_advice_from_file():
-    with open('../resources/friendly_robot_advice.txt') as file:
-        friendly_robot_advice = [line.strip() for line in file]
-    return friendly_robot_advice
-
-
-def get_rock_facts_from_file():
-    with open('../resources/rock_facts.txt') as file:
-        rock_facts = [line.strip() for line in file]
-    return rock_facts
-
-
-def get_tv_games_help_from_file():
-    with open('../resources/tv_games.txt') as file:
-        tv_games = [line.strip() for line in file]
-    return tv_games
-
-
-def get_nerts_commentry_from_file():
-    with open('../resources/nerts_commentry.txt') as file:
-        nerts_commentry = [line.strip() for line in file]
-    return nerts_commentry
-
-
-def get_aoe_taunts_from_file():
-    with open('../resources/aoe_taunts.json') as file:
-        aoe_taunts = json.load(file)
-    return aoe_taunts
-
 
 def get_aoe_taunt(aoe_taunts, number):
     taunt = aoe_taunts.get(number)
     return taunt
-
-
-def read_watchlist_from_file():
-    movie_watchlist = {}
-    try:
-        with open(MOVIE_WATCHLIST, 'r') as in_file:
-            movie_watchlist = json.load(in_file)
-    except FileNotFoundError as ex:
-        write_watchlist_to_file(movie_watchlist)
-    return movie_watchlist
-
-
-def write_watchlist_to_file(watchlist):
-    with open(MOVIE_WATCHLIST, 'w') as out_file:
-        json.dump(watchlist, out_file)
 
 
 def get_random(list_of_things):
@@ -105,14 +50,8 @@ def britishify(string, british_to_american, word_len):
         return get_word(british_to_american, word_len)
 
 
-def get_british_spellings_from_file():
-    with open('../resources/british_spellings.json') as file:
-        british_spellings = json.load(file)
-    return british_spellings
-
-
-def get_word(british_to_american, word_len=5):
-    wordle_words = [word for word in WORD_SET if len(word) == word_len]
+def get_word(british_to_american, word_set, word_len=5):
+    wordle_words = [word for word in word_set if len(word) == word_len]
     chosen_word = None
     while chosen_word == None:
         random_word = random.choice(wordle_words)
@@ -122,8 +61,8 @@ def get_word(british_to_american, word_len=5):
     return random_word
 
 
-def valid_word(word):
-    if word in WORD_SET:
+def valid_word(word, word_set):
+    if word in word_set:
         return True
     else:
         return False
@@ -154,8 +93,8 @@ def check_answer(answer, word, leftover_alphabet):
     return correct, wrong_len, leftover_alphabet, squares_response
 
 
-def get_wordle_stats():
-    stats_msg = f'Play Wordle on Discord with a selection of {len(WORD_SET)} English words!'
+def get_wordle_stats(word_set):
+    stats_msg = f'Play Wordle on Discord with a selection of {len(word_set)} English words!'
     return stats_msg
 
 
