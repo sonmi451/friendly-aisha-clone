@@ -25,6 +25,9 @@ use `docker-compose up` to start the robot
 use `docker-compose up -d` to start the robot in detached mode
 use `docker-compose down` to stop the robot
 
+### Logs
+use `docker-compose logs robot` to print the logs from the docker container
+
 ## Wordlist
 
 The `$wordle` function uses the `3of6` wordlist from: [12 Dicts](http://wordlist.aspell.net/12dicts/)
