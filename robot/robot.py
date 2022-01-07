@@ -15,7 +15,7 @@ from file_helpers import get_aoe_taunts_from_file, get_british_spellings_from_fi
     get_friendly_advice_from_file, get_nerts_commentry_from_file, \
     get_rock_facts_from_file, get_tv_games_help_from_file, get_word_set_from_file
 from helpers import get_random_beep_boop, get_random, get_aoe_taunt, \
-     get_word, get_wordle_stats, get_emoji_word, check_answer, valid_word
+    get_word, get_wordle_stats, get_emoji_word, check_answer, valid_word
 from database_helpers import get_movie_watchlist, add_movie_to_watchlist, \
     remove_movie_from_watchlist, get_movie_by_upvotes
 from embeds import embed_movie_watchlist, embed_movie_schedule, embed_shitemas_schedule, embed_games_schedule, \
@@ -59,8 +59,8 @@ WORD_SET = get_word_set_from_file()
 
 ALPHABET = [x for x in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ']
 SHITEMASTER_HELP = ['shitemaster email', 'submit shitemaster', 'submit task',
-                     'sm email', 'shitemasters assistant email',
-                     'shitemaster\'s assistant email', 'shite email']
+                    'sm email', 'shitemasters assistant email',
+                    'shitemaster\'s assistant email', 'shite email']
 
 ################################################################################
 # LOAD DATABASE
@@ -87,12 +87,14 @@ else:
 ################################################################################
 # EVENT REACTIONS
 
+
 @client.event
 async def on_ready():
     for guild in client.guilds:
         if guild.name == SERVER:
             print(f"{client.user} has connected to Discord Server {guild.name}")
             break
+
 
 @client.event
 async def on_member_join(member):
@@ -106,11 +108,13 @@ async def on_member_join(member):
 ################################################################################
 # USER COMMANDS
 
+
 @client.command(name='shitemaster',
                 help='Recieve a DM of the Shitemaster submission info')
 async def full_schedule(ctx):
-        embed = embed_shitemaster_email(SHITEMASTER_EMAIL)
-        await ctx.author.send('', embed=embed)
+    embed = embed_shitemaster_email(SHITEMASTER_EMAIL)
+    await ctx.author.send('', embed=embed)
+
 
 @client.command(name='movies',
                 help='Read the full movie schedule from the calendar')
@@ -197,6 +201,7 @@ async def github_url(ctx):
     url = embed_github()
     await ctx.send(embed=url)
 
+
 @client.command(name='parrot',
                 help='I\'ll repeat what you say')
 async def parrot_speak(ctx, *message):
@@ -218,8 +223,12 @@ async def aoe_speak(ctx, taunt_num):
                 help='Play wordle in Discord')
 async def play_wordle(ctx, *message):
     if message:
-        if message[0] == 'stats':
-            await ctx.send(get_wordle_stats(WORD_SET))
+        if message[0] == "stats":
+            response = embed_wordle(
+                {"Wordle Stats": get_wordle_stats(message, WORD_SET)}
+            )
+            await ctx.send(embed=response)
+            return
         try:
             word_len = int(message[0])
         except:
@@ -228,7 +237,8 @@ async def play_wordle(ctx, *message):
         word_len = 5
     try:
         word = get_word(BRITISH_WORDS, WORD_SET, word_len).upper()
-        response = embed_wordle({'Wordle!': f'Guessing a {word_len} character word in {word_len+1} guesses...'})
+        response = embed_wordle(
+            {'Wordle!': f'Guessing a {word_len} character word in {word_len+1} guesses...'})
         await ctx.send(embed=response)
         await wait_for_answer(ctx, word, word_len)
     except Exception as e:
@@ -244,6 +254,7 @@ async def play_wordle(ctx, *message):
 async def wait_for_answer(ctx, word, word_len):
     emoji_correct_word = get_emoji_word(word)
     tag_user = ctx.author.mention
+
     def check(m):
         '''
         Checks message is by original command user and in the same channel
@@ -268,8 +279,9 @@ async def wait_for_answer(ctx, word, word_len):
                     # Skip bot commands
                     pass
                 elif not valid_word(guess, WORD_SET):
-                    wordle_invalid_word = {player_title: f'{guess} is not in the dictionary. Please guess again.'}
-                    await ctx.send(content=msg.author.mention, embed= embed_wordle(wordle_invalid_word))
+                    wordle_invalid_word = {
+                        player_title: f'{guess} is not in the dictionary. Please guess again.'}
+                    await ctx.send(content=msg.author.mention, embed=embed_wordle(wordle_invalid_word))
                 else:
                     correct, wrong_len, leftover_alphabet, squares_response = check_answer(
                         guess, word, leftover_alphabet)
@@ -277,7 +289,8 @@ async def wait_for_answer(ctx, word, word_len):
                     if not wrong_len:
                         fail_count += 1
                         emoji_guess_word = get_emoji_word(guess)
-                        emoji_alphabet = get_emoji_word(''.join(leftover_alphabet))
+                        emoji_alphabet = get_emoji_word(
+                            ''.join(leftover_alphabet))
                         past_guesses += [f'{emoji_guess_word} | {squares_response}']
                         past_guesses_string = '\n'.join(past_guesses)
                         common_response_text = f'{past_guesses_string} - {fail_count}/{word_len+1}'
@@ -288,23 +301,26 @@ async def wait_for_answer(ctx, word, word_len):
                         await ctx.send(content=msg.author.mention, embed=embed_wordle(wordle_success))
                         return
                     elif wrong_len:
-                        wordle_bad_word = {player_title: f'Your guesses must be {word_len} letters long! Try again!'}
+                        wordle_bad_word = {
+                            player_title: f'Your guesses must be {word_len} letters long! Try again!'}
                         await ctx.send(content=msg.author.mention, embed=embed_wordle(wordle_bad_word))
                     elif (fail_count == word_len+1):
-                        wordle_fail = {player_title:f'{common_response_text}',
-                                      'Incorrect!': f'The correct word was {emoji_correct_word}'}
+                        wordle_fail = {player_title: f'{common_response_text}',
+                                       'Incorrect!': f'The correct word was {emoji_correct_word}'}
                         await ctx.send(content=msg.author.mention, embed=embed_wordle(wordle_fail))
                         break
                     else:
                         wordle_guess_again = {player_title: f'{common_response_text}',
-                                             'Unused Letters': emoji_alphabet}
+                                              'Unused Letters': emoji_alphabet}
                         await ctx.send(content=msg.author.mention, embed=embed_wordle(wordle_guess_again))
     except asyncio.TimeoutError:
-        wordle_timeout_error = {'A wordley timeout': f'Guess quicker next time!\nThe word was {emoji_correct_word}'}
+        wordle_timeout_error = {
+            'A wordley timeout': f'Guess quicker next time!\nThe word was {emoji_correct_word}'}
         await ctx.send(content=tag_user, embed=embed_wordle(wordle_timeout_error))
 
 ################################################################################
 # RESPONSES TO TEXT
+
 
 @client.event
 async def on_message(message):
