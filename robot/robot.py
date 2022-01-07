@@ -312,14 +312,10 @@ async def on_message(message):
 
     # if Wade uses AoE shortcuts, reply with their meaning
     if WADE_ID and message.author.id == WADE_ID:
-        if re.search(r'(^|\D)(1{2})(\D|$)', chat_message):
-            herb_laugh = get_herb_laugh_from_file()
-            await message.channel.send(file=herb_laugh)
-        else:
-            taunt = get_aoe_taunt(AOE_TAUNTS_DICT, chat_message)
-            if taunt:
-                response = embed_response(taunt)
-                await message.channel.send(embed=response)
+        taunt = get_aoe_taunt(AOE_TAUNTS_DICT, chat_message)
+        if taunt:
+            response = embed_response(taunt)
+            await message.channel.send(embed=response)
 
     # if you @ the bot it beeps or boops
     if any(id in chat_message for id in [BOT_USER_ID, BOT_ROLE_ID]):
