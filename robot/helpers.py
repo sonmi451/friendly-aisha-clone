@@ -148,10 +148,10 @@ def get_wordle_stats():
 
 
 def get_emoji_word(word):
-    emojied_word = ''
+    emojied_word = []
     for character in list(word.lower()):
         if character.isalpha():
             emojied_word += f':regional_indicator_{character}:'
         else:
             emojied_word += character
-    return emojied_word
+    return ' '.join(emojied_word)

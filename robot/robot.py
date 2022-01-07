@@ -249,6 +249,7 @@ async def wait_for_answer(ctx, word, word_len):
         correct = False
         fail_count = 1
         leftover_alphabet = ALPHABET
+        past_guesses = ''
         while not correct:
             msg = await ctx.bot.wait_for('message', timeout=500, check=check)
             player = f'{msg.author}'
@@ -261,7 +262,7 @@ async def wait_for_answer(ctx, word, word_len):
                     correct, wrong_len, leftover_alphabet, squares_response = check_answer(
                         msg.content, word, leftover_alphabet)
                     emoji_word = get_emoji_word(msg.content)
-                    emoji_alphabet = get_emoji_word(' '.join(leftover_alphabet))
+                    emoji_alphabet = get_emoji_word(leftover_alphabet)
                     if correct:
                         response = embed_wordle(player_title, f'{emoji_word} - {fail_count}/{word_len+1}\n{squares_response}\nCorrect! The word was {get_emoji_word(word)}')
                         await ctx.send(embed=response)
