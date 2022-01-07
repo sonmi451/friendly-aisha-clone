@@ -16,7 +16,7 @@ from helpers import get_random_beep_boop, get_random, get_aoe_taunt, \
     get_herb_laugh_from_file, get_nerts_commentry_from_file, \
     get_rock_facts_from_file, get_tv_games_help_from_file, \
     get_british_spellings_from_file, get_word, get_wordle_stats, get_emoji_word, \
-    check_answer
+    check_answer, valid_word
 from database_helpers import get_movie_watchlist, add_movie_to_watchlist, \
     remove_movie_from_watchlist, get_movie_by_upvotes
 from embeds import embed_movie_watchlist, embed_movie_schedule, embed_shitemas_schedule, embed_games_schedule, \
@@ -259,17 +259,22 @@ async def wait_for_answer(ctx, word, word_len):
             msg = await ctx.bot.wait_for('message', timeout=500, check=check)
             player = f'{msg.author}'
             player_title = f'{player.split("#")[0]}\'s Wordle!'
+            guess = msg.content
             if msg:
-                if msg.content[0] == '$':
+                if guess[0] == '$':
                     # Skip bot commands
                     pass
+                elif not valid_word(guess):
+                    response = embed_wordle(
+                        player_title, f'{guess} is not in the dictionary. Please guess again.')
+                    await ctx.send(content=msg.author.mention, embed=response)
                 else:
                     correct, wrong_len, leftover_alphabet, squares_response = check_answer(
-                        msg.content, word, leftover_alphabet)
+                        guess, word, leftover_alphabet)
                     # Setup only for valid guesses
                     if not wrong_len:
                         fail_count += 1
-                        emoji_word = get_emoji_word(msg.content)
+                        emoji_word = get_emoji_word(guess)
                         emoji_alphabet = get_emoji_word(''.join(leftover_alphabet))
                         past_guesses += [f'{emoji_word} | {squares_response}']
                         past_guesses_string = '\n'.join(past_guesses)

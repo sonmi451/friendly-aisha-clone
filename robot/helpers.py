@@ -119,6 +119,13 @@ def get_word(british_to_american, word_len=5):
     return random_word
 
 
+def valid_word(word):
+    if word in WORD_SET:
+        return True
+    else:
+        return False
+
+
 def check_answer(answer, word, leftover_alphabet):
     characters = list(answer.upper())
     squares_response = ''
