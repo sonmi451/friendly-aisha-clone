@@ -252,7 +252,7 @@ async def wait_for_answer(ctx, word, word_len):
         return True
     try:
         correct = False
-        fail_count = 1
+        fail_count = 0
         leftover_alphabet = ALPHABET
         past_guesses = []
         while not correct:
