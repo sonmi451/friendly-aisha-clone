@@ -9,8 +9,6 @@ For getting files, directory structure is assumed to be:
 
 '''
 
-import discord
-import json
 import random
 import re
 
