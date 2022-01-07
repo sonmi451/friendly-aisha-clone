@@ -260,7 +260,7 @@ async def wait_for_answer(ctx, word, word_len):
             msg = await ctx.bot.wait_for('message', timeout=500, check=check)
             player = f'{msg.author}'
             player_title = f'{player.split("#")[0]}\'s Wordle!'
-            guess = msg.content
+            guess = msg.content.lower()
             if msg:
                 if guess[0] == '$':
                     # Skip bot commands
