@@ -32,6 +32,12 @@ def get_nerts_commentry_from_file():
     return nerts_commentry
 
 
+def get_regional_indicator_letters_from_file():
+    with open('../resources/emoji_letters.json') as file:
+        regional_indicator_letters = json.load(file)
+    return regional_indicator_letters
+
+
 def get_rock_facts_from_file():
     with open('../resources/rock_facts.txt') as file:
         rock_facts = [line.strip() for line in file]

@@ -13,7 +13,8 @@ from pymongo import MongoClient
 from calendars import scrape_events_from_calender
 from file_helpers import get_aoe_taunts_from_file, get_british_spellings_from_file, \
     get_friendly_advice_from_file, get_nerts_commentry_from_file, \
-    get_rock_facts_from_file, get_tv_games_help_from_file, get_word_set_from_file
+    get_rock_facts_from_file, get_tv_games_help_from_file, get_word_set_from_file, \
+    get_regional_indicator_letters_from_file
 from helpers import get_random_beep_boop, get_random, get_aoe_taunt, \
     get_word, get_wordle_stats, get_emoji_word, check_answer, valid_word
 from database_helpers import get_movie_watchlist, add_movie_to_watchlist, \
@@ -53,6 +54,7 @@ NERTS = get_nerts_commentry_from_file()
 TV_GAMES_HELP = get_tv_games_help_from_file()
 BRITISH_WORDS = get_british_spellings_from_file()
 WORD_SET = get_word_set_from_file()
+REGIONAL_INDICATOR_LETTERS = get_regional_indicator_letters_from_file()
 
 ################################################################################
 # OTHER GLOBAL VARS
@@ -252,7 +254,7 @@ async def play_wordle(ctx, *message):
 
 
 async def wait_for_answer(ctx, word, word_len):
-    emoji_correct_word = get_emoji_word(word)
+    emoji_correct_word = get_emoji_word(word, REGIONAL_INDICATOR_LETTERS)
     tag_user = ctx.author.mention
 
     def check(m):
@@ -274,23 +276,24 @@ async def wait_for_answer(ctx, word, word_len):
             player = f'{msg.author}'
             player_title = f'{player.split("#")[0]}\'s Wordle!'
             guess = msg.content.lower()
+            emoji_guess_word = get_emoji_word(msg.content.lower(), REGIONAL_INDICATOR_LETTERS)
             if msg:
                 if guess[0] == '$':
                     # Skip bot commands
                     pass
                 elif not valid_word(guess, WORD_SET):
                     wordle_invalid_word = {
-                        player_title: f'{guess} is not in the dictionary. Please guess again.'}
-                    await ctx.send(content=msg.author.mention, embed=embed_wordle(wordle_invalid_word))
+                        player_title: f'{emoji_guess_word} is not in the dictionary. Please guess again.'}
+                    await ctx.send(content=tag_user, embed=embed_wordle(wordle_invalid_word))
                 else:
                     correct, wrong_len, leftover_alphabet, squares_response = check_answer(
                         guess, word, leftover_alphabet)
                     # Setup only for valid guesses
                     if not wrong_len:
                         fail_count += 1
-                        emoji_guess_word = get_emoji_word(guess)
                         emoji_alphabet = get_emoji_word(
-                            ''.join(leftover_alphabet))
+                            ''.join(leftover_alphabet),
+                            REGIONAL_INDICATOR_LETTERS)
                         past_guesses += [f'{emoji_guess_word} | {squares_response}']
                         past_guesses_string = '\n'.join(past_guesses)
                         common_response_text = f'{past_guesses_string} - {fail_count}/{word_len+1}'
@@ -298,21 +301,21 @@ async def wait_for_answer(ctx, word, word_len):
                     if correct:
                         wordle_success = {player_title: f'{common_response_text}',
                                           'Correct!': f'The word was {emoji_correct_word}'}
-                        await ctx.send(content=msg.author.mention, embed=embed_wordle(wordle_success))
+                        await ctx.send(content=tag_user, embed=embed_wordle(wordle_success))
                         return
                     elif wrong_len:
                         wordle_bad_word = {
                             player_title: f'Your guesses must be {word_len} letters long! Try again!'}
-                        await ctx.send(content=msg.author.mention, embed=embed_wordle(wordle_bad_word))
+                        await ctx.send(content=tag_user, embed=embed_wordle(wordle_bad_word))
                     elif (fail_count == word_len+1):
                         wordle_fail = {player_title: f'{common_response_text}',
                                        'Incorrect!': f'The correct word was {emoji_correct_word}'}
-                        await ctx.send(content=msg.author.mention, embed=embed_wordle(wordle_fail))
+                        await ctx.send(content=tag_user, embed=embed_wordle(wordle_fail))
                         break
                     else:
                         wordle_guess_again = {player_title: f'{common_response_text}',
                                               'Unused Letters': emoji_alphabet}
-                        await ctx.send(content=msg.author.mention, embed=embed_wordle(wordle_guess_again))
+                        await ctx.send(content=tag_user, embed=embed_wordle(wordle_guess_again))
     except asyncio.TimeoutError:
         wordle_timeout_error = {
             'A wordley timeout': f'Guess quicker next time!\nThe word was {emoji_correct_word}'}

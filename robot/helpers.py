@@ -105,11 +105,6 @@ def get_wordle_stats(message, word_set):
     return stats_msg
 
 
-def get_emoji_word(word):
-    emojied_word = []
-    for character in list(word.lower()):
-        if character.isalpha():
-            emojied_word += [f':regional_indicator_{character}:']
-        else:
-            emojied_word += [character]
+def get_emoji_word(word, regional_indicator_letters):
+    emojied_word = [regional_indicator_letters.get(char.lower()) if regional_indicator_letters.get(char.lower()) else char for char in word]
     return ' '.join(emojied_word)
