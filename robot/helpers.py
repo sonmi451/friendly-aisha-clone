@@ -19,13 +19,8 @@ def get_aoe_taunt(aoe_taunts, number):
 
 
 def get_random(list_of_things):
-    random_friendly_message = random.choice(list_of_things)
-    return random_friendly_message
-
-
-def get_random_rock_fact(rock_facts):
-    random_rock_fact = random.choice(rock_facts)
-    return random_rock_fact
+    random_thing = random.choice(list_of_things)
+    return random_thing
 
 
 def get_random_beep_boop():
