@@ -44,6 +44,12 @@ def get_rock_facts_from_file():
     return rock_facts
 
 
+def get_toki_pona_words_from_file():
+    with open('../resources/toki_pona_words.json') as file:
+        toki_pona_dict = json.load(file)
+    return toki_pona_dict
+
+
 def get_tv_games_help_from_file():
     with open('../resources/tv_games.txt') as file:
         tv_games = [line.strip() for line in file]
