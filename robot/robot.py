@@ -14,9 +14,9 @@ from calendars import scrape_events_from_calender
 from file_helpers import get_aoe_taunts_from_file, get_british_spellings_from_file, \
     get_friendly_advice_from_file, get_nerts_commentry_from_file, \
     get_rock_facts_from_file, get_tv_games_help_from_file, get_word_set_from_file, \
-    get_regional_indicator_letters_from_file
+    get_regional_indicator_letters_from_file, get_toki_pona_words_from_file
 from helpers import get_random_beep_boop, get_random, get_aoe_taunt, \
-    get_word, get_wordle_stats, get_emoji_word, check_answer, valid_word
+    get_word, get_wordle_stats, get_emoji_word, check_answer, valid_word, toki_pona_translate
 from database_helpers import get_movie_watchlist, add_movie_to_watchlist, \
     remove_movie_from_watchlist, get_movie_by_upvotes
 from embeds import embed_movie_watchlist, embed_movie_schedule, embed_shitemas_schedule, embed_games_schedule, \
@@ -55,6 +55,7 @@ TV_GAMES_HELP = get_tv_games_help_from_file()
 BRITISH_WORDS = get_british_spellings_from_file()
 WORD_SET = get_word_set_from_file()
 REGIONAL_INDICATOR_LETTERS = get_regional_indicator_letters_from_file()
+TOKI_PONA_DICT = get_toki_pona_words_from_file()
 
 ################################################################################
 # OTHER GLOBAL VARS
@@ -218,6 +219,16 @@ async def aoe_speak(ctx, taunt_num):
     taunt = get_aoe_taunt(AOE_TAUNTS_DICT, taunt_num)
     if taunt:
         response = embed_response(taunt)
+        await ctx.send(embed=response)
+
+
+@client.command(name='toki',
+                help='toki pona translator')
+async def toki_translate(ctx, *message):
+    if message:
+        english = toki_pona_translate(' '.join(message), TOKI_PONA_DICT)
+        print(english)
+        response = embed_response(english)
         await ctx.send(embed=response)
 
 

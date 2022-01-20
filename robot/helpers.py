@@ -13,6 +13,18 @@ import random
 import re
 
 
+def toki_pona_translate(toki_pona, toki_pona_dict):
+    english = []
+    toki_pona_list = toki_pona.split(' ')
+    for word in toki_pona_list:
+        english_word = toki_pona_dict.get(word.lower())
+        if english_word:
+            english.append(english_word)
+    if english:
+        return ' '.join(english)
+    return "that's not a toki pona sentance!"
+
+
 def get_aoe_taunt(aoe_taunts, number):
     taunt = aoe_taunts.get(number)
     return taunt
