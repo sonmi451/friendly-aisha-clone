@@ -233,7 +233,7 @@ async def musi_nimi(ctx, *message):
         response = embed_wordle(
             {'Wordle!': f'Guessing a {word_len} character toki pona word in {word_len+1} guesses...'})
         await ctx.send(embed=response)
-        await wait_for_answer(ctx, word, word_len, toki_pona_words, REGIONAL_INDICATOR_LETTERS)
+        await wait_for_answer(ctx, word, word_len, toki_pona_words, REGIONAL_INDICATOR_LETTERS, TOKI_ALPHABET)
     except Exception as error:
         response_text = wordle_exception(error, DEBUG)
         response = embed_wordle({'A wordley error!': response_text})
@@ -270,7 +270,7 @@ async def play_wordle(ctx, *message):
         response = embed_wordle(
             {'Wordle!': f'Guessing a {word_len} character word in {word_len+1} guesses...'})
         await ctx.send(embed=response)
-        await wait_for_answer(ctx, word, word_len, WORD_SET, REGIONAL_INDICATOR_LETTERS)
+        await wait_for_answer(ctx, word, word_len, WORD_SET, REGIONAL_INDICATOR_LETTERS, ALPHABET)
     except Exception as error:
         if DEBUG == '1':
             response_text = ' Debug mode error details:\n```' + str(e) + '```'
@@ -289,7 +289,7 @@ async def toki_translate(ctx, *message):
         await ctx.send(embed=response)
 
 
-async def wait_for_answer(ctx, word, word_len, word_set, emoji_letters):
+async def wait_for_answer(ctx, word, word_len, word_set, emoji_letters, alphabet):
     emoji_correct_word = get_emoji_word(word, emoji_letters)
     tag_user = ctx.author.mention
     def check(m):
@@ -304,7 +304,7 @@ async def wait_for_answer(ctx, word, word_len, word_set, emoji_letters):
     try:
         correct = False
         fail_count = 0
-        leftover_alphabet = ALPHABET
+        leftover_alphabet = alphabet
         past_guesses = []
         while not correct:
             msg = await ctx.bot.wait_for('message', timeout=500, check=check)
