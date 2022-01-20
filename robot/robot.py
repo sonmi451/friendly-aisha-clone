@@ -228,8 +228,8 @@ async def musi_nimi(ctx, *message):
         word_len = 4
     try:
         toki_pona_words= [*TOKI_PONA_DICT.keys()]
-        print(toki_pona_words)
-        word = get_random(toki_pona_words).upper()
+        toki_pona_length_words= [word for word in toki_pona_words if len(word) == word_len]
+        word = get_random(toki_pona_length_words).upper()
         response = embed_wordle(
             {'Wordle!': f'Guessing a {word_len} character toki pona word in {word_len+1} guesses...'})
         await ctx.send(embed=response)
