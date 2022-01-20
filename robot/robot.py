@@ -224,16 +224,6 @@ async def aoe_speak(ctx, taunt_num):
         await ctx.send(embed=response)
 
 
-@client.command(name='toki',
-                help='toki pona translator')
-async def toki_translate(ctx, *message):
-    if message:
-        english = toki_pona_translate(' '.join(message), TOKI_PONA_DICT)
-        print(english)
-        response = embed_response(english)
-        await ctx.send(embed=response)
-
-
 @client.command(name='wordle',
                 help='Play wordle in Discord')
 async def play_wordle(ctx, *message):
@@ -261,6 +251,16 @@ async def play_wordle(ctx, *message):
             response_text = ' Debug mode error details:\n```' + str(e) + '```'
         response_text = wordle_exception(error, DEBUG)
         response = embed_wordle({'A wordley error!': response_text})
+        await ctx.send(embed=response)
+
+
+@client.command(name='toki',
+                help='toki pona translator')
+async def toki_translate(ctx, *message):
+    if message:
+        english = toki_pona_translate(' '.join(message), TOKI_PONA_DICT)
+        print(english)
+        response = embed_response(english)
         await ctx.send(embed=response)
 
 

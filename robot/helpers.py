@@ -10,19 +10,6 @@ For getting files, directory structure is assumed to be:
 '''
 
 import random
-import re
-
-
-def toki_pona_translate(toki_pona, toki_pona_dict):
-    english = []
-    toki_pona_list = toki_pona.split(' ')
-    for word in toki_pona_list:
-        english_word = toki_pona_dict.get(word.lower())
-        if english_word:
-            english.append(english_word)
-    if english:
-        return ' '.join(english)
-    return "that's not a toki pona sentance!"
 
 
 def get_aoe_taunt(aoe_taunts, number):
@@ -42,3 +29,15 @@ def get_random_beep_boop():
                    'beep!']
     random_beep = random.choice(beeps_boops)
     return random_beep
+
+
+def toki_pona_translate(toki_pona, toki_pona_dict):
+    english = []
+    toki_pona_list = toki_pona.split(' ')
+    for word in toki_pona_list:
+        english_word = toki_pona_dict.get(word.lower())
+        if english_word:
+            english.append(english_word)
+    if english:
+        return ' '.join(english)
+    return "that's not a toki pona sentance!"
