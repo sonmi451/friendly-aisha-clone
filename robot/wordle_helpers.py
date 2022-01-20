@@ -1,3 +1,6 @@
+import re
+import random
+
 def britishify(string, british_to_american, word_len):
     for british_spelling, american_spelling in british_to_american.items():
         if string == american_spelling:

@@ -63,6 +63,7 @@ TOKI_PONA_DICT = get_toki_pona_words_from_file()
 # OTHER GLOBAL VARS
 
 ALPHABET = [x for x in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ']
+TOKI_ALPHABET = [x for x in 'AEIOUPTKSMNLJW']
 SHITEMASTER_HELP = ['shitemaster email', 'submit shitemaster', 'submit task',
                     'sm email', 'shitemasters assistant email',
                     'shitemaster\'s assistant email', 'shite email']
@@ -215,6 +216,30 @@ async def parrot_speak(ctx, *message):
         await ctx.send(embed=response)
 
 
+@client.command(name='ponawordle',
+                help='Play toki pona wordle in Discord')
+async def musi_nimi(ctx, *message):
+    if message:
+        try:
+            word_len = int(message[0])
+        except:
+            word_len = 4
+    else:
+        word_len = 4
+    try:
+        toki_pona_words= [*TOKI_PONA_DICT.keys()]
+        print(toki_pona_words)
+        word = get_random(toki_pona_words).upper()
+        response = embed_wordle(
+            {'Wordle!': f'Guessing a {word_len} character toki pona word in {word_len+1} guesses...'})
+        await ctx.send(embed=response)
+        await wait_for_answer(ctx, word, word_len, toki_pona_words, REGIONAL_INDICATOR_LETTERS)
+    except Exception as error:
+        response_text = wordle_exception(error, DEBUG)
+        response = embed_wordle({'A wordley error!': response_text})
+        await ctx.send(embed=response)
+
+
 @client.command(name='wade',
                 help='Talk in AOE taunts!')
 async def aoe_speak(ctx, taunt_num):
@@ -245,7 +270,7 @@ async def play_wordle(ctx, *message):
         response = embed_wordle(
             {'Wordle!': f'Guessing a {word_len} character word in {word_len+1} guesses...'})
         await ctx.send(embed=response)
-        await wait_for_answer(ctx, word, word_len)
+        await wait_for_answer(ctx, word, word_len, WORD_SET, REGIONAL_INDICATOR_LETTERS)
     except Exception as error:
         if DEBUG == '1':
             response_text = ' Debug mode error details:\n```' + str(e) + '```'
@@ -264,10 +289,9 @@ async def toki_translate(ctx, *message):
         await ctx.send(embed=response)
 
 
-async def wait_for_answer(ctx, word, word_len, word_set=WORD_SET, emoji_letters=REGIONAL_INDICATOR_LETTERS):
+async def wait_for_answer(ctx, word, word_len, word_set, emoji_letters):
     emoji_correct_word = get_emoji_word(word, emoji_letters)
     tag_user = ctx.author.mention
-
     def check(m):
         '''
         Checks message is by original command user and in the same channel
