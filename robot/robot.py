@@ -14,9 +14,11 @@ from calendars import scrape_events_from_calender
 from file_helpers import get_aoe_taunts_from_file, get_british_spellings_from_file, \
     get_friendly_advice_from_file, get_nerts_commentry_from_file, \
     get_rock_facts_from_file, get_tv_games_help_from_file, get_word_set_from_file, \
-    get_regional_indicator_letters_from_file, get_toki_pona_words_from_file
+    get_toki_pona_words_from_file, get_regional_indicator_letters_from_file
 from helpers import get_random_beep_boop, get_random, get_aoe_taunt, \
-    get_word, get_wordle_stats, get_emoji_word, check_answer, valid_word, toki_pona_translate
+    toki_pona_translate
+from wordle_helpers import check_answer, get_emoji_word, get_word, \
+    get_wordle_stats, wordle_exception, valid_word
 from database_helpers import get_movie_watchlist, add_movie_to_watchlist, \
     remove_movie_from_watchlist, get_movie_by_upvotes
 from embeds import embed_movie_watchlist, embed_movie_schedule, embed_shitemas_schedule, embed_games_schedule, \
@@ -254,18 +256,16 @@ async def play_wordle(ctx, *message):
             {'Wordle!': f'Guessing a {word_len} character word in {word_len+1} guesses...'})
         await ctx.send(embed=response)
         await wait_for_answer(ctx, word, word_len)
-    except Exception as e:
+    except Exception as error:
         if DEBUG == '1':
             response_text = ' Debug mode error details:\n```' + str(e) + '```'
-        else:
-            response_text = ' Sorry your current game is lost forever, please start a new one!'
+        response_text = wordle_exception(error, DEBUG)
         response = embed_wordle({'A wordley error!': response_text})
-        print('\nException in play_wordle():', e, '', sep='\n')
         await ctx.send(embed=response)
 
 
-async def wait_for_answer(ctx, word, word_len):
-    emoji_correct_word = get_emoji_word(word, REGIONAL_INDICATOR_LETTERS)
+async def wait_for_answer(ctx, word, word_len, word_set=WORD_SET, emoji_letters=REGIONAL_INDICATOR_LETTERS):
+    emoji_correct_word = get_emoji_word(word, emoji_letters)
     tag_user = ctx.author.mention
 
     def check(m):
@@ -287,12 +287,12 @@ async def wait_for_answer(ctx, word, word_len):
             player = f'{msg.author}'
             player_title = f'{player.split("#")[0]}\'s Wordle!'
             guess = msg.content.lower()
-            emoji_guess_word = get_emoji_word(msg.content.lower(), REGIONAL_INDICATOR_LETTERS)
+            emoji_guess_word = get_emoji_word(msg.content.lower(), emoji_letters)
             if msg:
                 if guess[0] == '$':
                     # Skip bot commands
                     pass
-                elif not valid_word(guess, WORD_SET):
+                elif not valid_word(guess, word_set):
                     wordle_invalid_word = {
                         player_title: f'{emoji_guess_word} is not in the dictionary. Please guess again.'}
                     await ctx.send(content=tag_user, embed=embed_wordle(wordle_invalid_word))
@@ -304,7 +304,7 @@ async def wait_for_answer(ctx, word, word_len):
                         fail_count += 1
                         emoji_alphabet = get_emoji_word(
                             ''.join(leftover_alphabet),
-                            REGIONAL_INDICATOR_LETTERS)
+                            emoji_letters)
                         past_guesses += [f'{emoji_guess_word} | {squares_response}']
                         past_guesses_string = '\n'.join(past_guesses)
                         common_response_text = f'{past_guesses_string} - {fail_count}/{word_len+1}'
