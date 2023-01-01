@@ -179,9 +179,9 @@ def embed_response(title):
 def embed_shitemaster_email(email):
     description = f'As much video and photo evidence as possible should be provided to \
         the SHITEmaster’s assistant (Lisa!) before the task deadline. \
-            This includes video of you reading out the tasks and how you do \
-                the task(not just the finished task).\nAll evidence should be \
-                    shared in Google Photos or email to **{email}** 🖖'
+        This includes video of you reading out the tasks and how you do \
+        the task (not just the finished task).\nAll evidence should be \
+        shared in Google Photos or email to **{email}** 🖖'
     sm_email = discord.Embed(title='Submit Your Shitemaster Tasks',
                              description=description)
 
