@@ -91,7 +91,7 @@ def embed_movie_watchlist(movie_watchlist):
     return responses
 
 
-def embed_movie_schedule(schedule, first=False):
+def embed_movie_schedule(schedule, calender, first=False):
     formatted_schedule = discord.Embed(title='Movie Schedule')
     if not schedule:
         formatted_schedule.add_field(
@@ -106,7 +106,7 @@ def embed_movie_schedule(schedule, first=False):
                                          inline=False)
 
     formatted_schedule.add_field(name='Calender',
-                                 value='[See the full calender of events online](https://calendar.google.com/calendar/u/0/embed?src=qjva8eaked6q9vdcgqkspqvseg@group.calendar.google.com)',
+                                 value=f'[See the full calender of events online]({calender})',
                                  inline=False)
     formatted_schedule.add_field(name='Reelgood',
                                  value='[Where can I stream these from?](https://reelgood.com/)',

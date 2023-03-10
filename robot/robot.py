@@ -126,7 +126,7 @@ async def full_schedule(ctx):
                 help='Read the full movie schedule from the calendar')
 async def full_schedule(ctx):
     schedule = scrape_events_from_calender(MOVIE_AGENDA)
-    print_schedule = embed_movie_schedule(schedule)
+    print_schedule = embed_movie_schedule(schedule, MOVIE_AGENDA)
     await ctx.send(embed=print_schedule)
 
 
@@ -134,7 +134,7 @@ async def full_schedule(ctx):
                 help='Reads the next scheduled movie schedule from the calendar')
 async def next_scheduled(ctx):
     schedule = scrape_events_from_calender(MOVIE_AGENDA)
-    print_schedule = embed_movie_schedule(schedule, first=True)
+    print_schedule = embed_movie_schedule(schedule, MOVIE_AGENDA, first=True)
     await ctx.send(embed=print_schedule)
 
 
@@ -420,12 +420,12 @@ async def on_message(message):
 
     if 'tv games schedule' in chat_message:
         schedule = scrape_events_from_calender(TV_GAMES_AGENDA)
-        print_schedule = embed_games_schedule(schedule)
+        print_schedule = embed_games_schedule(schedule, TV_GAMES_AGENDA)
         await message.channel.send(embed=print_schedule)
 
     if 'movie schedule' in chat_message:
         schedule = scrape_events_from_calender(MOVIE_AGENDA)
-        print_schedule = embed_movie_schedule(schedule)
+        print_schedule = embed_movie_schedule(schedule, MOVIE_AGENDA)
         await message.channel.send(embed=print_schedule)
 
     if any(x in chat_message.lower() for x in SHITEMASTER_HELP):
@@ -440,7 +440,7 @@ async def on_message(message):
 
         if 'shite schedule' in chat_message:
             schedule = scrape_events_from_calender(SHITEMAS_AGENDA)
-            print_schedule = embed_shitemas_schedule(schedule)
+            print_schedule = embed_shitemas_schedule(schedule, SHITEMAS_AGENDA)
             await message.channel.send(embed=print_schedule)
 
     await client.process_commands(message)
