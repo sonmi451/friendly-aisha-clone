@@ -31,7 +31,8 @@ def scrape_events_from_calender(calender):
         agenda_button.click()
         time.sleep(1)
         agenda_html = browser.page_source
-        browser.close
+        browser.close()
+        browser.quit()
 
         # scrape calender
         soup = BeautifulSoup(agenda_html, 'html.parser')
