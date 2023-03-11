@@ -18,7 +18,7 @@ async def scrape_events_from_calender(calender):
 
     if calender:
 
-        print('Open Browser Session')
+        print('Open browser session')
         async with async_playwright() as playwright:
             firefox = playwright.firefox
             browser = await firefox.launch()
@@ -26,12 +26,12 @@ async def scrape_events_from_calender(calender):
             await page.goto(calender)
             print('Click agenda tab')
             await page.locator("//div[@id='tab-controller-container-agenda']").click()
+            time.sleep(1)
             agenda_html = await page.content()
-            print(await page.title())
             await browser.close()
 
         # scrape calender
-        print("Read adenda")
+        print("Read agenda")
         soup = BeautifulSoup(agenda_html, 'html.parser')
         if not 'Nothing currently scheduled' in soup.text:
             adgenda_events = soup.select("body > div#container > div.calendar-container > div#calendarContainer1 > div#viewContainer1 > div#agenda1 >div#agendaEventContainer1 > div#agendaScrollContent1 > div#eventContainer1 > div.day")
