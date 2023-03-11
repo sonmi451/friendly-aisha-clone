@@ -2,9 +2,7 @@ import os
 import time
 from datetime import datetime, timedelta, timezone
 from bs4 import BeautifulSoup
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.common.by import By
+from playwright.async_api import async_playwright
 
 TIME_FORMAT = "%H:%M"
 
@@ -13,28 +11,27 @@ def is_british_summer_time():
     time.tzset()
     return time.localtime().tm_isdst
 
-def scrape_events_from_calender(calender):
+async def scrape_events_from_calender(calender):
     # setup empty events list
     events = []
+    agenda_html = ""
 
     if calender:
 
-        # open selenium session to get page HTML
-        browser = webdriver.Remote(command_executor="http://selenium:4444/wd/hub",
-                                    desired_capabilities={
-                                                "browserName": "chrome",
-                                            })
-  
-        print('Open browser')
-        browser.get(calender)
-        agenda_button = browser.find_element(By.XPATH,"//div[@id='tab-controller-container-agenda']")
-        agenda_button.click()
-        time.sleep(1)
-        agenda_html = browser.page_source
-        browser.close()
-        browser.quit()
+        print('Open Browser Session')
+        async with async_playwright() as playwright:
+            firefox = playwright.firefox
+            browser = await firefox.launch()
+            page = await browser.new_page()
+            await page.goto(calender)
+            print('Click agenda tab')
+            await page.locator("//div[@id='tab-controller-container-agenda']").click()
+            agenda_html = await page.content()
+            print(await page.title())
+            await browser.close()
 
         # scrape calender
+        print("Read adenda")
         soup = BeautifulSoup(agenda_html, 'html.parser')
         if not 'Nothing currently scheduled' in soup.text:
             adgenda_events = soup.select("body > div#container > div.calendar-container > div#calendarContainer1 > div#viewContainer1 > div#agenda1 >div#agendaEventContainer1 > div#agendaScrollContent1 > div#eventContainer1 > div.day")

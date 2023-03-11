@@ -13,13 +13,6 @@ services:
     environment:
       PYTHONUNBUFFERED: 1
 
-  selenium:
-    container_name: selenium
-    restart: unless-stopped
-    image: seleniarm/standalone-chromium:latest
-    ports:
-      - 4444:4444
-
   databse:
     container_name: database
     image: mongo:latest

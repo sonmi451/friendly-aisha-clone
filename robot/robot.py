@@ -84,6 +84,7 @@ if DB_LOAD_DATA == '1':
 
 intents = discord.Intents.default()
 intents.members = True
+intents.message_content = True
 
 if DEBUG == '1':
     client = commands.Bot(command_prefix='test$', intents=intents)
@@ -125,7 +126,7 @@ async def full_schedule(ctx):
 @client.command(name='movies',
                 help='Read the full movie schedule from the calendar')
 async def full_schedule(ctx):
-    schedule = scrape_events_from_calender(MOVIE_AGENDA)
+    schedule = await scrape_events_from_calender(MOVIE_AGENDA)
     print_schedule = embed_movie_schedule(schedule, MOVIE_AGENDA)
     await ctx.send(embed=print_schedule)
 
@@ -133,7 +134,7 @@ async def full_schedule(ctx):
 @client.command(name='movie',
                 help='Reads the next scheduled movie schedule from the calendar')
 async def next_scheduled(ctx):
-    schedule = scrape_events_from_calender(MOVIE_AGENDA)
+    schedule = await scrape_events_from_calender(MOVIE_AGENDA)
     print_schedule = embed_movie_schedule(schedule, MOVIE_AGENDA, first=True)
     await ctx.send(embed=print_schedule)
 
@@ -419,12 +420,12 @@ async def on_message(message):
         await message.channel.send(embed=response)
 
     if 'tv games schedule' in chat_message:
-        schedule = scrape_events_from_calender(TV_GAMES_AGENDA)
+        schedule = await scrape_events_from_calender(TV_GAMES_AGENDA)
         print_schedule = embed_games_schedule(schedule, TV_GAMES_AGENDA)
         await message.channel.send(embed=print_schedule)
 
     if 'movie schedule' in chat_message:
-        schedule = scrape_events_from_calender(MOVIE_AGENDA)
+        schedule = await scrape_events_from_calender(MOVIE_AGENDA)
         print_schedule = embed_movie_schedule(schedule, MOVIE_AGENDA)
         await message.channel.send(embed=print_schedule)
 
@@ -439,7 +440,7 @@ async def on_message(message):
             await message.channel.send(embed=response)
 
         if 'shite schedule' in chat_message:
-            schedule = scrape_events_from_calender(SHITEMAS_AGENDA)
+            schedule = await scrape_events_from_calender(SHITEMAS_AGENDA)
             print_schedule = embed_shitemas_schedule(schedule, SHITEMAS_AGENDA)
             await message.channel.send(embed=print_schedule)
 
