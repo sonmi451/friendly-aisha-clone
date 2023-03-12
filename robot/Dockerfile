@@ -1,7 +1,9 @@
-FROM mcr.microsoft.com/playwright/python:v1.30.0-focal
+FROM ubuntu:20.04
+
+ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update
-RUN apt-get install -y python3
+RUN apt-get install -y python3.10 python3-pip
 
 WORKDIR /app
 
