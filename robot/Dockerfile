@@ -1,7 +1,7 @@
 FROM mcr.microsoft.com/playwright/python:v1.30.0-focal
 
-RUN apt update
-RUN apt install -y python3
+RUN apt-get update
+RUN apt-get install -y python3
 
 WORKDIR /app
 
