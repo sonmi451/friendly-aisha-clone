@@ -9,6 +9,8 @@ import DiscordUtils
 from dotenv import load_dotenv
 from discord.ext import commands
 from pymongo import MongoClient
+from requests_html import HTMLSession
+
 
 from calendars import scrape_events_from_calender
 from file_helpers import get_aoe_taunts_from_file, get_british_spellings_from_file, \
@@ -90,6 +92,13 @@ if DEBUG == '1':
     client = commands.Bot(command_prefix='test$', intents=intents)
 else:
     client = commands.Bot(command_prefix='$', intents=intents)
+
+################################################################################
+# TRIGGER REQUESTS-HTML DOWNLOADING CHROMIUM
+
+session = HTMLSession()
+trigger_download_chromium = session.get("https://discord.com/")
+trigger_download_chromium.html.render()
 
 ################################################################################
 # EVENT REACTIONS
