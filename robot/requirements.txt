@@ -3,7 +3,6 @@ bs4
 discord.py
 DiscordUtils
 requests
-requests-html
 prettyprint
 pymongo
 python-dotenv

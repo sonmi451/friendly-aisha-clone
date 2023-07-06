@@ -1,7 +1,6 @@
 import os
 import time
 from datetime import datetime, timedelta, timezone
-from requests_html import AsyncHTMLSession
 from bs4 import BeautifulSoup
 
 
@@ -19,9 +18,9 @@ async def scrape_events_from_calender(calender):
     if not calender:
         return events
 
-    session = AsyncHTMLSession()
-    agenda = await session.get(calender)
-    agenda_html = await agenda.html.arender()
+    # session = AsyncHTMLSession()
+    # agenda = await session.get(calender)
+    # agenda_html = await agenda.html.arender()
  
     # scrape calender
     # print("Read agenda")

@@ -9,8 +9,6 @@ import DiscordUtils
 from dotenv import load_dotenv
 from discord.ext import commands
 from pymongo import MongoClient
-from requests_html import HTMLSession
-
 
 from calendars import scrape_events_from_calender
 from file_helpers import get_aoe_taunts_from_file, get_british_spellings_from_file, \
@@ -94,13 +92,6 @@ else:
     client = commands.Bot(command_prefix='$', intents=intents)
 
 ################################################################################
-# TRIGGER REQUESTS-HTML DOWNLOADING CHROMIUM
-
-session = HTMLSession()
-trigger_download_chromium = session.get("https://discord.com/")
-trigger_download_chromium.html.render()
-
-################################################################################
 # EVENT REACTIONS
 
 
@@ -135,7 +126,8 @@ async def full_schedule(ctx):
 @client.command(name='movies',
                 help='Read the full movie schedule from the calendar')
 async def full_schedule(ctx):
-    schedule = await scrape_events_from_calender(MOVIE_AGENDA)
+    schedule = None
+    # schedule = await scrape_events_from_calender(MOVIE_AGENDA)
     print_schedule = embed_movie_schedule(schedule, MOVIE_AGENDA)
     await ctx.send(embed=print_schedule)
 
@@ -143,7 +135,8 @@ async def full_schedule(ctx):
 @client.command(name='movie',
                 help='Reads the next scheduled movie schedule from the calendar')
 async def next_scheduled(ctx):
-    schedule = await scrape_events_from_calender(MOVIE_AGENDA)
+    schedule = None
+    # schedule = await scrape_events_from_calender(MOVIE_AGENDA)
     print_schedule = embed_movie_schedule(schedule, MOVIE_AGENDA, first=True)
     await ctx.send(embed=print_schedule)
 
@@ -429,12 +422,14 @@ async def on_message(message):
         await message.channel.send(embed=response)
 
     if 'tv games schedule' in chat_message:
-        schedule = await scrape_events_from_calender(TV_GAMES_AGENDA)
+        schedule = None
+        # schedule = await scrape_events_from_calender(TV_GAMES_AGENDA)
         print_schedule = embed_games_schedule(schedule, TV_GAMES_AGENDA)
         await message.channel.send(embed=print_schedule)
 
     if 'movie schedule' in chat_message:
-        schedule = await scrape_events_from_calender(MOVIE_AGENDA)
+        schedule = None
+        # schedule = await scrape_events_from_calender(MOVIE_AGENDA)
         print_schedule = embed_movie_schedule(schedule, MOVIE_AGENDA)
         await message.channel.send(embed=print_schedule)
 
@@ -449,7 +444,8 @@ async def on_message(message):
             await message.channel.send(embed=response)
 
         if 'shite schedule' in chat_message:
-            schedule = await scrape_events_from_calender(SHITEMAS_AGENDA)
+            schedule = None
+            # schedule = await scrape_events_from_calender(SHITEMAS_AGENDA)
             print_schedule = embed_shitemas_schedule(schedule, SHITEMAS_AGENDA)
             await message.channel.send(embed=print_schedule)
 

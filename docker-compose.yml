@@ -13,7 +13,7 @@ services:
     environment:
       PYTHONUNBUFFERED: 1
 
-  databse:
+  database:
     container_name: database
     image: mongo:latest
     restart: unless-stopped
