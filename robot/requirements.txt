@@ -2,7 +2,8 @@ beautifulsoup4
 bs4
 discord.py
 DiscordUtils
-playwright
+requests
+requests-html
 prettyprint
 pymongo
 python-dotenv
