@@ -126,18 +126,16 @@ async def full_schedule(ctx):
 @client.command(name='movies',
                 help='Read the full movie schedule from the calendar')
 async def full_schedule(ctx):
-    schedule = None
     # schedule = await scrape_events_from_calender(MOVIE_AGENDA)
-    print_schedule = embed_movie_schedule(schedule, MOVIE_AGENDA)
+    print_schedule = embed_movie_schedule()
     await ctx.send(embed=print_schedule)
 
 
 @client.command(name='movie',
                 help='Reads the next scheduled movie schedule from the calendar')
 async def next_scheduled(ctx):
-    schedule = None
     # schedule = await scrape_events_from_calender(MOVIE_AGENDA)
-    print_schedule = embed_movie_schedule(schedule, MOVIE_AGENDA, first=True)
+    print_schedule = embed_movie_schedule(first=True)
     await ctx.send(embed=print_schedule)
 
 
@@ -428,9 +426,8 @@ async def on_message(message):
         await message.channel.send(embed=print_schedule)
 
     if 'movie schedule' in chat_message:
-        schedule = None
         # schedule = await scrape_events_from_calender(MOVIE_AGENDA)
-        print_schedule = embed_movie_schedule(schedule, MOVIE_AGENDA)
+        print_schedule = embed_movie_schedule()
         await message.channel.send(embed=print_schedule)
 
     if any(x in chat_message.lower() for x in SHITEMASTER_HELP):
