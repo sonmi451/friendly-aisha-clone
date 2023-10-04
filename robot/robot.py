@@ -17,8 +17,7 @@ from file_helpers import get_aoe_taunts_from_file, get_british_spellings_from_fi
     get_toki_pona_words_from_file, get_regional_indicator_letters_from_file
 from helpers import get_random_beep_boop, get_random, get_aoe_taunt, \
     toki_pona_translate
-from wordle_helpers import check_answer, get_emoji_word, get_word, \
-    get_wordle_stats, wordle_exception, valid_word
+from wordle_helpers import *
 from database_helpers import get_movie_watchlist, add_movie_to_watchlist, \
     remove_movie_from_watchlist, get_movie_by_upvotes
 from embeds import embed_movie_watchlist, embed_movie_schedule, embed_shitemas_schedule, embed_games_schedule, \
@@ -297,10 +296,13 @@ async def play_wordle(ctx, *message):
         await ctx.send(embed=response)
 
 
-## WORDLE HELPER
+################################################################################
+# WORDLE HELPER
+
 async def wait_for_answer(ctx, word, word_len, word_set, emoji_letters, alphabet):
     emoji_correct_word = get_emoji_word(word, emoji_letters)
     tag_user = ctx.author.mention
+
     def check(m):
         '''
         Checks message is by original command user and in the same channel
@@ -320,7 +322,8 @@ async def wait_for_answer(ctx, word, word_len, word_set, emoji_letters, alphabet
             player = f'{msg.author}'
             player_title = f'{player.split("#")[0]}\'s Wordle!'
             guess = msg.content.lower()
-            emoji_guess_word = get_emoji_word(msg.content.lower(), emoji_letters)
+            emoji_guess_word = get_emoji_word(
+                msg.content.lower(), emoji_letters)
             if msg:
                 if guess[0] == '$':
                     # Skip bot commands
