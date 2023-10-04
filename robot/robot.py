@@ -249,14 +249,6 @@ async def full_schedule(ctx):
     ctx.author.send(embed=print_schedule)
 
 
-@client.command(name='upvotelist',
-                help='See the watchlist sorted by upvotes')
-async def view_watchlist_upvote_sorted(ctx):
-    watchlist = get_movie_by_upvotes(MOVIE_COLLECTION)
-    response = embed_movie_watchlist(watchlist)
-    await ctx.send(embed=response)
-
-
 @client.command(name='wade',
                 help='Talk in AOE taunts!')
 async def aoe_speak(ctx, taunt_num):
