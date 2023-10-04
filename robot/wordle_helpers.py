@@ -73,6 +73,7 @@ def valid_word(word, word_set):
     else:
         return False
 
+
 def wordle_exception(error, debug):
     if debug == '1':
         response_text = ' Debug mode error details:\n```' + str(error) + '```'
