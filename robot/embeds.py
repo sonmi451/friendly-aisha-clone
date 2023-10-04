@@ -147,8 +147,8 @@ def embed_games_schedule(schedule):
 
 def embed_github():
     robot_response = discord.Embed()
-    robot_response.add_field(name='See my Source Code:',
-                             value='[https://github.com/sonmi451/friendly-aisha-clone](https://github.com/sonmi451/friendly-aisha-clone)',
+    robot_response.add_field(name='See my Source Code',
+                             value='https://github.com/sonmi451/friendly-aisha-clone',
                              inline=False)
     return robot_response
 
