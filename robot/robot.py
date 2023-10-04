@@ -403,16 +403,13 @@ async def on_message(message):
         await message.channel.send(embed=response)
 
     if 'rock' in chat_message and 'fact' in chat_message:
-        await message.add_reaction(emoji='<:rockfact:772801261103742976>')
         rock_message = get_random(ROCK_FACTS)
         response = embed_response(rock_message)
         await message.channel.send(embed=response)
 
     if 'guess the soup' in chat_message:
-        await message.add_reaction(emoji='<:soupguess:806255878902513724>')
-        if 'rule' in chat_message:
-            response = embed_guess_the_soup_rules()
-            await message.channel.send(embed=response)
+        response = embed_guess_the_soup_rules()
+        await message.channel.send(embed=response)
 
     if 'tv' in chat_message and 'game' in chat_message and 'help' in chat_message:
         tv_games_help = get_random(TV_GAMES_HELP)
