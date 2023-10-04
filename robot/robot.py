@@ -416,10 +416,10 @@ async def on_message(message):
         response = embed_response(tv_games_help)
         await message.channel.send(embed=response)
 
-    if 'tv games schedule' in chat_message:
+    if 'tv games' in chat_message:
         schedule = None
-        # schedule = await scrape_events_from_calender(TV_GAMES_AGENDA)
-        print_schedule = embed_games_schedule(schedule, TV_GAMES_AGENDA)
+        #schedule = await scrape_events_from_calender(TV_GAMES_AGENDA)
+        print_schedule = embed_games_schedule(schedule)
         await message.channel.send(embed=print_schedule)
 
     if 'movie schedule' in chat_message:
