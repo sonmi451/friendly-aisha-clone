@@ -115,22 +115,53 @@ async def on_member_join(member):
 ################################################################################
 # USER COMMANDS
 
+@client.command(name='addmovie',
+                help='Add or upvote a movie on the watchlist')
+async def add_movie(ctx, *movie):
+    if movie:
+        movie = ' '.join(movie)
+        movie_name = str(movie).title()
+        movie_details = {
+            '_id': movie_name,
+            'suggestedBy': ctx.message.author.name,
+            'votes': 1,
+            'IMDB': "",
+        }
+        add_movie_to_watchlist(MOVIE_COLLECTION, movie_details)
+        text = f"Thank you for your suggestion: {movie_name}!"
+    else:
+        text = "you wanna try: `$addmovie The Best Film in the World`"
+    response = embed_response(text)
+    await ctx.send(embed=response)
 
-@client.command(name='shitemaster',
-                help='Recieve a DM of the Shitemaster submission info')
-async def full_schedule(ctx):
-    embed = embed_shitemaster_email(SHITEMASTER_EMAIL)
-    await ctx.author.send('', embed=embed)
+
+@client.command(name='bubblewrap',
+                help='Gimme some bubblewrap to pop')
+async def bubblewrap(ctx):
+    bubblerow = "||pop|| ||pop|| ||pop|| ||pop|| ||pop|| ||pop|| ||pop|| ||pop|| ||pop|| ||pop|| ||pop||\n"
+    bubbles = f"Enjoy the bubblewrap:\n{bubblerow * 9}"
+    await ctx.send(bubbles)
 
 
-@client.command(name='tvgames',
-                help='What and when are tv games?')
-async def full_schedule(ctx):
-    schedule = None
-    # schedule = await scrape_events_from_calender(TV_GAMES_AGENDA)
-    print_schedule = embed_games_schedule(schedule)
-    ctx.author.send(embed=print_schedule)
+@client.command(name='delmovie',
+                help='Remove a movie to the watchlist')
+async def remove_movie(ctx, *movie):
+    if movie:
+        movie = ' '.join(movie)
+        movie_name = str(movie).title()
+        remove_movie_from_watchlist(MOVIE_COLLECTION, movie_name)
+        text = f"Removed movie from watchlist: {movie_name}!"
+    else:
+        text = "you wanna try: `$delmovie \"The Best Film in the World\"`"
+    response = embed_response(text)
+    await ctx.send(embed=response)
 
+
+@client.command(name='github',
+                help='See my insides on Github!')
+async def github_url(ctx):
+    url = embed_github()
+    await ctx.send(embed=url)
 
 @client.command(name='movies',
                 help='Read the full movie schedule from the calendar')
@@ -159,63 +190,6 @@ async def view_watchlist(ctx):
         await paginator.run(responses)
     else:
         await ctx.send(content='', embed=responses[0])
-
-
-@client.command(name='upvotelist',
-                help='See the watchlist sorted by upvotes')
-async def view_watchlist_upvote_sorted(ctx):
-    watchlist = get_movie_by_upvotes(MOVIE_COLLECTION)
-    response = embed_movie_watchlist(watchlist)
-    await ctx.send(embed=response)
-
-
-@client.command(name='addmovie',
-                help='Add or upvote a movie on the watchlist')
-async def add_movie(ctx, *movie):
-    if movie:
-        movie = ' '.join(movie)
-        movie_name = str(movie).title()
-        movie_details = {
-            '_id': movie_name,
-            'suggestedBy': ctx.message.author.name,
-            'votes': 1,
-            'IMDB': "",
-        }
-        add_movie_to_watchlist(MOVIE_COLLECTION, movie_details)
-        text = f"Thank you for your suggestion: {movie_name}!"
-    else:
-        text = "you wanna try: `$addmovie The Best Film in the World`"
-    response = embed_response(text)
-    await ctx.send(embed=response)
-
-
-@client.command(name='delmovie',
-                help='Remove a movie to the watchlist')
-async def remove_movie(ctx, *movie):
-    if movie:
-        movie = ' '.join(movie)
-        movie_name = str(movie).title()
-        remove_movie_from_watchlist(MOVIE_COLLECTION, movie_name)
-        text = f"Removed movie from watchlist: {movie_name}!"
-    else:
-        text = "you wanna try: `$delmovie \"The Best Film in the World\"`"
-    response = embed_response(text)
-    await ctx.send(embed=response)
-
-
-@client.command(name='bubblewrap',
-                help='Gimme some bubblewrap to pop')
-async def bubblewrap(ctx):
-    bubblerow = "||pop|| ||pop|| ||pop|| ||pop|| ||pop|| ||pop|| ||pop|| ||pop|| ||pop|| ||pop|| ||pop||\n"
-    bubbles = f"Enjoy the bubblewrap:\n{bubblerow * 9}"
-    await ctx.send(bubbles)
-
-
-@client.command(name='github',
-                help='See my insides on Github!')
-async def github_url(ctx):
-    url = embed_github()
-    await ctx.send(embed=url)
 
 
 @client.command(name='parrot',
@@ -248,6 +222,40 @@ async def musi_nimi(ctx, *message):
         response_text = wordle_exception(error, DEBUG)
         response = embed_wordle({'A wordley error!': response_text})
         await ctx.send(embed=response)
+
+
+@client.command(name='shitemaster',
+                help='Recieve a DM of the Shitemaster submission info')
+async def full_schedule(ctx):
+    embed = embed_shitemaster_email(SHITEMASTER_EMAIL)
+    await ctx.author.send('', embed=embed)
+
+
+@client.command(name='toki',
+                help='toki pona translator')
+async def toki_translate(ctx, *message):
+    if message:
+        english = toki_pona_translate(' '.join(message), TOKI_PONA_DICT)
+        print(english)
+        response = embed_response(english)
+        await ctx.send(embed=response)
+
+
+@client.command(name='tvgames',
+                help='What and when are tv games?')
+async def full_schedule(ctx):
+    schedule = None
+    # schedule = await scrape_events_from_calender(TV_GAMES_AGENDA)
+    print_schedule = embed_games_schedule(schedule)
+    ctx.author.send(embed=print_schedule)
+
+
+@client.command(name='upvotelist',
+                help='See the watchlist sorted by upvotes')
+async def view_watchlist_upvote_sorted(ctx):
+    watchlist = get_movie_by_upvotes(MOVIE_COLLECTION)
+    response = embed_movie_watchlist(watchlist)
+    await ctx.send(embed=response)
 
 
 @client.command(name='wade',
@@ -289,16 +297,7 @@ async def play_wordle(ctx, *message):
         await ctx.send(embed=response)
 
 
-@client.command(name='toki',
-                help='toki pona translator')
-async def toki_translate(ctx, *message):
-    if message:
-        english = toki_pona_translate(' '.join(message), TOKI_PONA_DICT)
-        print(english)
-        response = embed_response(english)
-        await ctx.send(embed=response)
-
-
+## WORDLE HELPER
 async def wait_for_answer(ctx, word, word_len, word_set, emoji_letters, alphabet):
     emoji_correct_word = get_emoji_word(word, emoji_letters)
     tag_user = ctx.author.mention
@@ -368,7 +367,6 @@ async def wait_for_answer(ctx, word, word_len, word_set, emoji_letters, alphabet
 
 ################################################################################
 # RESPONSES TO TEXT
-
 
 @client.event
 async def on_message(message):
