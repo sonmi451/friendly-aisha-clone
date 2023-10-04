@@ -138,10 +138,11 @@ def embed_games_schedule(schedule):
     formatted_schedule = discord.Embed(title='TV Games')
     formatted_schedule.add_field(name='Every Wednesday at 8PM!',
                                  value='join Acres Greg in the TV games voice channel for socialising and games')
-    for day in schedule:
-        formatted_schedule.add_field(name=day[0],
-                                     value='\n'.join([str(time + ': ' + description) if time != ' ' else description for time, description in day[1].items()]),
-                                     inline=False)
+    if schedule:                                 
+        for day in schedule:
+            formatted_schedule.add_field(name=day[0],
+                                        value='\n'.join([str(time + ': ' + description) if time != ' ' else description for time, description in day[1].items()]),
+                                        inline=False)
     return formatted_schedule
 
 
