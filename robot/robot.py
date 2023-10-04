@@ -123,6 +123,15 @@ async def full_schedule(ctx):
     await ctx.author.send('', embed=embed)
 
 
+@client.command(name='tvgames',
+                help='What and when are tv games?')
+async def full_schedule(ctx):
+    schedule = None
+    # schedule = await scrape_events_from_calender(TV_GAMES_AGENDA)
+    print_schedule = embed_games_schedule(schedule)
+    ctx.author.send(embed=print_schedule)
+
+
 @client.command(name='movies',
                 help='Read the full movie schedule from the calendar')
 async def full_schedule(ctx):
