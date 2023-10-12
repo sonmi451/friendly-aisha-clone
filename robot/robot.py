@@ -409,7 +409,7 @@ async def on_message(message):
         response = embed_response(rock_message)
         await message.channel.send(embed=response)
 
-    if 'guess' in chat_message and 'soup' and 'rules' in chat_message:
+    if 'guess' in chat_message and 'soup' in chat_message and 'rules' in chat_message:
         response = embed_guess_the_soup_rules()
         await message.channel.send(embed=response)
 
