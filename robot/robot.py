@@ -386,6 +386,10 @@ async def on_message(message):
         response = embed_response(beep_boop)
         await message.channel.send(embed=response)
 
+    if 'frog' in chat_message:
+        response = embed_response("it's a frog takeover!")
+        await message.channel.send(embed=response)
+
     if 'orb' in chat_message and 'i have counted' not in chat_message:
         orbified_message = re.sub('[aeiou]', 'orb', chat_message)
         await message.channel.send(orbified_message)
