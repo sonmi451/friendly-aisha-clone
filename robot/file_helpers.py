@@ -43,6 +43,10 @@ def get_rock_facts_from_file():
         rock_facts = [line.strip() for line in file]
     return rock_facts
 
+def get_vet_clinics_from_file():
+    with open('../resources/vet_clinics.txt') as file:
+        vet_clinics = [line.lower().strip() for line in file]
+    return vet_clinics
 
 def get_toki_pona_words_from_file():
     with open('../resources/toki_pona_words.json') as file:

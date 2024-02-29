@@ -14,7 +14,7 @@ from calendars import scrape_events_from_calender
 from file_helpers import get_aoe_taunts_from_file, get_british_spellings_from_file, \
     get_friendly_advice_from_file, get_nerts_commentry_from_file, \
     get_rock_facts_from_file, get_tv_games_help_from_file, get_word_set_from_file, \
-    get_toki_pona_words_from_file, get_regional_indicator_letters_from_file
+    get_toki_pona_words_from_file, get_regional_indicator_letters_from_file, get_vet_clinics_from_file
 from helpers import get_random_beep_boop, get_random, get_aoe_taunt, \
     toki_pona_translate
 from wordle_helpers import *
@@ -57,6 +57,7 @@ BRITISH_WORDS = get_british_spellings_from_file()
 WORD_SET = get_word_set_from_file()
 REGIONAL_INDICATOR_LETTERS = get_regional_indicator_letters_from_file()
 TOKI_PONA_DICT = get_toki_pona_words_from_file()
+VET_CLINICS = get_vet_clinics_from_file()
 
 ################################################################################
 # OTHER GLOBAL VARS
@@ -366,12 +367,19 @@ async def wait_for_answer(ctx, word, word_len, word_set, emoji_letters, alphabet
 @client.event
 async def on_message(message):
     chat_message = message.content.lower()
+    chat_message_words = chat_message.split()
 
     if DEBUG:
         print(str(message.author) + '\n' + str(chat_message))
 
     if message.author == client.user:
         return
+    
+    # vet clinics
+    vet_clinic_in_message = list(set(chat_message_words) & set(VET_CLINICS))
+    if vet_clinic_in_message:         
+        response = embed_response(f"There is a Vets Now clinic in {vet_clinic_in_message[0].title()}")
+        await message.channel.send(embed=response)
 
     # if Wade uses AoE shortcuts, reply with their meaning
     if WADE_ID and message.author.id == WADE_ID:
