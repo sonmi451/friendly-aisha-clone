@@ -367,7 +367,6 @@ async def wait_for_answer(ctx, word, word_len, word_set, emoji_letters, alphabet
 @client.event
 async def on_message(message):
     chat_message = message.content.lower()
-    chat_message_words = chat_message.split()
 
     if DEBUG:
         print(str(message.author) + '\n' + str(chat_message))
@@ -375,10 +374,10 @@ async def on_message(message):
     if message.author == client.user:
         return
     
-    # vet clinics
-    vet_clinic_in_message = list(set(chat_message_words) & set(VET_CLINICS))
-    if vet_clinic_in_message:         
-        response = embed_response(f"There is a Vets Now clinic in {vet_clinic_in_message[0].title()}")
+    # check if any vet clinic locations are mentioned
+    vet_clinics_in_message = [clinic for clinic in VET_CLINICS if(clinic in chat_message)]
+    for clinic in vet_clinics_in_message:
+        response = embed_response(f"There is a Vets Now clinic in {clinic.title()}")
         await message.channel.send(embed=response)
 
     # if Wade uses AoE shortcuts, reply with their meaning
@@ -416,7 +415,7 @@ async def on_message(message):
         response = embed_response('Praise be the regulations')
         await message.channel.send(embed=response)
 
-    if 'rock' in chat_message and 'fact' in chat_message:
+    if 'rock' in chat_message and 'fact' and ':rock_fact:' not in chat_message:
         rock_message = get_random(ROCK_FACTS)
         response = embed_response(rock_message)
         await message.channel.send(embed=response)
@@ -435,7 +434,7 @@ async def on_message(message):
         print_schedule = embed_movie_schedule()
         await message.channel.send(embed=print_schedule)
 
-    if any(x in chat_message.lower() for x in SHITEMASTER_HELP):
+    if any(x in chat_message for x in SHITEMASTER_HELP):
         embed = embed_shitemaster_email(SHITEMASTER_EMAIL)
         await message.author.send('', embed=embed)
 

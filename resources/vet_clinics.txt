@@ -1,62 +1,62 @@
-Aberdeen
-Belfast
-Newport
-Bath
-Ashford
-Barton le Clay
-Barnet
-Bradford
-Milton Keynes
-Northampton
-Bournemouth
-Bristol
-Herne Bay
-Chesterfield
-Colchester
-Coventry
-Colwyn Bay
-Derby
-Doncaster
-Dundee
-Eastbourne
-Portsmouth
-Preston
-Southampton
-Wolverhampton
-Birmingham
-Gillingham
-Edinburgh
-Farnham
-Gateshead
-Guildford
-Hemel Hempstead
-Kendal
-High Wycombe
-Hull
-Ipswich
-Kilmarnock
-Kirkcaldy
-Lincoln
-Liverpool
-Macclesfield
-Middlesbrough
-Nottingham
-Peterborough
-Reading
-Salisbury
-Sheffield
-Staines
-Stoke
-Sutton
-Swansea
-Telford
-Thamesmead
-Tunbridge Wells
-Winchester
-Witham
-Worcester
-Worthing
-Wrexham
-Glasgow
-Manchester
-Swindon
+aberdeen
+belfast
+newport
+bath
+ashford
+barton le clay
+barnet
+bradford
+milton keynes
+northampton
+bournemouth
+bristol
+herne bay
+chesterfield
+colchester
+coventry
+colwyn bay
+derby
+doncaster
+dundee
+eastbourne
+portsmouth
+preston
+southampton
+wolverhampton
+birmingham
+gillingham
+edinburgh
+farnham
+gateshead
+guildford
+hemel hempstead
+kendal
+high wycombe
+hull
+ipswich
+kilmarnock
+kirkcaldy
+lincoln
+liverpool
+macclesfield
+middlesbrough
+nottingham
+peterborough
+reading
+salisbury
+sheffield
+staines
+stoke
+sutton
+swansea
+telford
+thamesmead
+tunbridge wells
+winchester
+witham
+worcester
+worthing
+wrexham
+glasgow
+manchester
+swindon
