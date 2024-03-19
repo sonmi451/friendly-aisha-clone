@@ -377,7 +377,7 @@ async def on_message(message):
     # check if any vet clinic locations are mentioned
     vet_clinics_in_message = [clinic for clinic in VET_CLINICS if(clinic in chat_message)]
     for clinic in vet_clinics_in_message:
-        response = embed_response(f"There is a Vets Now clinic in {clinic.title()}")
+        response = f"There is a Vets Now clinic in {clinic.title()}"
         await message.channel.send(response)
 
     # if Wade uses AoE shortcuts, reply with their meaning
@@ -394,8 +394,7 @@ async def on_message(message):
         await message.channel.send(embed=response)
 
     if 'frog' in chat_message:
-        response = embed_response("it's a frog takeover!")
-        await message.channel.send(response)
+        await message.channel.send("it's a frog takeover!")
 
     if 'orb' in chat_message and 'i have counted' not in chat_message:
         orbified_message = re.sub('[aeiou]', 'orb', chat_message)
