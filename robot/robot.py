@@ -407,12 +407,10 @@ async def on_message(message):
 
     if 'robot' in chat_message:
         friendly_message = get_random(FRIENDLY_ROBOT_ADVICE)
-        response = embed_response(friendly_message)
-        await message.channel.send(response)
+        await message.channel.send(friendly_message)
 
     if 'regulations' in chat_message:
-        response = embed_response('Praise be the regulations')
-        await message.channel.send(embed=response)
+        await message.channel.send('Praise be the regulations')
 
     if 'rock' in chat_message and 'fact' and ':rock_fact:' not in chat_message:
         rock_message = get_random(ROCK_FACTS)
@@ -425,8 +423,7 @@ async def on_message(message):
 
     if 'tv' in chat_message and 'game' in chat_message:
         tv_games_help = get_random(TV_GAMES_HELP)
-        response = embed_response(tv_games_help)
-        await message.channel.send(embed=response)
+        await message.channel.send(tv_games_help)
 
     if 'movie schedule' in chat_message:
         # schedule = await scrape_events_from_calender(MOVIE_AGENDA)
