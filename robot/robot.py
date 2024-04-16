@@ -375,10 +375,18 @@ async def on_message(message):
         return
     
     # check if any vet clinic locations are mentioned
-    vet_clinics_in_message = [clinic for clinic in VET_CLINICS if(clinic in chat_message)]
-    for clinic in vet_clinics_in_message:
-        response = f"There is a Vets Now clinic in {clinic.title()}"
+    if 'bury' in chat_message:
+        response = "There is a Vets Now clinic in a repurposed car dealership that is right next to Besses o'th'Barn tram stop on the Manchester Metrolink, in Whitefield, within the Metropolitan Borough of Bury."
         await message.channel.send(response)
+    vet_clinics_in_message = [clinic.title() for clinic in VET_CLINICS if(clinic in chat_message)]
+    if vet_clinics_in_message:
+        if len(vet_clinics_in_message) is 1:
+            await message.channel.send(f"There is a Vets Now clinic in {vet_clinics_in_message[0]}")
+        elif len(vet_clinics_in_message) is 2:
+            await message.channel.send(f"There are Vets Now clinics in {' and '.join(vet_clinics_in_message)}")
+        else:
+            response = f"There are Vets Now clinics in: {', '.join(vet_clinics_in_message)}"
+            await message.channel.send(response)
 
     # if Wade uses AoE shortcuts, reply with their meaning
     if WADE_ID and message.author.id == WADE_ID:
