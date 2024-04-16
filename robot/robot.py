@@ -374,6 +374,11 @@ async def on_message(message):
     if message.author == client.user:
         return
     
+    # VETS NOW
+    # check if anyone from vets now is here right now
+    if 'vets now' in chat_message:
+        await message.channel.send("There is no one from Vets Now here right now.")
+
     # check if any vet clinic locations are mentioned
     if 'bury' in chat_message:
         response = "There is a Vets Now clinic in a repurposed car dealership that is right next to Besses o'th'Barn tram stop on the Manchester Metrolink, in Whitefield, within the Metropolitan Borough of Bury."
