@@ -420,7 +420,7 @@ async def on_message(message):
     if 'regulations' in chat_message:
         await message.channel.send('Praise be the regulations')
 
-    if 'rock' in chat_message and 'fact' and ':rock_fact:' not in chat_message:
+    if 'rock' in chat_message and 'fact' in chat_message and ':rock_fact:' not in chat_message:
         rock_message = get_random(ROCK_FACTS)
         response = embed_response(rock_message)
         await message.channel.send(embed=response)
