@@ -94,12 +94,10 @@ else:
 ################################################################################
 # EVENT REACTIONS
 
-
 @client.event
 async def on_ready():
     for guild in client.guilds:
         if guild.name == SERVER:
-            print(f"{client.user} has connected to Discord Server {guild.name}")
             break
 
 
@@ -114,6 +112,18 @@ async def on_member_join(member):
 
 ################################################################################
 # USER COMMANDS
+
+@client.command(name='ppl',
+                help='ppl')
+async def ppl(ctx):
+    print("hello ppl!")
+    for guild in client.guilds:
+        for member in guild.members:
+            print(f"Member: {member}\nRoles:")
+            for role in member.roles:
+                print(f"> {role}")
+    print("bye ppl!")
+
 
 @client.command(name='addmovie',
                 help='Add or upvote a movie on the watchlist')
