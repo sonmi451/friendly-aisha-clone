@@ -19,7 +19,7 @@ from helpers import get_random_beep_boop, get_random, get_aoe_taunt, \
     toki_pona_translate
 from wordle_helpers import *
 from database_helpers import get_movie_watchlist, add_movie_to_watchlist, \
-    remove_movie_from_watchlist, get_movie_by_upvotes
+    remove_movie_from_watchlist, get_movie_by_upvotes, export_movie_db_to_json
 from embeds import embed_movie_watchlist, embed_movie_schedule, embed_shitemas_schedule, embed_games_schedule, \
     embed_github, embed_guess_the_soup_rules, embed_response, embed_shitemaster_email, embed_wordle
 
@@ -75,9 +75,9 @@ DB_CLIENT = MongoClient("mongodb://database:27017/")
 MOVIE_DATABASE = DB_CLIENT["movie_list"]
 MOVIE_COLLECTION = MOVIE_DATABASE["movies"]
 if DB_LOAD_DATA == '1':
-    from database_helpers import load_movie_json_into_db
+    from database_helpers import import_movie_json_to_db
     print("Populate database")
-    load_movie_json_into_db(MOVIE_COLLECTION)
+    import_movie_json_to_db(MOVIE_COLLECTION)
 
 ################################################################################
 # DISCORDS SETUP
@@ -200,6 +200,13 @@ async def view_watchlist(ctx):
         await paginator.run(responses)
     else:
         await ctx.send(content='', embed=responses[0])
+
+
+@client.command(name='export_movies',
+                help='Exports movie db to json')
+async def movie_export(ctx):
+    export_movie_db_to_json()
+    await ctx.send('Exported movie db')
 
 
 @client.command(name='parrot',

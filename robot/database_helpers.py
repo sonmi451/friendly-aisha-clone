@@ -66,7 +66,7 @@ def remove_movie_from_watchlist(movie_collection, movie_name):
         movie_collection.delete_one(query)
 
 
-def load_movie_json_into_db(movie_collection):
+def import_movie_json_to_db(movie_collection):
     movie_dict = {}
     with open('../resources/movie_watchlist.json', 'r') as in_file:
         movie_watchlist = json.load(in_file)
@@ -75,3 +75,12 @@ def load_movie_json_into_db(movie_collection):
             temp_dict['_id'] = movie
             movie_collection.insert_one(temp_dict)
             print(f'Inserted new record for {movie}')
+
+
+def export_movie_db_to_json(movie_collection):
+    movies = {}
+    for movie in movie_collection.find():
+        temp_dict = {movie['_id'] : {'suggestedBy': movie['suggestedBy'], 'votes': movie['votes'], 'IMDB': movie['IMDB']}}
+        movies.append(temp_dict)
+    with open('../resources/movie_watchlist.json', 'r') as out_file:
+        json.dump(movies, out_file)
