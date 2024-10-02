@@ -376,7 +376,7 @@ async def wait_for_answer(ctx, word, word_len, word_set, emoji_letters, alphabet
 
 @client.event
 async def on_message(message):
-    chat_message = message.content
+    chat_message = message.content.lower()
 
     if DEBUG:
         print(str(message.author) + '\n' + str(chat_message))
@@ -386,13 +386,15 @@ async def on_message(message):
     
     # VETS NOW
     # check if anyone from vets now is here right now
-    if 'vets now' in chat_message.lower():
+    if 'vets now' in chat_message:
         await message.channel.send("There is no one from Vets Now here right now.")
 
     # check if any vet clinic locations are mentioned
-    if 'Bury' in chat_message:
+    if ' bury' in chat_message:
         response = "There is a Vets Now clinic in a repurposed car dealership that is right next to Besses o'th'Barn tram stop on the Manchester Metrolink, in Whitefield, within the Metropolitan Borough of Bury."
         await message.channel.send(response)
+        return
+    
     vet_clinics_in_message = [clinic.title() for clinic in VET_CLINICS if(clinic in chat_message)]
     if vet_clinics_in_message:
         if len(vet_clinics_in_message) is 1:
@@ -402,6 +404,7 @@ async def on_message(message):
         else:
             response = f"There are Vets Now clinics in: {', '.join(vet_clinics_in_message)}"
             await message.channel.send(response)
+        return
 
     # if Wade uses AoE shortcuts, reply with their meaning
     if WADE_ID and message.author.id == WADE_ID:
@@ -416,54 +419,54 @@ async def on_message(message):
         response = embed_response(beep_boop)
         await message.channel.send(embed=response)
 
-    if 'frog' in chat_message.lower():
+    if 'frog' in chat_message:
         await message.channel.send("it's a frog takeover!")
 
-    if 'orb' in chat_message.lower() and 'i have counted' not in chat_message.lower():
+    if 'orb' in chat_message and 'i have counted' not in chat_message:
         orbified_message = re.sub('[aeiou]', 'orb', chat_message)
         await message.channel.send(orbified_message)
 
-    if 'nerts' in chat_message.lower():
+    if 'nerts' in chat_message:
         response = get_random(NERTS)
         response = embed_response(response)
         await message.channel.send(embed=response)
 
-    if 'robot' in chat_message.lower():
+    if 'robot' in chat_message:
         friendly_message = get_random(FRIENDLY_ROBOT_ADVICE)
         await message.channel.send(friendly_message)
 
-    if 'regulations' in chat_message.lower():
+    if 'regulations' in chat_message:
         await message.channel.send('Praise be the regulations')
 
-    if 'rock' in chat_message.lower() and 'fact' in chat_message.lower() and ':rock_fact:' not in chat_message.lower():
+    if 'rock' in chat_message and 'fact' in chat_message and ':rock_fact:' not in chat_message:
         rock_message = get_random(ROCK_FACTS)
         response = embed_response(rock_message)
         await message.channel.send(embed=response)
 
-    if 'guess' in chat_message.lower() and 'soup' in chat_message.lower() and 'rules' in chat_message.lower():
+    if 'guess' in chat_message and 'soup' in chat_message and 'rules' in chat_message:
         response = embed_guess_the_soup_rules()
         await message.channel.send(embed=response)
 
-    if 'tv' in chat_message.lower() and 'game' in chat_message.lower():
+    if 'tv' in chat_message and 'game' in chat_message:
         tv_games_help = get_random(TV_GAMES_HELP)
         await message.channel.send(tv_games_help)
 
-    if 'movie schedule' in chat_message.lower():
+    if 'movie schedule' in chat_message:
         # schedule = await scrape_events_from_calender(MOVIE_AGENDA)
         print_schedule = embed_movie_schedule()
         await message.channel.send(embed=print_schedule)
 
-    if any(x in chat_message.lower() for x in SHITEMASTER_HELP):
+    if any(x in chat_message for x in SHITEMASTER_HELP):
         embed = embed_shitemaster_email(SHITEMASTER_EMAIL)
         await message.author.send('', embed=embed)
 
     if SHITE == '1':
-        if 'shitemas' in chat_message.lower():
+        if 'shitemas' in chat_message:
             response = embed_response(
                 'SHITEmas is the most wonderful time of the year.')
             await message.channel.send(embed=response)
 
-        if 'shite schedule' in chat_message.lower():
+        if 'shite schedule' in chat_message:
             schedule = None
             # schedule = await scrape_events_from_calender(SHITEMAS_AGENDA)
             print_schedule = embed_shitemas_schedule(schedule, SHITEMAS_AGENDA)
