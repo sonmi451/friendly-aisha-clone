@@ -67,7 +67,6 @@ def remove_movie_from_watchlist(movie_collection, movie_name):
 
 
 def import_movie_json_to_db(movie_collection):
-    movie_dict = {}
     with open('../resources/movie_watchlist.json', 'r') as in_file:
         movie_watchlist = json.load(in_file)
         for movie in movie_watchlist.keys():
