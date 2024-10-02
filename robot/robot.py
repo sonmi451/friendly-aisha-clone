@@ -115,7 +115,7 @@ async def on_member_join(member):
 
 @client.command(name='ppl',
                 help='ppl')
-async def ppl():
+async def ppl(ctx):
     print("hello ppl!")
     for guild in client.guilds:
         for member in guild.members:
