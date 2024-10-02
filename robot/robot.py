@@ -115,14 +115,13 @@ async def on_member_join(member):
 
 @client.command(name='ppl',
                 help='ppl')
-async def ppl(ctx):
+async def ppl():
     print("hello ppl!")
     for guild in client.guilds:
         for member in guild.members:
             print(f"Member: {member}\nRoles:")
             for role in member.roles:
                 print(f"> {role}")
-    print("bye ppl!")
 
 
 @client.command(name='addmovie',
@@ -173,6 +172,7 @@ async def github_url(ctx):
     url = embed_github()
     await ctx.send(embed=url)
 
+
 @client.command(name='movies',
                 help='Read the full movie schedule from the calendar')
 async def full_schedule(ctx):
@@ -202,11 +202,11 @@ async def view_watchlist(ctx):
         await ctx.send(content='', embed=responses[0])
 
 
-@client.command(name='export_movies',
+@client.command(name='exportmovies',
                 help='Exports movie db to json')
 async def movie_export(ctx):
     export_movie_db_to_json()
-    await ctx.send('Exported movie db')
+    await ctx.send('Exported movie list to file')
 
 
 @client.command(name='parrot',
