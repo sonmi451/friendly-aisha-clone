@@ -166,6 +166,13 @@ async def remove_movie(ctx, *movie):
     await ctx.send(embed=response)
 
 
+@client.command(name='exportmovies',
+                help='Exports movie db to json')
+async def movie_export(ctx):
+    export_movie_db_to_json(MOVIE_COLLECTION)
+    await ctx.send('Exported movie list to file')
+
+
 @client.command(name='github',
                 help='See my insides on Github!')
 async def github_url(ctx):
@@ -200,13 +207,6 @@ async def view_watchlist(ctx):
         await paginator.run(responses)
     else:
         await ctx.send(content='', embed=responses[0])
-
-
-@client.command(name='exportmovies',
-                help='Exports movie db to json')
-async def movie_export(ctx):
-    export_movie_db_to_json()
-    await ctx.send('Exported movie list to file')
 
 
 @client.command(name='parrot',
