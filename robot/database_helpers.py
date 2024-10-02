@@ -79,7 +79,6 @@ def import_movie_json_to_db(movie_collection):
 def export_movie_db_to_json(movie_collection):
     movies = {}
     for movie in movie_collection.find():
-        temp_dict = {movie['_id'] : {'suggestedBy': movie['suggestedBy'], 'votes': movie['votes'], 'IMDB': movie['IMDB']}}
-        movies.append(temp_dict)
+        movies[movie['_id']] = {'suggestedBy': movie['suggestedBy'], 'votes': movie['votes'], 'IMDB': movie['IMDB']}
     with open('../resources/movie_watchlist.json', 'w') as out_file:
         json.dump(movies, out_file)
