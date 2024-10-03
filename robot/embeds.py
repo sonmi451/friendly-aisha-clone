@@ -91,19 +91,19 @@ def embed_movie_watchlist(movie_watchlist):
     return responses
 
 
-def embed_movie_schedule(first=False):
+def embed_movie_schedule(schedule, first=False):
     formatted_schedule = discord.Embed(title='Movie Schedule')
-    # if not schedule:
-    #     formatted_schedule.add_field(
-    #         name='Empty schedule', value='Hmm, looks like nothing is scheduled!')
-    # else:
-    #     if first:
-    #         schedule = [schedule[0]]
+    if not schedule:
+        formatted_schedule.add_field(
+            name='Empty schedule', value='Hmm, looks like nothing is scheduled!')
+    else:
+        if first:
+            schedule = [schedule[0]]
 
-    #     for day in schedule:
-    #         formatted_schedule.add_field(name=day[0],
-    #                                      value='\n'.join([str(time + ': ' + description) if time != ' ' else description for time, description in day[1].items()]),
-    #                                      inline=False)
+        for day in schedule:
+            formatted_schedule.add_field(name=day[0],
+                                        value='\n'.join([str(time + ': ' + description) if time != ' ' else description for time, description in day[1].items()]),
+                                        inline=False)
 
     formatted_schedule.add_field(name='Calender',
                                  value=f'[See the full calender of events online](https://aishamclean.co.uk/movie-club/)',

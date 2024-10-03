@@ -183,16 +183,16 @@ async def github_url(ctx):
 @client.command(name='movies',
                 help='Read the full movie schedule from the calendar')
 async def full_schedule(ctx):
-    # schedule = await scrape_events_from_calender(MOVIE_AGENDA)
-    print_schedule = embed_movie_schedule()
+    schedule = await scrape_events_from_calender(MOVIE_AGENDA)
+    print_schedule = embed_movie_schedule(schedule)
     await ctx.send(embed=print_schedule)
 
 
 @client.command(name='movie',
                 help='Reads the next scheduled movie schedule from the calendar')
 async def next_scheduled(ctx):
-    # schedule = await scrape_events_from_calender(MOVIE_AGENDA)
-    print_schedule = embed_movie_schedule(first=True)
+    schedule = await scrape_events_from_calender(MOVIE_AGENDA)
+    print_schedule = embed_movie_schedule(schedule, first=True)
     await ctx.send(embed=print_schedule)
 
 
@@ -459,8 +459,8 @@ async def on_message(message):
         await message.channel.send(tv_games_help)
 
     if 'movie schedule' in chat_message:
-        # schedule = await scrape_events_from_calender(MOVIE_AGENDA)
-        print_schedule = embed_movie_schedule()
+        schedule = await scrape_events_from_calender(MOVIE_AGENDA)
+        print_schedule = embed_movie_schedule(schedule)
         await message.channel.send(embed=print_schedule)
 
     if any(x in chat_message for x in SHITEMASTER_HELP):
