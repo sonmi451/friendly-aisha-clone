@@ -1,3 +1,4 @@
+audioop-lts
 beautifulsoup4
 bs4
 discord.py
@@ -6,4 +7,3 @@ http3
 prettyprint
 pymongo
 python-dotenv
-audioop-lts
