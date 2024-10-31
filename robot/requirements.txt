@@ -6,3 +6,4 @@ http3
 prettyprint
 pymongo
 python-dotenv
+audioop-lts
