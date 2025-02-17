@@ -72,6 +72,15 @@ def import_movie_json_to_db(movie_collection):
         for movie in movie_watchlist.keys():
             temp_dict = movie_watchlist[movie]
             temp_dict['_id'] = movie
+            add_movie_to_watchlist(movie_collection, temp_dict)
+
+
+def import_movie_list_to_db(movie_collection):
+    with open('../resources/movie_watchlist.txt', 'r') as in_file:
+        movies = [line.lower().strip() for line in in_file]
+        for movie in movies:
+            temp_dict = {}
+            temp_dict['_id'] = movie
             movie_collection.insert_one(temp_dict)
             print(f'Inserted new record for {movie}')
 
@@ -82,3 +91,11 @@ def export_movie_db_to_json(movie_collection):
         movies[movie['_id']] = {'suggestedBy': movie['suggestedBy'], 'votes': movie['votes'], 'IMDB': movie['IMDB']}
     with open('../resources/movie_watchlist.json', 'w') as out_file:
         json.dump(movies, out_file)
+
+
+def export_movie_db_to_list(movie_collection):
+    movies = []
+    for movie in movie_collection.find():
+        movies.append(movie['_id'])
+    with open('../resources/movie_watchlist.text', 'w') as out_file:
+        out_file.write('\n'.join(movies))

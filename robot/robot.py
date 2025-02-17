@@ -19,7 +19,7 @@ from helpers import get_random_beep_boop, get_random, get_aoe_taunt, \
     toki_pona_translate
 from wordle_helpers import *
 from database_helpers import get_movie_watchlist, add_movie_to_watchlist, \
-    remove_movie_from_watchlist, get_movie_by_upvotes, export_movie_db_to_json
+    remove_movie_from_watchlist, get_movie_by_upvotes, export_movie_db_to_json, import_movie_json_to_db
 from embeds import embed_movie_watchlist, embed_movie_schedule, embed_shitemas_schedule, embed_games_schedule, \
     embed_github, embed_guess_the_soup_rules, embed_response, embed_shitemaster_email, embed_wordle
 
@@ -73,11 +73,6 @@ SHITEMASTER_HELP = ['shitemaster email', 'submit shitemaster', 'submit task',
 
 DB_CLIENT = MongoClient("mongodb://database:27017/")
 MOVIE_DATABASE = DB_CLIENT["movie_list"]
-MOVIE_COLLECTION = MOVIE_DATABASE["movies"]
-if DB_LOAD_DATA == '1':
-    from database_helpers import import_movie_json_to_db
-    print("Populate database")
-    import_movie_json_to_db(MOVIE_COLLECTION)
 
 ################################################################################
 # DISCORDS SETUP
@@ -178,6 +173,13 @@ async def movie_export(ctx):
 async def github_url(ctx):
     url = embed_github()
     await ctx.send(embed=url)
+
+
+@client.command(name='importmovies',
+                help='Populates movie db')
+async def movie_import(ctx):
+    import_movie_json_to_db(MOVIE_COLLECTION)
+    await ctx.send('Exported movie list to file')
 
 
 @client.command(name='movies',
