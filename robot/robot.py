@@ -73,6 +73,7 @@ SHITEMASTER_HELP = ['shitemaster email', 'submit shitemaster', 'submit task',
 
 DB_CLIENT = MongoClient("mongodb://database:27017/")
 MOVIE_DATABASE = DB_CLIENT["movie_list"]
+MOVIE_COLLECTION = MOVIE_DATABASE["movies"]
 
 ################################################################################
 # DISCORDS SETUP
