@@ -180,7 +180,7 @@ async def github_url(ctx):
                 help='Populates movie db')
 async def movie_import(ctx):
     import_movie_json_to_db(MOVIE_COLLECTION)
-    await ctx.send('Exported movie list to file')
+    await ctx.send('Imported movie list')
 
 
 @client.command(name='movies',
