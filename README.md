@@ -21,26 +21,25 @@ However you can set the `DISCORD_TOKEN_TEST` token to be the same as your `DISCO
 
 ## Running with Docker Compose
 
-use `docker compose up` to start the robot
-use `docker compose up -d` to start the robot in detached mode
-use `docker compose down` to stop the robot
+- Use `docker compose up` to start the robot
+- Use `docker compose up -d` to start the robot in detached mode
+- Use `docker compose down` to stop the robot
 
 ## Deploying
 
-Clone directory
-Create `.env` file in directory root
-Run `docker compose up --build -d`
+1. Clone directory
+1. Create `.env` file in directory root
+1. Run `docker compose up --build -d`
 
 ## Populating the movie list data base
 
 From terminal run
 `nano ./resources/movie_watchlist.txt` and populate the list
 
-Run `python ./movie_list_migrate_to_json.py`
-the output is `./resources/movie_watchlist.json`
+Run `python ./movie_list_migrate_to_json.py`, which converts the `resources/movie_watchlist.txt` to `resources/movie_watchlist.json`
 
 In discord run
-`$importmovies` which imports from `./resources/movie_watchlist.json` 
+`$importmovies` which imports from `resources/movie_watchlist.json` 
 
 ### Logs
 use `docker-compose logs robot` to print the logs from the docker container
