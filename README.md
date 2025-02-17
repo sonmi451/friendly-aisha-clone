@@ -36,7 +36,7 @@ However you can set the `DISCORD_TOKEN_TEST` token to be the same as your `DISCO
 From terminal run
 `nano ./resources/movie_watchlist.txt` and populate the list
 
-Run `python ./movie_list_migrate_to_json.py`, which converts the `resources/movie_watchlist.txt` to `resources/movie_watchlist.json`
+Run `python ./movie_data_txt_to_json.py`, which converts the `resources/movie_watchlist.txt` to `resources/movie_watchlist.json`
 
 In discord run
 `$importmovies` which imports from `resources/movie_watchlist.json` 

@@ -1,6 +1,6 @@
 import json
 
-def update_movie_list_file():
+def txt_to_json():
     movie_dict = {}
     with open('./resources/movie_watchlist.txt', 'r') as in_file:
         for line in in_file:
@@ -14,4 +14,4 @@ def update_movie_list_file():
     with open('./resources/movie_watchlist.json', 'w+') as out_file:
         json.dump(movie_dict, out_file)
 
-update_movie_list_file()
+txt_to_json()
