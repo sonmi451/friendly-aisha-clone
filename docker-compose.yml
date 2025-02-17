@@ -8,6 +8,7 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ./resources:/resources:rw
+      - .env:/.env:r
     environment:
       PYTHONUNBUFFERED: 1
 
