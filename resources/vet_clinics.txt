@@ -1,7 +1,7 @@
 aberdeen
 belfast
 newport
-bath
+bath the place
 ashford
 barton le clay
 barnet
@@ -12,7 +12,6 @@ bournemouth
 bristol
 herne bay
 chesterfield
-colchester
 coventry
 colwyn bay
 derby
@@ -33,7 +32,6 @@ hemel hempstead
 kendal
 high wycombe
 hull
-ipswich
 kilmarnock
 king's lynn
 kirkcaldy
@@ -43,7 +41,7 @@ macclesfield
 middlesbrough
 nottingham
 peterborough
-reading
+reading the place
 salisbury
 sidcup
 sheffield
@@ -61,3 +59,4 @@ wrexham
 glasgow
 swindon
 cheltenham
+manningtree
