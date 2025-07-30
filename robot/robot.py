@@ -416,9 +416,8 @@ async def on_message(message):
             await message.channel.send(response)
         return
 
-    # if Wade uses AoE shortcuts, reply with their meaning
-    if WADE_ID and message.author.id == WADE_ID:
-        taunt = get_aoe_taunt(AOE_TAUNTS_DICT, chat_message)
+    if '11' in chat_message:
+        taunt = get_aoe_taunt(AOE_TAUNTS_DICT, '11')
         if taunt:
             response = embed_response(taunt)
             await message.channel.send(embed=response)
