@@ -222,6 +222,8 @@ async def aoe_speak(interaction: discord.Interaction, taunt: str):
         response = embed_response(taunt)
         await interaction.response.send_message(embed=response)
 
+################################################################################
+# WORDLE
 
 # @bot.tree.command(name='wordle', description='Play wordle in Discord')
 # async def play_wordle(interaction: discord.Interaction, message: str):
