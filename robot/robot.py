@@ -65,7 +65,7 @@ VET_CLINICS = get_vet_clinics_from_file()
 
 ALPHABET = [x for x in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ']
 TOKI_ALPHABET = [x for x in 'AEIOUPTKSMNLJW']
-SHITEMASTER_HELP = ['shitemaster email', 'submit shitemaster', 'submit task',     'sm email', 'shitemasters assistant email',     'shitemaster\'s assistant email', 'shite email']
+SHITEMASTER_HELP = ['shitemaster email', 'submit shitemaster', 'submit task', 'sm email', 'shitemasters assistant email', 'shitemaster\'s assistant email', 'shite email']
 
 ################################################################################
 # LOAD DATABASE
