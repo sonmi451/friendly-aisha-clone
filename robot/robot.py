@@ -1,7 +1,6 @@
 ################################################################################
-# IMPORTS
+# IMPORT EXTERNAL PACKAGES
 
-import asyncio
 import os
 import re
 import discord
@@ -9,6 +8,9 @@ import DiscordUtils
 from dotenv import load_dotenv
 from discord.ext import commands
 from pymongo import MongoClient
+
+################################################################################
+# IMPORT LOCAL PACKAGES
 
 from calendars import scrape_events_from_calender
 from file_helpers import get_aoe_taunts_from_file, get_british_spellings_from_file, \
@@ -31,7 +33,6 @@ load_dotenv()
 DEBUG = os.getenv('DEBUG_MODE', default=False)
 SHITE = os.getenv('SHITE', default=False)
 SERVER = os.getenv('DISCORD_SERVER')
-WADE_ID = os.getenv('WADE_ID', default=False)
 BOT_USER_ID = os.getenv('BOT_USER_ID', default=False)
 BOT_ROLE_ID = os.getenv('BOT_ROLE_ID', default=False)
 MOVIE_AGENDA = os.getenv('MOVIE_AGENDA', default=False)
@@ -64,9 +65,7 @@ VET_CLINICS = get_vet_clinics_from_file()
 
 ALPHABET = [x for x in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ']
 TOKI_ALPHABET = [x for x in 'AEIOUPTKSMNLJW']
-SHITEMASTER_HELP = ['shitemaster email', 'submit shitemaster', 'submit task',
-                    'sm email', 'shitemasters assistant email',
-                    'shitemaster\'s assistant email', 'shite email']
+SHITEMASTER_HELP = ['shitemaster email', 'submit shitemaster', 'submit task', 'sm email', 'shitemasters assistant email', 'shitemaster\'s assistant email', 'shite email']
 
 ################################################################################
 # LOAD DATABASE
@@ -76,28 +75,17 @@ MOVIE_DATABASE = DB_CLIENT["movie_list"]
 MOVIE_COLLECTION = MOVIE_DATABASE["movies"]
 
 ################################################################################
-# DISCORDS SETUP
+# DISCORD BOT SETUP
 
 intents = discord.Intents.default()
 intents.members = True
 intents.message_content = True
-
-if DEBUG == '1':
-    client = commands.Bot(command_prefix='test$', intents=intents)
-else:
-    client = commands.Bot(command_prefix='$', intents=intents)
+bot = commands.Bot(command_prefix=commands.when_mentioned, intents=intents)
 
 ################################################################################
 # EVENT REACTIONS
 
-@client.event
-async def on_ready():
-    for guild in client.guilds:
-        if guild.name == SERVER:
-            break
-
-
-@client.event
+@bot.event
 async def on_member_join(member):
     welcome_message = f"""Wilkommen {member.name}, to the Socially Distant Club!
                           I am your Friendly Aisha Clone,
@@ -107,207 +95,185 @@ async def on_member_join(member):
     await member.send(embed=welcome_message)
 
 ################################################################################
-# USER COMMANDS
+# SLASH COMMANDS
+# https://fallendeity.github.io/discord.py-masterclass/slash-commands/
 
-@client.command(name='ppl',
-                help='ppl')
-async def ppl(ctx):
+@bot.command()
+async def sync(ctx: commands.Context) -> None:
+    await ctx.bot.tree.sync()
+    response = embed_response("Synced commands")
+    await ctx.send(embed=response)
+
+@bot.tree.command(name='ppl', description='ppl')
+async def ppl(interaction: discord.Interaction):
     print("hello ppl!")
-    for guild in client.guilds:
+    for guild in bot.guilds:
         for member in guild.members:
             print(f"Member: {member}\nRoles:")
-            for role in member.roles:
-                print(f"> {role}")
+            for role in member.roles: print(f"> {role}")
+    await interaction.response.send_message('Check the logs why don\'t you')
 
 
-@client.command(name='addmovie',
-                help='Add or upvote a movie on the watchlist')
-async def add_movie(ctx, *movie):
-    if movie:
-        movie = ' '.join(movie)
-        movie_name = str(movie).title()
-        movie_details = {
-            '_id': movie_name,
-            'suggestedBy': ctx.message.author.name,
-            'votes': 1,
-            'IMDB': "",
-        }
-        add_movie_to_watchlist(MOVIE_COLLECTION, movie_details)
-        text = f"Thank you for your suggestion: {movie_name}!"
-    else:
-        text = "you wanna try: `$addmovie The Best Film in the World`"
+@bot.tree.command(name='addmovie', description='Add or upvote a movie on the watchlist')
+async def add_movie(interaction: discord.Interaction, movie: str):
+    movie_name = str(movie).title()
+    movie_details = {
+        '_id': movie_name,
+        'suggestedBy': interaction.user.display_name,
+        'votes': 1,
+        'IMDB': "",
+    }
+    add_movie_to_watchlist(MOVIE_COLLECTION, movie_details)
+    text = f"Thank you for your suggestion: {movie_name}!"
     response = embed_response(text)
-    await ctx.send(embed=response)
+    await interaction.response.send_message(embed=response)
 
 
-@client.command(name='bubblewrap',
-                help='Gimme some bubblewrap to pop')
-async def bubblewrap(ctx):
+@bot.tree.command(name='bubblewrap', description='Gimme some bubblewrap to pop')
+async def bubblewrap(interaction: discord.Interaction):
     bubblerow = "||pop|| ||pop|| ||pop|| ||pop|| ||pop|| ||pop|| ||pop|| ||pop|| ||pop|| ||pop|| ||pop||\n"
     bubbles = f"Enjoy the bubblewrap:\n{bubblerow * 9}"
-    await ctx.send(bubbles)
+    await interaction.response.send_message(bubbles)
 
 
-@client.command(name='delmovie',
-                help='Remove a movie to the watchlist')
-async def remove_movie(ctx, *movie):
-    if movie:
-        movie = ' '.join(movie)
-        movie_name = str(movie).title()
-        remove_movie_from_watchlist(MOVIE_COLLECTION, movie_name)
-        text = f"Removed movie from watchlist: {movie_name}!"
-    else:
-        text = "you wanna try: `$delmovie \"The Best Film in the World\"`"
+@bot.tree.command(name='delmovie', description='Remove a movie to the watchlist')
+async def remove_movie(interaction: discord.Interaction, movie: str):
+    movie_name = str(movie).title()
+    remove_movie_from_watchlist(MOVIE_COLLECTION, movie_name)
+    text = f"Removed movie from watchlist: {movie_name}!"
     response = embed_response(text)
-    await ctx.send(embed=response)
+    await interaction.response.send_message(embed=response)
 
 
-@client.command(name='exportmovies',
-                help='Exports movie db to json')
-async def movie_export(ctx):
+@bot.tree.command(name='exportmovies', description='Exports movie db to json')
+async def movie_export(interaction: discord.Interaction):
     export_movie_db_to_json(MOVIE_COLLECTION)
-    await ctx.send('Exported movie list to file')
+    await interaction.response.send_message('Exported movie list to file')
 
 
-@client.command(name='github',
-                help='See my insides on Github!')
-async def github_url(ctx):
+@bot.tree.command(name='github', description='See my insides on Github!')
+async def github_url(interaction: discord.Interaction):
     url = embed_github()
-    await ctx.send(embed=url)
+    await interaction.response.send_message(embed=url)
 
 
-@client.command(name='importmovies',
-                help='Populates movie db')
-async def movie_import(ctx):
+@bot.tree.command(name='importmovies', description='Populates movie db')
+async def movie_import(interaction: discord.Interaction):
     import_movie_json_to_db(MOVIE_COLLECTION)
-    await ctx.send('Imported movie list')
+    await interaction.response.send_message('Imported movie list')
 
 
-@client.command(name='movies',
-                help='Read the full movie schedule from the calendar')
-async def full_schedule(ctx):
+@bot.tree.command(name='movies', description='Read the full movie schedule from the calendar')
+async def full_schedule(interaction: discord.Interaction):
     schedule = await scrape_events_from_calender(MOVIE_AGENDA)
     print_schedule = embed_movie_schedule(schedule)
-    await ctx.send(embed=print_schedule)
+    await interaction.response.send_message(embed=print_schedule)
 
 
-@client.command(name='movie',
-                help='Reads the next scheduled movie schedule from the calendar')
-async def next_scheduled(ctx):
+@bot.tree.command(name='movie', description='Reads the next scheduled movie schedule from the calendar')
+async def next_scheduled(interaction: discord.Interaction):
     schedule = await scrape_events_from_calender(MOVIE_AGENDA)
     print_schedule = embed_movie_schedule(schedule, first=True)
-    await ctx.send(embed=print_schedule)
+    await interaction.response.send_message(embed=print_schedule)
 
 
-@client.command(name='movielist',
-                help='See the watchlist')
-async def view_watchlist(ctx):
+@bot.tree.command(name='movielist', description='See the watchlist')
+async def view_watchlist(interaction: discord.Interaction):
     watchlist = get_movie_watchlist(MOVIE_COLLECTION)
     responses = embed_movie_watchlist(watchlist)
     if len(responses) > 1:
-        paginator = DiscordUtils.Pagination.AutoEmbedPaginator(
-            ctx, timeout=60)
+        paginator = DiscordUtils.Pagination.AutoEmbedPaginator(interaction, timeout=60)
         await paginator.run(responses)
     else:
-        await ctx.send(content='', embed=responses[0])
+        await interaction.response.send_message(content='', embed=responses[0])
 
 
-@client.command(name='parrot',
-                help='I\'ll repeat what you say')
-async def parrot_speak(ctx, *message):
-    if message:
-        response = embed_response(' '.join(message))
-        await ctx.send(embed=response)
+@bot.tree.command(name='parrot', description='I\'ll repeat what you say')
+async def parrot_speak(interaction: discord.Interaction, sentance: str):
+    response = embed_response(sentance)
+    await interaction.response.send_message(embed=response)
 
 
-@client.command(name='ponawordle',
-                help='Play toki pona wordle in Discord')
-async def musi_nimi(ctx, *message):
-    if message:
-        try:
-            word_len = int(message[0])
-        except:
-            word_len = 4
-    else:
-        word_len = 4
-    try:
-        toki_pona_words= [*TOKI_PONA_DICT.keys()]
-        toki_pona_length_words= [word for word in toki_pona_words if len(word) == word_len]
-        word = get_random(toki_pona_length_words).upper()
-        response = embed_wordle(
-            {'Wordle!': f'Guessing a {word_len} character toki pona word in {word_len+1} guesses...'})
-        await ctx.send(embed=response)
-        await wait_for_answer(ctx, word, word_len, toki_pona_words, REGIONAL_INDICATOR_LETTERS, TOKI_ALPHABET)
-    except Exception as error:
-        response_text = wordle_exception(error, DEBUG)
-        response = embed_wordle({'A wordley error!': response_text})
-        await ctx.send(embed=response)
-
-
-@client.command(name='shitemaster',
-                help='Recieve a DM of the Shitemaster submission info')
-async def full_schedule(ctx):
+@bot.tree.command(name='shitemaster', description='Recieve a DM of the Shitemaster submission info')
+async def full_schedule(interaction: discord.Interaction):
     embed = embed_shitemaster_email(SHITEMASTER_EMAIL)
-    await ctx.author.send('', embed=embed)
+    await interaction.response.send_message('', embed=embed)
 
 
-@client.command(name='toki',
-                help='toki pona translator')
-async def toki_translate(ctx, *message):
-    if message:
-        english = toki_pona_translate(' '.join(message), TOKI_PONA_DICT)
-        print(english)
-        response = embed_response(english)
-        await ctx.send(embed=response)
+@bot.tree.command(name='toki', description='toki pona translator')
+async def toki_translate(interaction: discord.Interaction, sentance: str):
+    english = toki_pona_translate(' '.join(sentance), TOKI_PONA_DICT)
+    print(english)
+    response = embed_response(english)
+    await interaction.response.send_message(embed=response)
 
 
-@client.command(name='tvgames',
-                help='What and when are tv games?')
-async def full_schedule(ctx):
+@bot.tree.command(name='tvgames', description='What and when are tv games?')
+async def full_schedule(interaction: discord.Interaction):
     schedule = None
-    # schedule = await scrape_events_from_calender(TV_GAMES_AGENDA)
     print_schedule = embed_games_schedule(schedule)
-    ctx.author.send(embed=print_schedule)
+    await interaction.response.send_message(embed=print_schedule)
 
 
-@client.command(name='wade',
-                help='Talk in AOE taunts!')
-async def aoe_speak(ctx, taunt_num):
-    taunt = get_aoe_taunt(AOE_TAUNTS_DICT, taunt_num)
+@bot.tree.command(name='wade', description='Talk in AOE taunts!')
+async def aoe_speak(interaction: discord.Interaction, taunt: str):
+    taunt = get_aoe_taunt(AOE_TAUNTS_DICT, taunt)
     if taunt:
         response = embed_response(taunt)
-        await ctx.send(embed=response)
+        await interaction.response.send_message(embed=response)
+
+################################################################################
+# WORDLE
+
+# @bot.tree.command(name='wordle', description='Play wordle in Discord')
+# async def play_wordle(interaction: discord.Interaction, message: str):
+#     if message:
+#         if message[0] == "stats":
+#             response = embed_wordle( {"Wordle Stats": get_wordle_stats(message, WORD_SET)}
+#             )
+#             await interaction.response.send_message(embed=response)
+#             return
+#         try:
+#             word_len = int(message[0])
+#         except:
+#             word_len = 5
+#     else:
+#         word_len = 5
+#     try:
+#         word = get_word(BRITISH_WORDS, WORD_SET, word_len).upper()
+#         response = embed_wordle(
+#             {'Wordle!': f'Guessing a {word_len} character word in {word_len+1} guesses...'})
+#         await interaction.response.send_message(embed=response)
+#         await wait_for_answer(interaction, word, word_len, WORD_SET, REGIONAL_INDICATOR_LETTERS, ALPHABET)
+#     except Exception as error:
+#         if DEBUG == '1':
+#             response_text = ' Debug mode error details:\n```' + str(e) + '```'
+#         response_text = wordle_exception(error, DEBUG)
+#         response = embed_wordle({'A wordley error!': response_text})
+#         await interaction.response.send_message(embed=response)
 
 
-@client.command(name='wordle',
-                help='Play wordle in Discord')
-async def play_wordle(ctx, *message):
-    if message:
-        if message[0] == "stats":
-            response = embed_wordle(
-                {"Wordle Stats": get_wordle_stats(message, WORD_SET)}
-            )
-            await ctx.send(embed=response)
-            return
-        try:
-            word_len = int(message[0])
-        except:
-            word_len = 5
-    else:
-        word_len = 5
-    try:
-        word = get_word(BRITISH_WORDS, WORD_SET, word_len).upper()
-        response = embed_wordle(
-            {'Wordle!': f'Guessing a {word_len} character word in {word_len+1} guesses...'})
-        await ctx.send(embed=response)
-        await wait_for_answer(ctx, word, word_len, WORD_SET, REGIONAL_INDICATOR_LETTERS, ALPHABET)
-    except Exception as error:
-        if DEBUG == '1':
-            response_text = ' Debug mode error details:\n```' + str(e) + '```'
-        response_text = wordle_exception(error, DEBUG)
-        response = embed_wordle({'A wordley error!': response_text})
-        await ctx.send(embed=response)
-
+# @bot.tree.command(name='wordlepona', description='Play toki pona wordle in Discord')
+# async def musi_nimi(interaction: discord.Interaction, message: str):
+#     if message:
+#         try:
+#             word_len = int(message[0])
+#         except:
+#             word_len = 4
+#     else:
+#         word_len = 4
+#     try:
+#         toki_pona_words= [*TOKI_PONA_DICT.keys()]
+#         toki_pona_length_words= [word for word in toki_pona_words if len(word) == word_len]
+#         word = get_random(toki_pona_length_words).upper()
+#         response = embed_wordle(
+#             {'Wordle!': f'Guessing a {word_len} character toki pona word in {word_len+1} guesses...'})
+#         await interaction.response.send_message(embed=response)
+#         await wait_for_answer(interaction, word, word_len, toki_pona_words, REGIONAL_INDICATOR_LETTERS, TOKI_ALPHABET)
+#     except Exception as error:
+#         response_text = wordle_exception(error, DEBUG)
+#         response = embed_wordle({'A wordley error!': response_text})
+#         await interaction.response.send_message(embed=response)
 
 ################################################################################
 # WORDLE HELPER
@@ -384,31 +350,36 @@ async def wait_for_answer(ctx, word, word_len, word_set, emoji_letters, alphabet
 ################################################################################
 # RESPONSES TO TEXT
 
-@client.event
-async def on_message(message):
+@bot.event
+async def on_message(message: discord.Message) -> None: 
     chat_message = message.content.lower()
 
     if DEBUG:
         print(str(message.author) + '\n' + str(chat_message))
 
-    if message.author == client.user:
+    if message.author.bot:
         return
     
+    if bot.user.mentioned_in(message):
+        beep_boop = get_random_beep_boop()
+        response = embed_response(beep_boop)
+        await message.channel.send(embed=response)
+
     # VETS NOW
     # check if anyone from vets now is here right now
     if 'vets now' in chat_message:
         await message.channel.send("There is no one from Vets Now here right now.")
 
-    # check if any vet clinic locations are mentioned
-    if ' bury' in chat_message:
-        response = "There is a Vets Now clinic in a repurposed car dealership that is right next to Besses o'th'Barn tram stop on the Manchester Metrolink, in Whitefield, within the Metropolitan Borough of Bury."
-        await message.channel.send(response)
-        return
-    
     vet_clinics_in_message = [clinic.title() for clinic in VET_CLINICS if(clinic in chat_message)]
     if vet_clinics_in_message:
         if len(vet_clinics_in_message) is 1:
-            await message.channel.send(f"There is a Vets Now clinic in {vet_clinics_in_message[0]}")
+            vet_clinic = vet_clinics_in_message[0]
+            print(vet_clinic)
+            if vet_clinic == 'Manchester':
+                response = "There is a Vets Now clinic in a repurposed car dealership that is right next to Besses o'th'Barn tram stop on the Manchester Metrolink, in Whitefield, within the Metropolitan Borough of Bury."
+            else:
+                response =f"There is a Vets Now clinic in {vet_clinic}"
+            await message.channel.send(response)
         elif len(vet_clinics_in_message) is 2:
             await message.channel.send(f"There are Vets Now clinics in {' and '.join(vet_clinics_in_message)}")
         else:
@@ -421,12 +392,6 @@ async def on_message(message):
         if taunt:
             response = embed_response(taunt)
             await message.channel.send(embed=response)
-
-    # if you @ the bot it beeps or boops
-    if any(id in chat_message for id in [BOT_USER_ID, BOT_ROLE_ID]):
-        beep_boop = get_random_beep_boop()
-        response = embed_response(beep_boop)
-        await message.channel.send(embed=response)
 
     if 'frog' in chat_message:
         await message.channel.send("it's a frog takeover!")
@@ -481,9 +446,9 @@ async def on_message(message):
             print_schedule = embed_shitemas_schedule(schedule, SHITEMAS_AGENDA)
             await message.channel.send(embed=print_schedule)
 
-    await client.process_commands(message)
+    await bot.process_commands(message)
 
 ################################################################################
 # RUN THE ROBOT
 
-client.run(TOKEN)
+bot.run(TOKEN)
