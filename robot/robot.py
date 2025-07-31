@@ -387,11 +387,11 @@ async def on_message(message: discord.Message) -> None:
             await message.channel.send(response)
         return
 
-    if '11' in chat_message:
-        taunt = get_aoe_taunt(AOE_TAUNTS_DICT, '11')
-        if taunt:
-            response = embed_response(taunt)
-            await message.channel.send(embed=response)
+    # if '11' in chat_message:
+    #     taunt = get_aoe_taunt(AOE_TAUNTS_DICT, '11')
+    #     if taunt:
+    #         response = embed_response(taunt)
+    #         await message.channel.send(embed=response)
 
     if 'frog' in chat_message:
         await message.channel.send("it's a frog takeover!")
