@@ -80,7 +80,7 @@ MOVIE_COLLECTION = MOVIE_DATABASE["movies"]
 intents = discord.Intents.default()
 intents.members = True
 intents.message_content = True
-bot = commands.Bot(command_prefix=commands.when_mentioned, intents=intents)
+bot = commands.Bot(command_prefix=commands.when_mentioned_or("$"), intents=intents)
 
 ################################################################################
 # EVENT REACTIONS
@@ -225,55 +225,57 @@ async def aoe_speak(interaction: discord.Interaction, taunt: str):
 ################################################################################
 # WORDLE
 
-# @bot.tree.command(name='wordle', description='Play wordle in Discord')
-# async def play_wordle(interaction: discord.Interaction, message: str):
-#     if message:
-#         if message[0] == "stats":
-#             response = embed_wordle( {"Wordle Stats": get_wordle_stats(message, WORD_SET)}
-#             )
-#             await interaction.response.send_message(embed=response)
-#             return
-#         try:
-#             word_len = int(message[0])
-#         except:
-#             word_len = 5
-#     else:
-#         word_len = 5
-#     try:
-#         word = get_word(BRITISH_WORDS, WORD_SET, word_len).upper()
-#         response = embed_wordle(
-#             {'Wordle!': f'Guessing a {word_len} character word in {word_len+1} guesses...'})
-#         await interaction.response.send_message(embed=response)
-#         await wait_for_answer(interaction, word, word_len, WORD_SET, REGIONAL_INDICATOR_LETTERS, ALPHABET)
-#     except Exception as error:
-#         if DEBUG == '1':
-#             response_text = ' Debug mode error details:\n```' + str(e) + '```'
-#         response_text = wordle_exception(error, DEBUG)
-#         response = embed_wordle({'A wordley error!': response_text})
-#         await interaction.response.send_message(embed=response)
+@bot.command(name='wordle',
+             help='Play wordle in Discord')
+async def play_wordle(ctx, *message):
+    if message:
+        if message[0] == "stats":
+            response = embed_wordle(
+                {"Wordle Stats": get_wordle_stats(message, WORD_SET)}
+            )
+            await ctx.send(embed=response)
+            return
+        try:
+            word_len = int(message[0])
+        except:
+            word_len = 5
+    else:
+        word_len = 5
+    try:
+        word = get_word(BRITISH_WORDS, WORD_SET, word_len).upper()
+        response = embed_wordle(
+            {'Wordle!': f'Guessing a {word_len} character word in {word_len+1} guesses...'})
+        await ctx.send(embed=response)
+        await wait_for_answer(ctx, word, word_len, WORD_SET, REGIONAL_INDICATOR_LETTERS, ALPHABET)
+    except Exception as error:
+        if DEBUG == '1':
+            response_text = ' Debug mode error details:\n```' + str(e) + '```'
+        response_text = wordle_exception(error, DEBUG)
+        response = embed_wordle({'A wordley error!': response_text})
+        await ctx.send(embed=response)
 
-
-# @bot.tree.command(name='wordlepona', description='Play toki pona wordle in Discord')
-# async def musi_nimi(interaction: discord.Interaction, message: str):
-#     if message:
-#         try:
-#             word_len = int(message[0])
-#         except:
-#             word_len = 4
-#     else:
-#         word_len = 4
-#     try:
-#         toki_pona_words= [*TOKI_PONA_DICT.keys()]
-#         toki_pona_length_words= [word for word in toki_pona_words if len(word) == word_len]
-#         word = get_random(toki_pona_length_words).upper()
-#         response = embed_wordle(
-#             {'Wordle!': f'Guessing a {word_len} character toki pona word in {word_len+1} guesses...'})
-#         await interaction.response.send_message(embed=response)
-#         await wait_for_answer(interaction, word, word_len, toki_pona_words, REGIONAL_INDICATOR_LETTERS, TOKI_ALPHABET)
-#     except Exception as error:
-#         response_text = wordle_exception(error, DEBUG)
-#         response = embed_wordle({'A wordley error!': response_text})
-#         await interaction.response.send_message(embed=response)
+@bot.command(name='ponawordle',
+             help='Play toki pona wordle in Discord')
+async def musi_nimi(ctx, *message):
+    if message:
+        try:
+            word_len = int(message[0])
+        except:
+            word_len = 4
+    else:
+        word_len = 4
+    try:
+        toki_pona_words= [*TOKI_PONA_DICT.keys()]
+        toki_pona_length_words= [word for word in toki_pona_words if len(word) == word_len]
+        word = get_random(toki_pona_length_words).upper()
+        response = embed_wordle(
+            {'Wordle!': f'Guessing a {word_len} character toki pona word in {word_len+1} guesses...'})
+        await ctx.send(embed=response)
+        await wait_for_answer(ctx, word, word_len, toki_pona_words, REGIONAL_INDICATOR_LETTERS, TOKI_ALPHABET)
+    except Exception as error:
+        response_text = wordle_exception(error, DEBUG)
+        response = embed_wordle({'A wordley error!': response_text})
+        await ctx.send(embed=response)
 
 ################################################################################
 # WORDLE HELPER
