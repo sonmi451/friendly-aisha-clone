@@ -224,7 +224,7 @@ async def aoe_speak(interaction: discord.Interaction, taunt: str):
         await interaction.response.send_message(embed=response)
 
 ################################################################################
-# WORDLE
+# PREFIX COMMANDS (WORDLE)
 
 @bot.command(name='wordle',
              help='Play wordle in Discord')
@@ -452,6 +452,6 @@ async def on_message(message: discord.Message) -> None:
     await bot.process_commands(message)
 
 ################################################################################
-# RUN THE ROBOT
+# RUN THE BOT
 
 bot.run(TOKEN)
