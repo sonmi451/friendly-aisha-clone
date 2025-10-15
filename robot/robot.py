@@ -250,7 +250,7 @@ async def play_wordle(ctx, *message):
         await wait_for_answer(ctx, word, word_len, WORD_SET, REGIONAL_INDICATOR_LETTERS, ALPHABET)
     except Exception as error:
         if DEBUG == '1':
-            response_text = ' Debug mode error details:\n```' + str(e) + '```'
+            response_text = ' Debug mode error details:\n```' + str(error) + '```'
         response_text = wordle_exception(error, DEBUG)
         response = embed_wordle({'A wordley error!': response_text})
         await ctx.send(embed=response)
