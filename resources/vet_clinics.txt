@@ -60,4 +60,4 @@ glasgow
 swindon
 cheltenham
 manningtree
-manchester
+greater manchester
