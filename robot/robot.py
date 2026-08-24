@@ -381,8 +381,6 @@ async def on_message(message: discord.Message) -> None:
             if vet_clinic == 'Greater Manchester':
                 response = "There is a Vets Now clinic in a repurposed car dealership that is right next to Besses o'th'Barn tram stop on the Manchester Metrolink, in Whitefield, within the Metropolitan Borough of Bury."
                 # response = "There is a Vets Now clinic in Whitefield, within the Metropolitan Borough of Bury."
-            elif vet_clinic == 'Swindon':
-                response = "There is a Vets Now hospital called Great Western Exotics in Swindon"
             else:
                 response =f"There is a Vets Now clinic in {vet_clinic}"
             await message.channel.send(response)

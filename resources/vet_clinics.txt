@@ -51,13 +51,11 @@ sutton
 swansea
 telford
 tunbridge wells
-winchester
 witham
 worcester
 worthing
 wrexham
 glasgow
-swindon
 cheltenham
 manningtree
 greater manchester
